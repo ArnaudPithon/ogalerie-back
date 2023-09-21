@@ -1,0 +1,43 @@
+{
+    "env": {
+        "browser": false,
+        "node": true,
+        "es6": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "camelcase": [ "error" ],
+        "indent": [ "error", 4 ],
+        "quotes": [ "error", "single", { "avoidEscape": true }],
+        "semi": [ "error", "always" ],
+        "arrow-spacing": [ "error" ],
+        "block-spacing": [ "error", "always" ],
+        "comma-dangle": [ "error", "always-multiline" ],
+        "comma-spacing": [ "error", { "before": false, "after": true }],
+        "comma-style": [ "error", "last" ],
+        "dot-location": [ "error", "property" ],
+        "dot-notation": [ "error", { "allowPattern": "^[a-z]+(_[a-z]+)+$" } ],
+        "padding-line-between-statements": [ "error",
+            { "blankLine": "always", "prev": "*", "next": "return" },
+            { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*"},
+            { "blankLine": "any",    "prev": ["const", "let", "var"], "next": ["const", "let", "var"]}
+        ]
+    },
+    "parserOptions": {
+        "ecmaVersion": 2022
+    },
+    "overrides": [
+        {
+            "files": [ "**/*.test.js" ],
+            "env": { "jest": true },
+            "plugins": [ "jest" ],
+            "rules": {
+                "jest/no-disabled-tests": "warn",
+                "jest/no-focused-tests": "error",
+                "jest/no-identical-title": "error",
+                "jest/prefer-to-have-length": "warn",
+                "jest/valid-expect": "error"
+            }
+        }
+    ]
+}
