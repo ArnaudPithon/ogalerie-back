@@ -1,6 +1,6 @@
 SHELL := /usr/bin/sh
 PG := /usr/bin/psql
-DB := oparc
+DB := ogalerie
 DEBUG :=  # -e
 
 all: database tables functions populate
