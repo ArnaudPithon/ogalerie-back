@@ -12,6 +12,7 @@
 ### Mise en place de la base de données
 
 ```sh
+cd src/data &&
 make database &&
 make tables
 ```
