@@ -1,17 +1,17 @@
 'use strict';
 
 const router = require('express').Router();
-const errorService = require('../services/error');
+const errorHandler = require('../services/errorHandler');
 
-const { authController } = require('../controllers');
+const routerAPI = require('./router.js');
 
-// Routes
+// Les urls préfixées par /v1 rentrent dans routerAPI
+router.use('/v1', routerAPI);
 
-router.post('/api/v1/login', authController.signIn);
-router.post('/api/v1/signup', authController.signUp);
+// Levée d'une erreur 404
+router.use(errorHandler.notFound);
 
-// 
-
-router.use(errorService.notFound);
+// Gestion globale des erreurs
+router.use(errorHandler.manage);
 
 module.exports = router;

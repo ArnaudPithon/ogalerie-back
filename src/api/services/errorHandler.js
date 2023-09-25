@@ -21,7 +21,6 @@ const errorHandler = {
         // j'informe l'utilisateur ou je le redirige vers une page spécifique
         switch (err.code) {
         case 401:
-            debug('redirect 401');
             res.redirect('/401.html');
             break;
         case 404:
@@ -38,7 +37,7 @@ const errorHandler = {
      */
     async log(err) {
         const fileName = `${err.date.toISOString().slice(0, 10)}.log`;
-        const path = join(__dirname, `../../log/${fileName}`);
+        const path = join(__dirname, `../../../log/${fileName}`);
 
         debug(path);
 

@@ -11,15 +11,20 @@ const dataMapper = {
      * @returns
      */
     async getUserByEmail(loginInformations) {
-        const sqlQuery = 'SELECT * FROM get_user_by_email($1)';
-        const values = [loginInformations];
+        const sqlQuery = `
+        select * from get_user_by_email($1)
+        ;`;
+
+        const values = [loginInformations.email];
         let result;
         let error;
+
+        debug(sqlQuery, values);
 
         try {
             const response = await client.query(sqlQuery, values);
 
-            result = response.rows[0].get_user_by_email;
+            result = response.rows[0];
 
             debug(result);
             if (!result) {
@@ -38,7 +43,9 @@ const dataMapper = {
      * @returns
      */
     async signUp (user) {
-        const sqlQuery = 'SELECT * FROM insert_user($1)';
+        const sqlQuery = `
+        select * from insert_user($1)
+        ;`;
         const values = [user];
         let result;
         let error;
@@ -46,7 +53,7 @@ const dataMapper = {
         try {
             const response = await client.query(sqlQuery, values);
 
-            result = response.rows[0].insert_user;
+            result = response.rows[0];
 
             debug(result);
             if (!result) {
