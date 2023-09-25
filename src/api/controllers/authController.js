@@ -17,7 +17,6 @@ const authController = {
         const newUser = req.body;
 
         // Password hash
-        debug(newUser);
         newUser.hash = await bcrypt.hash(newUser.password, Number(process.env.SALT));
         delete newUser.password;
 
@@ -29,12 +28,10 @@ const authController = {
         }
         else {
             // Record in user's session
-            debug('session', req.session);
             req.session.user = result;
 
             const token = securityService.getToken(result);
 
-            debug('token', token);
             res.json({ token });
         }
     },
@@ -46,24 +43,21 @@ const authController = {
      */
     signIn: async (req, res, next) => {
         const { password, email } = req.body;
-        const { error, result } = await dataMapper.getUserByEmail({ email });
-
-        debug(email);
+        const { error, user } = await dataMapper.getUserByEmail({ email });
 
         if (error) {
             next(error);
         }
         else {
-            const isPasswordOk = await bcrypt.compare(password, result.hash);
+            const isPasswordOk = await bcrypt.compare(password, user.hash);
 
             if (isPasswordOk) {
                 // Record in user's session while delete password hash
-                delete result.hash;
-                req.session.user = result;
+                delete user.hash;
+                req.session.user = user;
 
-                const token = securityService.getToken(result);
+                const token = securityService.getToken(user);
 
-                debug('token', token);
                 res.json({ token });
             }
             else {
