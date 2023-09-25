@@ -7,8 +7,8 @@ const { authController } = require('../controllers');
 
 // Routes
 
-router.post('/login', authController.signIn);
-router.post('/signup', authController.signUp);
+router.post('/api/v1/login', authController.signIn);
+router.post('/api/v1/signup', authController.signUp);
 
 // 
 

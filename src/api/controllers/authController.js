@@ -2,7 +2,7 @@
 
 const dataMapper = require('../models/dataMapper');
 const bcrypt = require('bcrypt');
-const securityService = require('../services/securityService');
+const securityService = require('../services/security');
 const APIError = require('../services/APIError');
 const debug = require('debug')('controller');
 
@@ -73,4 +73,4 @@ const authController = {
     },
 };
 
-module.exports = { authController };
+module.exports = authController;
