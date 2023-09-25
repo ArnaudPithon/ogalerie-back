@@ -9,17 +9,28 @@
 
 ## Installation
 
+### Dépendances
+
+- Postgres
+- Node
+    - npm / pnpm / yarn
+    - pg
+    - Express
+- GNU/Make
+
 ### Mise en place de la base de données
 
 ```sh
 cd src/data &&
-make database &&
-make tables
+make
 ```
 
 ### Installation des modules Javascript
 
-    npm install
+```sh
+cd src &&
+npm install
+```
 
 ## Documentation
 
