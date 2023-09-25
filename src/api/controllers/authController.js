@@ -43,9 +43,9 @@ const authController = {
      * @param {*} next
      */
     signIn: async (req, res, next) => {
-        const { password, nickname } = req.body;
+        const { password, email } = req.body;
 
-        const { error, result } = await dataMapper.getUserByNickName({ nickname });
+        const { error, result } = await dataMapper.getUserByEmail({ email });
 
         if (error) {
             next(error);
