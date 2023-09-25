@@ -3,8 +3,7 @@ PG := /usr/bin/psql
 DB := ogalerie
 DEBUG :=  # -e
 
-#all: database tables functions populate
-all: database tables populate
+all: database tables functions populate
 
 drop_database:
 	dropdb $(DEBUG) -U postgres --if-exists $(DB)
