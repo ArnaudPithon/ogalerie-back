@@ -21,18 +21,17 @@ const authController = {
         delete newUser.password;
 
         // Add user to DB
-        const { error, result } = await dataMapper.signUp(newUser);
+        const { error, user } = await dataMapper.signUp(newUser);
 
         if (error) {
             next(error);
         }
         else {
             // Record in user's session
-            req.session.user = result;
+            req.session.user = user;
 
-            const token = securityService.getToken(result);
+            const token = securityService.getToken(user);
 
-            debug('token', token);
             res.json({ token });
         }
     },
@@ -44,23 +43,27 @@ const authController = {
      */
     signIn: async (req, res, next) => {
         const { password, email } = req.body;
-
-        const { error, result } = await dataMapper.getUserByEmail({ email });
+        const { error, user } = await dataMapper.getUserByEmail({ email });
 
         if (error) {
             next(error);
         }
         else {
-            const isPasswordOk = await bcrypt.compare(password, result.hash);
+            const isPasswordOk = await bcrypt.compare(password, user.hash);
 
             if (isPasswordOk) {
                 // Record in user's session while delete password hash
-                delete result.hash;
-                req.session.user = result;
+                delete user.hash;
+                req.session.user = user;
 
-                const token = securityService.getToken(result);
+                const token = securityService.getToken(user);
 
-                debug('token', token);
+                /*
+                 * Le token pourra être déchifré avec :
+                 * const jwt = require('jsonwebtoken');
+                 * debug(jwt.verify(token, process.env.JWT_SECRET));
+                 */
+
                 res.json({ token });
             }
             else {

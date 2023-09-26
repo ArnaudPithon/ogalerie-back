@@ -11,18 +11,23 @@ const dataMapper = {
      * @returns
      */
     async getUserByEmail(loginInformations) {
-        const sqlQuery = 'SELECT * FROM get_user_by_email($1)';
+        const sqlQuery = `
+        select * from get_user_by_email($1)
+        ;`;
+
         const values = [loginInformations];
-        let result;
+        let user;
         let error;
+
+        debug(sqlQuery, values);
 
         try {
             const response = await client.query(sqlQuery, values);
 
-            result = response.rows[0].get_user_by_email;
+            user = response.rows[0].get_user_by_email;
 
-            debug(result);
-            if (!result) {
+            debug(user);
+            if (!user) {
                 error = new APIError('Informations erronnées', 403);
             }
         }
@@ -30,26 +35,30 @@ const dataMapper = {
             error = new APIError(err.message, 500, err);
         }
 
-        return {error, result};
+        return {error, user};
     },
     /**
      * Ajout d'un utilisateur à la base de données
      * @param {object} user
      * @returns
      */
-    async signUp (user) {
-        const sqlQuery = 'SELECT * FROM insert_user($1)';
-        const values = [user];
-        let result;
+    async signUp (signInformations) {
+        const sqlQuery = `
+        select * from insert_user($1)
+        ;`;
+        const values = [signInformations];
+        let user;
         let error;
 
+        debug(values);
         try {
             const response = await client.query(sqlQuery, values);
 
-            result = response.rows[0].insert_user;
+            debug(response);
+            user = response.rows[0].insert_user;
 
-            debug(result);
-            if (!result) {
+            debug(user);
+            if (!user) {
                 error = new APIError('Informations erronnées', 403);
             }
         }
@@ -57,7 +66,7 @@ const dataMapper = {
             error = new APIError(err.message, 500, err);
         }
 
-        return {error, result};
+        return {error, user};
     },
 };
 

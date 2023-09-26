@@ -24,6 +24,7 @@ const securityService = {
             next(error);
         }
     },
+
     /**
      * Token generation
      * @param {*} user
@@ -32,6 +33,7 @@ const securityService = {
     getToken (user) {
         return jwt.sign(user, process.env.JWT_SECRET);
     },
+
     /**
      * Token validation
      * @param {*} user
