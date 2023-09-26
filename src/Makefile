@@ -8,4 +8,7 @@ start:
 test:
 	npm run test
 
-.PHONY: all start test
+tags:
+	ctags -R api/
+
+.PHONY: all start test tags

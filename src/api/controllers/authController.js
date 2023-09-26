@@ -45,7 +45,6 @@ const authController = {
         const { password, email } = req.body;
         const { error, user } = await dataMapper.getUserByEmail({ email });
 
-        debug(user);
         if (error) {
             next(error);
         }
@@ -58,6 +57,12 @@ const authController = {
                 req.session.user = user;
 
                 const token = securityService.getToken(user);
+
+                /*
+                 * Le token pourra être déchifré avec :
+                 * const jwt = require('jsonwebtoken');
+                 * debug(jwt.verify(token, process.env.JWT_SECRET));
+                 */
 
                 res.json({ token });
             }

@@ -6,9 +6,15 @@ const PORT = process.env.PORT || 3000;
 
 const express = require('express');
 const session = require('express-session');
+
+const cors = require('cors');
+
 const app = express();
 
+app.use(cors());
+
 const routers = require('./api/routers');
+
 
 app.use(express.urlencoded({ extended: true }));
 
