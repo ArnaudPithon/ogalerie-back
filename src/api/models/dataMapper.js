@@ -15,8 +15,8 @@ const dataMapper = {
         select * from get_user_by_email($1)
         ;`;
 
-        const values = [loginInformations.email];
-        let result;
+        const values = [loginInformations];
+        let user;
         let error;
 
         debug(sqlQuery, values);
@@ -24,10 +24,10 @@ const dataMapper = {
         try {
             const response = await client.query(sqlQuery, values);
 
-            result = response.rows[0];
+            user = response.rows[0].get_user_by_email;
 
-            debug(result);
-            if (!result) {
+            debug(user);
+            if (!user) {
                 error = new APIError('Informations erronnées', 403);
             }
         }
@@ -35,28 +35,30 @@ const dataMapper = {
             error = new APIError(err.message, 500, err);
         }
 
-        return {error, result};
+        return {error, user};
     },
     /**
      * Ajout d'un utilisateur à la base de données
      * @param {object} user
      * @returns
      */
-    async signUp (user) {
+    async signUp (signInformations) {
         const sqlQuery = `
         select * from insert_user($1)
         ;`;
-        const values = [user];
-        let result;
+        const values = [signInformations];
+        let user;
         let error;
 
+        debug(values);
         try {
             const response = await client.query(sqlQuery, values);
 
-            result = response.rows[0];
+            debug(response);
+            user = response.rows[0].insert_user;
 
-            debug(result);
-            if (!result) {
+            debug(user);
+            if (!user) {
                 error = new APIError('Informations erronnées', 403);
             }
         }
@@ -64,7 +66,7 @@ const dataMapper = {
             error = new APIError(err.message, 500, err);
         }
 
-        return {error, result};
+        return {error, user};
     },
 };
 

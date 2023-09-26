@@ -21,16 +21,16 @@ const authController = {
         delete newUser.password;
 
         // Add user to DB
-        const { error, result } = await dataMapper.signUp(newUser);
+        const { error, user } = await dataMapper.signUp(newUser);
 
         if (error) {
             next(error);
         }
         else {
             // Record in user's session
-            req.session.user = result;
+            req.session.user = user;
 
-            const token = securityService.getToken(result);
+            const token = securityService.getToken(user);
 
             res.json({ token });
         }
@@ -45,6 +45,7 @@ const authController = {
         const { password, email } = req.body;
         const { error, user } = await dataMapper.getUserByEmail({ email });
 
+        debug(user);
         if (error) {
             next(error);
         }
