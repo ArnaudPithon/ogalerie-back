@@ -18,18 +18,7 @@ const errorHandler = {
         // si je suis en dev, j'affiche l'erreur dans le terminal
         debug(err.error);
 
-        // j'informe l'utilisateur ou je le redirige vers une page spécifique
-        switch (err.code) {
-        case 401:
-            res.redirect('/401.html');
-            break;
-        case 404:
-            res.redirect('/404.html');
-            break;
-        default:
-            res.status(err.code).json({ error: err.message });
-            break;
-        }
+        res.status(err.code).json({ error: err.message });
     },
     /**
      * Méthode pour enregistrer les fichiers de logs

@@ -23,6 +23,17 @@ begin;
         where p.email = $1->>'email';
     $$ language sql strict security definer;
 
+    create function public.sign_in (json) returns json as
+    $$
+        select json_build_object(
+            'nickname', p.nickname,
+            'hash', p.hash,
+            'situation', p.situation
+        )
+        from public.person p
+        where p.email = $1->>'email';
+    $$ language sql strict security definer;
+
     -- Enregistre un nouvel utilisateur
     create function public.insert_user (new_user json) returns json as
     $$

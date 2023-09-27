@@ -19,8 +19,6 @@ const dataMapper = {
         let user;
         let error;
 
-        debug(sqlQuery, values);
-
         try {
             const response = await client.query(sqlQuery, values);
 
@@ -37,6 +35,37 @@ const dataMapper = {
 
         return {error, user};
     },
+
+    /**
+     * Récupération des infos de connection d'un utilisateur
+     * @param {object} loginInformations
+     * @returns
+     */
+    async signIn (loginInformations) {
+        const sqlQuery = `
+        select * from sign_in($1)
+        ;`;
+
+        const values = [loginInformations];
+        let user;
+        let error;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            user = response.rows[0].sign_in;
+
+            if (!user) {
+                error = new APIError('Informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return {error, user};
+    },
+
     /**
      * Ajout d'un utilisateur à la base de données
      * @param {object} user
@@ -50,11 +79,9 @@ const dataMapper = {
         let user;
         let error;
 
-        debug(values);
         try {
             const response = await client.query(sqlQuery, values);
 
-            debug(response);
             user = response.rows[0].insert_user;
 
             debug(user);
@@ -68,6 +95,7 @@ const dataMapper = {
 
         return {error, user};
     },
+
 };
 
 module.exports = dataMapper;

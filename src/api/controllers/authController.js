@@ -43,7 +43,7 @@ const authController = {
      */
     signIn: async (req, res, next) => {
         const { password, email } = req.body;
-        const { error, user } = await dataMapper.getUserByEmail({ email });
+        const { error, user } = await dataMapper.signIn({ email });
 
         if (error) {
             next(error);
@@ -64,7 +64,9 @@ const authController = {
                  * debug(jwt.verify(token, process.env.JWT_SECRET));
                  */
 
-                res.json({ token });
+                const response = { ...user, token, 'logged': true };
+
+                res.json(response);
             }
             else {
                 // Mot de passe incorrect

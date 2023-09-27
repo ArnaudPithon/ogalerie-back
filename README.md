@@ -18,19 +18,21 @@
     - Express
 - GNU/Make
 
-### Mise en place de la base de données
+### Préparatifs
 
 ```sh
-cd src/data &&
-make
-```
+# Création du répertoire d'écriture des logs
+mkdir log &&
 
-### Installation des modules Javascript
-
-```sh
+# Installation de l'environement NodeJS
 cd src &&
 npm install
+
+# Mise en place de la base de données
+make -C data
 ```
+
+Penser à créer le fichier _.env_ d'après le modèle fournit !
 
 ## Documentation
 

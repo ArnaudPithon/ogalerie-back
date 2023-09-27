@@ -3,7 +3,10 @@ DEBUG:=controller,datamapper
 all: start
 
 start:
-	DEBUG=${DEBUG} npm run start
+	npm run start
+
+dev:
+	npm run dev
 
 test:
 	npm run test
