@@ -96,6 +96,33 @@ const dataMapper = {
         return {error, user};
     },
 
+    /**
+     * Récupère la liste des artistes / créateurs
+     */
+    async getCreators () {
+        const sqlQuery = `
+        select * from get_creators()
+        ;`;
+        let error;
+        let creators;
+
+        try {
+            const response = await client.query(sqlQuery);
+
+            creators = response.rows.map(e => {
+                return e.get_creators;
+            });
+
+            debug(creators);
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, creators };
+
+    },
+
 };
 
 module.exports = dataMapper;

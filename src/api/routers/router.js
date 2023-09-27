@@ -1,7 +1,7 @@
 'use strict';
 
 const router = require('express').Router();
-const { authController } = require('../controllers');
+const { authController, userController } = require('../controllers');
 const validationService = require('../services/validation');
 
 /**
@@ -17,5 +17,9 @@ router.post('/login', validationService.checkLoginData, authController.signIn);
  * @returns {User} 200 - A newly registered user
  */
 router.post('/signup', validationService.checkSignUpData, authController.signUp);
+router.post('/users', validationService.checkSignUpData, authController.signUp);
+
+router.get('/users', userController.creators);
+
 
 module.exports = router;
