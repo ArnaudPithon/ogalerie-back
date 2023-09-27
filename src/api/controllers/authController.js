@@ -16,6 +16,8 @@ const authController = {
     signUp: async (req, res, next) => {
         const newUser = req.body;
 
+        debug('body', req.body);
+
         // Password hash
         newUser.hash = await bcrypt.hash(newUser.password, Number(process.env.SALT));
         delete newUser.password;
