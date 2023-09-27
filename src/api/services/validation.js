@@ -9,9 +9,9 @@ const schemaUserInput = Joi.object({
     email:Joi.string().email().required(),
     nickname:Joi.string().pattern(/^[\p{L}\p{M}_-]+$/um).required(),
     password:Joi.string().pattern(/^[ -~]{8,32}$/).required(),    // tous les caractères imprimables
-    confirmation:Joi.string().pattern(/^[ -~]{8,32}$/).required(),    // tous les caractères imprimables
+    //confirmation:Joi.string().pattern(/^[ -~]{8,32}$/).required(),    // tous les caractères imprimables
     situation:Joi.string().pattern(/^(?:user|creator|admin)?$/).required(),
-    hash:Joi.string().pattern(/^(?:\$2b\$10\$){1}[a-zA-Z0-9./]*$/).required(),
+    //hash:Joi.string().pattern(/^(?:\$2b\$10\$){1}[a-zA-Z0-9./]*$/).required(),
     birthday:Joi.string().pattern(/^\d{4}(?:-\d{2}){2}$/).required(),
     firstname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
     lastname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
