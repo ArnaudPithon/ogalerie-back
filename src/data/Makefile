@@ -1,5 +1,5 @@
 SHELL := /usr/bin/env sh
-PG := /usr/bin/psql
+PG := /usr/bin/env psql
 DB := ogalerie
 DEBUG :=  # -e
 
