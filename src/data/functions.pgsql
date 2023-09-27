@@ -1,8 +1,10 @@
+-- vim: foldmethod=syntax
 set role ogalerie_admin;
 begin;
 
-    drop function if exists get_user_by_email;
-    drop function if exists insert_user;
+    drop function if exists public.get_user_by_email;
+    drop function if exists public.insert_user;
+    drop function if exists public.sign_in;
 
     -- Retourne les infos d'un visiteur identifié par son email
     create function public.get_user_by_email (json) returns json as
@@ -66,7 +68,6 @@ begin;
         'lastname', p.lastname,
         'nickname', p.nickname,
         'email', p.email,
-        'hash', p.hash,
         'birthday', p.birthday,
         'town', p.town,
         'country', p.country,
@@ -76,4 +77,4 @@ begin;
     $$ language sql security definer;
 
     commit;
-    reset role;
+reset role;
