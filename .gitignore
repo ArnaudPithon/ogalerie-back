@@ -1,4 +1,4 @@
 .env
 .pgpass
-log/
+log/*.log
 tags
