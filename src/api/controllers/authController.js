@@ -16,9 +16,13 @@ const authController = {
     signUp: async (req, res, next) => {
         const newUser = req.body;
 
+        debug('body', req.body);
+
         // Password hash
         newUser.hash = await bcrypt.hash(newUser.password, Number(process.env.SALT));
-        delete newUser.password;
+        delete req.body.password;
+
+        debug('body', req.body);
 
         // Add user to DB
         const { error, user } = await dataMapper.signUp(newUser);
@@ -27,12 +31,10 @@ const authController = {
             next(error);
         }
         else {
-            // Record in user's session
-            req.session.user = user;
-
             const token = securityService.getToken(user);
+            const response = { ...user, token, 'logged': true };
 
-            res.json({ token });
+            res.json(response);
         }
     },
     /**
@@ -54,7 +56,6 @@ const authController = {
             if (isPasswordOk) {
                 // Record in user's session while delete password hash
                 delete user.hash;
-                req.session.user = user;
 
                 const token = securityService.getToken(user);
 
