@@ -76,5 +76,19 @@ begin;
     );
     $$ language sql security definer;
 
+    -- Fournit la liste des utilisateurs creator
+    drop function if exists get_creators;
+
+    create function get_creators() returns setof json as
+    $$
+        select json_build_object(
+            'firstname', p.firstname,
+            'lastname', p.lastname,
+            'nickname', p.nickname
+        )
+        from public.person p
+        where p.situation = 'creator';
+    $$ language sql security definer;
+
     commit;
 reset role;
