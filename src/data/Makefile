@@ -1,4 +1,4 @@
-SHELL := /usr/bin/sh
+SHELL := /usr/bin/env sh
 PG := /usr/bin/psql
 DB := ogalerie
 DEBUG :=  # -e
