@@ -20,12 +20,12 @@ database: drop_database users
 	sudo -u postgres createdb $(DEBUG) -U postgres -O $(DB)_admin $(DB)
 
 tables: create_tables.pgsql
-	$(PG) -U $(DB)_api -d $(DB) -f $<
+	$(PG) -W -U $(DB)_api -d $(DB) -f $<
 
 functions: functions.pgsql
-	$(PG) -U $(DB)_api -d $(DB) -f $<
+	$(PG) -W -U $(DB)_api -d $(DB) -f $<
 
 populate: seeding.pgsql
-	$(PG) -U $(DB)_api -d $(DB) -f $<
+	$(PG) -W -U $(DB)_api -d $(DB) -f $<
 
 .PHONY: all drop_users drop_database users database tables functions populate
