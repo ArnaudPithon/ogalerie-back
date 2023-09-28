@@ -112,6 +112,18 @@ const usersController = {
             res.json(user);
         }
     },
+
+    update: async (req, res, next) => {
+        const { id } = req.params;
+        const { error, user } = await dataMapper.updateUser({ id, ...req.body });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(user);
+        }
+    },
 };
 
 module.exports = usersController;

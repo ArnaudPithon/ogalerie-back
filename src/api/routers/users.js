@@ -23,8 +23,10 @@ router.get('/', usersController.creators);
 
 /**
  * GET /v1/users/:id
- * @summary Respond with list of registered creators
+ * @summary Respond with an user
  */
 router.get('/:id(\\d+)', securityService.isConnected, usersController.getUserById);
+
+router.patch('/:id(\\d+)', securityService.isConnected, usersController.update);
 
 module.exports = router;

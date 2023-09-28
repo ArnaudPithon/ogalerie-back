@@ -3,8 +3,10 @@ set role ogalerie_admin;
 begin;
 
     drop function if exists public.get_user_by_email;
+    drop function if exists public.get_user_by_id;
     drop function if exists public.insert_user;
     drop function if exists public.sign_in;
+    drop function if exists public.update_person;
 
     -- Retourne les infos d'un visiteur identifié par son email
     create function public.get_user_by_email (json) returns json as
@@ -103,6 +105,72 @@ begin;
         from public.person p
         where p.situation = 'creator';
     $$ language sql security definer;
+
+    -- Met à jour les infos d'un utilisateur
+    create function update_person(p json) returns public.person as
+    $$
+    declare
+        person_db public.person;
+    begin
+        -- On récupère l'utilisateur en BDD et le stocke dans person_db
+        select * into person_db
+        from public.person where id = (p->>'id')::int;
+
+        -- On met à jour ce qui doit l'être
+        if p->>'firstname' is not null
+        then
+            person_db.firstname = p->>'firstname';
+        end if;
+        if p->>'lastname' is not null
+        then
+            person_db.lastname = p->>'lastname';
+        end if;
+        if p->>'nickname' is not null
+        then
+            person_db.nickname = p->>'nickname';
+        end if;
+        if p->>'email' is not null
+        then
+            person_db.email = p->>'email';
+        end if;
+        if p->>'birthday' is not null
+        then
+            person_db.birthday = (p->>'birthday')::date;
+        end if;
+        if p->>'town' is not null
+        then
+            person_db.town = p->>'town';
+        end if;
+        if p->>'country' is not null
+        then
+            person_db.country = p->>'country';
+        end if;
+        if p->>'avatar' is not null
+        then
+            person_db.avatar = p->>'avatar';
+        end if;
+
+        person_db.updated_at = now();
+
+        -- Réintroduit les infos de person_db dans la BDD
+        update public.person
+        set
+            firstname = person_db.firstname,
+            lastname = person_db.lastname,
+            nickname = person_db.nickname,
+            email = person_db.email,
+            birthday = person_db.birthday,
+            town = person_db.town,
+            country = person_db.country,
+            avatar = person_db.avatar,
+            updated_at = person_db.updated_at
+        where id = (p->>'id')::int;
+
+        -- Retourne les valeurs actualisées.
+        return person_db;
+        -- TODO : Je préfèrerai ne pas renvoyer le hash
+    end;
+    $$ language plpgsql security definer;
 
     commit;
 reset role;
