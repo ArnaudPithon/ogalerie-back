@@ -1,3 +1,4 @@
+// vim: foldmethod=syntax:foldlevel=1
 'use strict';
 
 const dataMapper = require('../models/dataMapper');
@@ -6,7 +7,7 @@ const securityService = require('../services/security');
 const APIError = require('../services/APIError');
 const debug = require('debug')('controller');
 
-const authController = {
+const usersController = {
     /**
      * Add a user in DB
      * @param {*} req
@@ -77,6 +78,16 @@ const authController = {
             }
         }
     },
+    creators: async (req, res, next) => {
+        const { error, creators } = await dataMapper.getCreators();
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(creators);
+        }
+    },
 };
 
-module.exports = authController;
+module.exports = usersController;

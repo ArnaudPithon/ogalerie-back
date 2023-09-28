@@ -1,25 +1,25 @@
 'use strict';
 
-const router = require('express').Router();
-const { authController, userController } = require('../controllers');
+const mainRouter = require('express').Router();
+const { usersController } = require('../controllers');
+
 const validationService = require('../services/validation');
+
+//const artworksRouter = require('./artworks');
+//const collectionsRouter = require('./collections');
+//const tagsRouter = require('./tags');
+const usersRouter = require('./users');
+
+//mainRouter.use('/artworks', artworksRouter);
+//mainRouter.use('/collections', collectionsRouter);
+//mainRouter.use('/tags', tagsRouter);
+mainRouter.use('/users', usersRouter);
 
 /**
  * Respond with a user identified by its email
  * @route POST /login
  * @returns {User} 200 - An identified user
  */
-router.post('/login', validationService.checkLoginData, authController.signIn);
+mainRouter.post('/login', validationService.checkLoginData, usersController.signIn);
 
-/**
- * Respond with a newly registered user
- * @route PUT /signUp
- * @returns {User} 200 - A newly registered user
- */
-router.post('/signup', validationService.checkSignUpData, authController.signUp);
-router.post('/users', validationService.checkSignUpData, authController.signUp);
-
-router.get('/users', userController.creators);
-
-
-module.exports = router;
+module.exports = mainRouter;
