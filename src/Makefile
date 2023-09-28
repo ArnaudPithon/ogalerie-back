@@ -1,17 +1,20 @@
-DEBUG:=controller,datamapper
+NPM := /usr/bin/env pnpm
 
-all: start
+all: build
 
 start:
-	npm run start
+	$(NPM) run start
 
 dev:
-	npm run dev
+	$(NPM) run dev
 
 test:
-	npm run test
+	$(NPM) run test
+
+build:
+	$(NPM) install
 
 tags:
 	ctags -R api/
 
-.PHONY: all start test tags
+.PHONY: all start dev test build tags
