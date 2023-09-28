@@ -10,11 +10,11 @@ begin;
     create function public.get_user_by_email (json) returns json as
     $$
         select json_build_object(
+            'id', p.id,
             'firstname', p.firstname,
             'lastname', p.lastname,
             'nickname', p.nickname,
             'email', p.email,
-            'hash', p.hash,
             'birthday', p.birthday,
             'town', p.town,
             'country', p.country,
@@ -25,9 +25,29 @@ begin;
         where p.email = $1->>'email';
     $$ language sql strict security definer;
 
+    -- Retourne les infos d'un visiteur identifié par son id
+    create function public.get_user_by_id (u_id int) returns json as
+    $$
+        select json_build_object(
+            'id', p.id,
+            'firstname', p.firstname,
+            'lastname', p.lastname,
+            'nickname', p.nickname,
+            'email', p.email,
+            'birthday', p.birthday,
+            'town', p.town,
+            'country', p.country,
+            'avatar', p.avatar,
+            'situation', p.situation
+        )
+        from public.person p
+        where p.id = u_id;
+    $$ language sql strict security definer;
+
     create function public.sign_in (json) returns json as
     $$
         select json_build_object(
+            'id', p.id,
             'nickname', p.nickname,
             'hash', p.hash,
             'situation', p.situation
@@ -75,6 +95,7 @@ begin;
     create function get_creators() returns setof json as
     $$
         select json_build_object(
+            'id', p.id,
             'firstname', p.firstname,
             'lastname', p.lastname,
             'nickname', p.nickname

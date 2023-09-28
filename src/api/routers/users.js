@@ -20,5 +20,10 @@ router.post('/', validationService.checkSignUpData, usersController.signUp);
  */
 router.get('/', usersController.creators);
 
+/**
+ * GET /v1/users/:id
+ * @summary Respond with list of registered creators
+ */
+router.get('/:id(\\d+)', usersController.getUserById);
 
 module.exports = router;
