@@ -7,7 +7,7 @@ const debug = require('debug')('service:validation');
 // Schéma des données attendues au formulaire d'inscription
 const schemaUserInput = Joi.object({
     email:Joi.string().email().required(),
-    nickname:Joi.string().pattern(/^[\p{L}\p{M}_-]+$/um).required(),
+    nickname:Joi.string().pattern(/^[\p{L}\p{M}_-]+\d*$/um).required(),
     password:Joi.string().pattern(/^[ -~]{8,32}$/).required(),    // tous les caractères imprimables
     //confirmation:Joi.string().pattern(/^[ -~]{8,32}$/).required(),    // tous les caractères imprimables
     situation:Joi.string().pattern(/^(?:user|creator|admin)?$/).required(),
