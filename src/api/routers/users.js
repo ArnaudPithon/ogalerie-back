@@ -5,6 +5,7 @@
 const router = require('express').Router();
 const { usersController } = require('../controllers');
 const validationService = require('../services/validation');
+const securityService = require('../services/security.js');
 
 /**
  * POST /v1/users
@@ -24,6 +25,6 @@ router.get('/', usersController.creators);
  * GET /v1/users/:id
  * @summary Respond with list of registered creators
  */
-router.get('/:id(\\d+)', usersController.getUserById);
+router.get('/:id(\\d+)', securityService.isConnected, usersController.getUserById);
 
 module.exports = router;

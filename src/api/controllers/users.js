@@ -1,4 +1,4 @@
-// vim: foldmethod=syntax:foldlevel=1
+// vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
 const dataMapper = require('../models/dataMapper');
@@ -35,6 +35,12 @@ const usersController = {
             const token = securityService.getToken(user);
             const response = { ...user, token, 'logged': true };
 
+            // Enregistre l'user comme connecté avec son token.
+            if (!req.session.users) {
+                req.session.users = {};
+            }
+            req.session.users[user.id] = token;
+
             res.json(response);
         }
     },
@@ -55,7 +61,6 @@ const usersController = {
             const isPasswordOk = await bcrypt.compare(password, user.hash);
 
             if (isPasswordOk) {
-                // Record in user's session while delete password hash
                 delete user.hash;
 
                 const token = securityService.getToken(user);
@@ -67,6 +72,13 @@ const usersController = {
                  */
 
                 const response = { ...user, token, 'logged': true };
+
+                // Enregistre l'user comme connecté avec son token.
+                if (!req.session.users) {
+                    req.session.users = {};
+                }
+                req.session.users[user.id] = token;
+                debug(req.session.users);
 
                 res.json(response);
             }

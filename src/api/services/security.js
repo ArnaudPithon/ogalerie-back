@@ -6,16 +6,23 @@ const debug = require('debug')('service:security');
 
 const securityService = {
     /**
-     * Vérification d'une session active
+     * @summary Vérification d'une session active
      * @param {*} req
      * @param {*} res
      * @param {*} next
      */
     isConnected (req, res, next) {
+        // Utilisée sur une route dynamique avec un id d'utilisateur en paramètre
         debug(req.url);
-        debug(req.session.user);
+        debug(req.session.users);
 
-        if (req.session.user) {
+        const { id } = req.params;
+        // TODO Manque la vérification du token
+
+        if (!req.session.users) {
+            req.session.users = {};
+        }
+        if (req.session.users[id]) {
             next();
         }
         else {
