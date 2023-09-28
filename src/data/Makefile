@@ -6,18 +6,18 @@ DEBUG :=  # -e
 all: database tables functions populate
 
 drop_database:
-	dropdb $(DEBUG) -U postgres --if-exists $(DB)
+	sudo -u postgres dropdb $(DEBUG) -U postgres --if-exists $(DB)
 
 drop_users: drop_database
-	dropuser $(DEBUG) -U postgres --if-exists $(DB)_admin
-	dropuser $(DEBUG) -U postgres --if-exists $(DB)_api
+	sudo -u postgres dropuser $(DEBUG) -U postgres --if-exists $(DB)_admin
+	sudo -u postgres dropuser $(DEBUG) -U postgres --if-exists $(DB)_api
 
 users: drop_users
-	createuser $(DEBUG) -U postgres --no-login $(DB)_admin
-	createuser $(DEBUG) -U postgres --login --pwprompt -g $(DB)_admin --no-inherit $(DB)_api
+	sudo -u postgres createuser $(DEBUG) -U postgres --no-login $(DB)_admin
+	sudo -u postgres createuser $(DEBUG) -U postgres --login --pwprompt -g $(DB)_admin --no-inherit $(DB)_api
 
 database: drop_database users
-	createdb $(DEBUG) -U postgres -O $(DB)_admin $(DB)
+	sudo -u postgres createdb $(DEBUG) -U postgres -O $(DB)_admin $(DB)
 
 tables: create_tables.pgsql
 	$(PG) -U $(DB)_api -d $(DB) -f $<
