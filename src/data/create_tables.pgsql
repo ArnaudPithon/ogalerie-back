@@ -1,5 +1,12 @@
+-- vim: foldmethod=syntax
 begin;
     set role ogalerie_admin;
+
+    -- On fait place nette avant de créer les tables
+
+    drop table if exists
+    tag, mark, artwork, art_comment, collection, moderate, appraise, favorite, person
+    ;
 
     -- Contraintes / Types custom
 
@@ -13,34 +20,27 @@ begin;
         'portrait', 'figuratif', 'paysage', 'abstrait',
         'autre'
     );
-
     create type category as enum ('type', 'support', 'style');
     create type ticket as enum ('alert', 'hide');
     create type situation as enum ('user', 'creator', 'admin');
 
-    -- On fait place nette avant de créer les tables
-
-    drop table if exists
-    tag, mark, artwork, art_comment, collection, moderate, appraise, favorite, person
-    ;
-
     -- Création des tables
 
+    -- Possibilité d'ajouter une contrainte d'unicité sur la paire name/category ?
     create table tag (
         id int generated always as identity primary key,
-        name sticker unique not null,
-        category category unique not null
+        name sticker not null,
+        category category not null
     );
-
 
     create table person (
         id int generated always as identity primary key,
-        firstname text not null,
-        lastname text not null,
+        firstname text,
+        lastname text,
         nickname text unique not null,
         email text unique not null,
         hash text not null,
-        birthday timestamptz not null,
+        birthday date not null,
         town text,
         country text,
         avatar text,
@@ -62,7 +62,7 @@ begin;
         id int generated always as identity primary key,
         title text not null,
         uri text unique not null,
-        date timestamptz,
+        date date,
         description text not null,
         mature boolean,
         collection_id int references collection(id),

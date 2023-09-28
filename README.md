@@ -1,4 +1,4 @@
-# O'Gallerie Back
+# O'Gallerie API
 
 ## Technologies utilisées
 
@@ -9,16 +9,40 @@
 
 ## Installation
 
-### Mise en place de la base de données
+### Dépendances
+
+- Postgres
+- Node
+    - pnpm / npm / yarn
+    - pg
+    - Express
+    - joi
+    - bcrypt
+- GNU/Make
+
+Le Makefile utilise __pnpm__ comme gestionnaire de
+package. Si vous voulez utiliser une alternative,
+il faudra taper vous même les commandes dans le
+répertoire _src/_.
+
+### Utilisation
 
 ```sh
-make database &&
-make tables
+# Installation de l'environement NodeJS
+make build
+
+# Mise en place de la base de données
+make database
+
+# Lancer le serveur en mode verbeux
+make dev
 ```
 
-### Installation des modules Javascript
+Si vous souhaitez vous contenter de mettre à jour les
+fonctions SQL, parceque vous avez déjà un système
+fonctionnel, un appel à `make functions` fera l'affaire.
 
-    npm install
+Pensez à créer le fichier _.env_ d'après le modèle fournit !
 
 ## Documentation
 
