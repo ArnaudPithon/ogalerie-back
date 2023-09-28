@@ -1,4 +1,4 @@
-# O'Gallerie Back
+# O'Gallerie API
 
 ## Technologies utilisées
 
@@ -13,24 +13,32 @@
 
 - Postgres
 - Node
-    - npm / pnpm / yarn
+    - pnpm / npm / yarn
     - pg
     - Express
 - GNU/Make
 
+Le Makefile utilise __pnpm__ comme gestionnaire de
+package. Si vous voulez utiliser une alternative,
+il faudra taper vous même les commandes dans le
+répertoire _src/_.
+
 ### Préparatifs
 
 ```sh
-# Création du répertoire d'écriture des logs
-mkdir log &&
-
 # Installation de l'environement NodeJS
-cd src &&
-npm install
+make build
 
 # Mise en place de la base de données
-make -C data
+make database
+
+# Lancer le serveur en mode verbeux
+make dev
 ```
+
+Si vous souhaitez vous contenter de mettre à jour les
+fonctions SQL, parceque vous avez déjà un système
+fonctionnel, un appel à `make functions` fera l'affaire.
 
 Penser à créer le fichier _.env_ d'après le modèle fournit !
 
