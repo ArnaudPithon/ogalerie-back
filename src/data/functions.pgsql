@@ -64,14 +64,7 @@ begin;
         new_user->>'avatar',
         (new_user->>'situation')::situation
     returning json_build_object(
-        'firstname', p.firstname,
-        'lastname', p.lastname,
         'nickname', p.nickname,
-        'email', p.email,
-        'birthday', p.birthday,
-        'town', p.town,
-        'country', p.country,
-        'avatar', p.avatar,
         'situation', p.situation
     );
     $$ language sql security definer;
