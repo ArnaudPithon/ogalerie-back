@@ -13,7 +13,9 @@ const securityService = require('../services/security.js');
  * @route PUT /signUp
  * @returns {User} 200 - A newly registered user
  */
-router.post('/', validationService.checkSignUpData, usersController.signUp);
+router.post('/',
+    validationService.checkSignUpData,
+    usersController.signUp);
 
 /**
  * GET /v1/users
@@ -25,8 +27,17 @@ router.get('/', usersController.creators);
  * GET /v1/users/:id
  * @summary Respond with an user
  */
-router.get('/:id(\\d+)', securityService.isConnected, usersController.getUserById);
+router.get('/:id(\\d+)',
+    securityService.isConnected,
+    usersController.getUserById);
 
-router.patch('/:id(\\d+)', securityService.isConnected, usersController.update);
+/**
+ * PATCH /v1/users/:id
+ * @summary Modify an user profil
+ */
+router.patch('/:id(\\d+)',
+    securityService.isConnected,
+    validationService.checkUpdateData,
+    usersController.update);
 
 module.exports = router;

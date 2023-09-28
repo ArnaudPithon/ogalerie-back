@@ -129,10 +129,6 @@ begin;
         then
             person_db.nickname = p->>'nickname';
         end if;
-        if p->>'email' is not null
-        then
-            person_db.email = p->>'email';
-        end if;
         if p->>'birthday' is not null
         then
             person_db.birthday = (p->>'birthday')::date;
@@ -158,7 +154,6 @@ begin;
             firstname = person_db.firstname,
             lastname = person_db.lastname,
             nickname = person_db.nickname,
-            email = person_db.email,
             birthday = person_db.birthday,
             town = person_db.town,
             country = person_db.country,
