@@ -88,6 +88,18 @@ const usersController = {
             res.json(creators);
         }
     },
+
+    getUserById: async (req, res, next) => {
+        const { id } = req.params;
+        const { error, user } = await dataMapper.getUserById(id);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(user);
+        }
+    },
 };
 
 module.exports = usersController;
