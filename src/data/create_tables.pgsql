@@ -2,6 +2,12 @@
 begin;
     set role ogalerie_admin;
 
+    -- On fait place nette avant de créer les tables
+
+    drop table if exists
+    tag, mark, artwork, art_comment, collection, moderate, appraise, favorite, person
+    ;
+
     -- Contraintes / Types custom
 
     drop type if exists
@@ -17,12 +23,6 @@ begin;
     create type category as enum ('type', 'support', 'style');
     create type ticket as enum ('alert', 'hide');
     create type situation as enum ('user', 'creator', 'admin');
-
-    -- On fait place nette avant de créer les tables
-
-    drop table if exists
-    tag, mark, artwork, art_comment, collection, moderate, appraise, favorite, person
-    ;
 
     -- Création des tables
 
