@@ -25,10 +25,10 @@ const errorHandler = {
      * @param {*} err
      */
     async log(err) {
+        debug(err);
+
         const fileName = `${err.date.toISOString().slice(0, 10)}.log`;
         const path = join(__dirname, `../../../log/${fileName}`);
-
-        debug(path);
 
         /*
          * Nous allons logguer le moment où est

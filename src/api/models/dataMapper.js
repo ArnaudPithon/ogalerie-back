@@ -147,6 +147,35 @@ const dataMapper = {
         return {error, user};
     },
 
+    async updateUser (newInfos) {
+        const sqlQuery = `
+        select * from update_person($1)
+        ;`;
+        const values = [newInfos];
+        let error;
+        let user;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            user = response.rows[0];
+
+            // TODO: ce serait mieux de ne pas le remonter
+            // alors autant ne pas le faire suivre.
+            delete user.hash;
+
+            debug(user);
+            if (!user) {
+                error = new APIError('Informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return {error, user};
+    },
+
 };
 
 module.exports = dataMapper;

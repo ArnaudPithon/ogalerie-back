@@ -5,6 +5,7 @@
 const router = require('express').Router();
 const { usersController } = require('../controllers');
 const validationService = require('../services/validation');
+const securityService = require('../services/security.js');
 
 /**
  * POST /v1/users
@@ -12,7 +13,9 @@ const validationService = require('../services/validation');
  * @route PUT /signUp
  * @returns {User} 200 - A newly registered user
  */
-router.post('/', validationService.checkSignUpData, usersController.signUp);
+router.post('/',
+    validationService.checkSignUpData,
+    usersController.signUp);
 
 /**
  * GET /v1/users
@@ -22,8 +25,19 @@ router.get('/', usersController.creators);
 
 /**
  * GET /v1/users/:id
- * @summary Respond with list of registered creators
+ * @summary Respond with an user
  */
-router.get('/:id(\\d+)', usersController.getUserById);
+router.get('/:id(\\d+)',
+    securityService.isConnected,
+    usersController.getUserById);
+
+/**
+ * PATCH /v1/users/:id
+ * @summary Modify an user profil
+ */
+router.patch('/:id(\\d+)',
+    securityService.isConnected,
+    validationService.checkUpdateData,
+    usersController.update);
 
 module.exports = router;

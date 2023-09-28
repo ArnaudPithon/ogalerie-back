@@ -9,12 +9,21 @@ const schemaUserInput = Joi.object({
     email:Joi.string().email().required(),
     nickname:Joi.string().pattern(/^[\d\p{L}\p{M}_-]{3,24}$/um).required(),
     password:Joi.string().pattern(/^[ -~]{8,32}$/).required(),    // tous les caractères imprimables
-    //confirmation:Joi.string().pattern(/^[ -~]{8,32}$/).required(),    // tous les caractères imprimables
     situation:Joi.string().pattern(/^(?:user|creator|admin)?$/).required(),
-    //hash:Joi.string().pattern(/^(?:\$2b\$10\$){1}[a-zA-Z0-9./]*$/).required(),
     birthday:Joi.string().pattern(/^\d{4}(?:-\d{2}){2}$/).required(),
     firstname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
     lastname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
+    town:Joi.string().pattern(/[a-zA-Z-]{2,24}$/),
+    country:Joi.string().pattern(/[a-zA-Z-]{2,32}$/),
+    avatar:Joi.string(),
+}).required();
+
+// Schéma des données attendues à la modification d'un profil
+const schemaUserPatch = Joi.object({
+    firstname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
+    lastname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
+    nickname:Joi.string().pattern(/^[\d\p{L}\p{M}_-]{3,24}$/um),
+    birthday:Joi.string().pattern(/^\d{4}(?:-\d{2}){2}$/),
     town:Joi.string().pattern(/[a-zA-Z-]{2,24}$/),
     country:Joi.string().pattern(/[a-zA-Z-]{2,32}$/),
     avatar:Joi.string(),
@@ -36,9 +45,6 @@ const schemaUserLogin = Joi.object({
 function checkSignUpData (req, res, next) {
     const { error } = schemaUserInput.validate(req.body);
 
-    debug('req.body', req.body);
-    debug('signin error', error);
-
     if(!error){
         next();
     }
@@ -58,8 +64,18 @@ function checkSignUpData (req, res, next) {
 function checkLoginData (req, res, next) {
     const { error } = schemaUserLogin.validate(req.body);
 
-    debug('req.body', req.body);
-    debug('signin error', error);
+    if(!error){
+        next();
+    }
+    else{
+        const err = new APIError('La syntaxe de la requête est erronée.', 400, error);
+
+        next(err);
+    }
+}
+
+function checkUpdateData (req, res, next) {
+    const { error } = schemaUserPatch.validate(req.body);
 
     if(!error){
         next();
@@ -71,4 +87,4 @@ function checkLoginData (req, res, next) {
     }
 }
 
-module.exports = {checkSignUpData, checkLoginData};
+module.exports = { checkSignUpData, checkLoginData, checkUpdateData };
