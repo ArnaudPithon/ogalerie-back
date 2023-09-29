@@ -1,7 +1,7 @@
 // vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
-const dataMapper = require('../models/dataMapper');
+const dataMapper = require('../models/users');
 const bcrypt = require('bcrypt');
 const securityService = require('../services/security');
 const APIError = require('../services/APIError');
@@ -117,7 +117,7 @@ const usersController = {
 
     update: async (req, res, next) => {
         const { id } = req.params;
-        const { error, user } = await dataMapper.updateUser({ id, ...req.body });
+        const { error, user } = await dataMapper.update({ id, ...req.body });
 
         if (error) {
             next(error);

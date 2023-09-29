@@ -148,7 +148,7 @@ const dataMapper = {
         return {error, user};
     },
 
-    async updateUser (newInfos) {
+    async update (newInfos) {
         const sqlQuery = `
         select * from update_person($1)
         ;`;
