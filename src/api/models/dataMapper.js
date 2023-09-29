@@ -97,29 +97,30 @@ const dataMapper = {
     },
 
     /**
-     * Récupère la liste des artistes / créateurs
+     * Récupère la liste des utilisateurs en fonction de leur rôle
      */
-    async getCreators () {
+    async getUsers (role) {
         const sqlQuery = `
-        select * from get_creators()
+        select * from get_users($1)
         ;`;
+        const values = [role];
         let error;
-        let creators;
+        let users;
 
         try {
-            const response = await client.query(sqlQuery);
+            const response = await client.query(sqlQuery, values);
 
-            creators = response.rows.map(e => {
-                return e.get_creators;
+            users = response.rows.map(e => {
+                return e.get_users;
             });
 
-            debug(creators);
+            debug(users);
         }
         catch (err) {
             error = new APIError(err.message, 500, err);
         }
 
-        return { error, creators };
+        return { error, users };
     },
 
     async getUserById (id) {
@@ -176,6 +177,30 @@ const dataMapper = {
         return {error, user};
     },
 
+    async delete (id) {
+        const sqlQuery = `
+        select * from delete_person($1)
+        ;`;
+        const values = [id];
+        let error;
+        let result;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows[0].delete_person;
+
+            debug(result);
+            if (!result) {
+                error = new APIError('Informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return {error, result};
+    },
 };
 
 module.exports = dataMapper;

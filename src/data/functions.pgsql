@@ -58,6 +58,16 @@ begin;
         where p.email = $1->>'email';
     $$ language sql strict security definer;
 
+    -- Retire un utilisateur
+    drop function if exists public.delete_person;
+    create function public.delete_person (json) returns json as
+    $$
+        delete from public.person p
+        where p.id = ($1->>'id')::int
+        returning $1
+        ;
+    $$ language sql strict security definer;
+
     -- Enregistre un nouvel utilisateur
     create function public.insert_user (new_user json) returns json as
     $$
@@ -86,15 +96,15 @@ begin;
         new_user->>'avatar',
         (new_user->>'situation')::situation
     returning json_build_object(
+        'id', p.id,
         'nickname', p.nickname,
         'situation', p.situation
     );
     $$ language sql security definer;
 
-    -- Fournit la liste des utilisateurs creator
-    drop function if exists get_creators;
-
-    create function get_creators() returns setof json as
+    -- Fournit la liste des utilisateurs en fonction de leur situation
+    drop function if exists get_users;
+    create function get_users(s situation) returns setof json as
     $$
         select json_build_object(
             'id', p.id,
@@ -103,7 +113,7 @@ begin;
             'nickname', p.nickname
         )
         from public.person p
-        where p.situation = 'creator';
+        where p.situation = s ;
     $$ language sql security definer;
 
     -- Met à jour les infos d'un utilisateur

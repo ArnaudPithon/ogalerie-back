@@ -19,9 +19,9 @@ router.post('/',
 
 /**
  * GET /v1/users
- * @summary Respond with list of registered creators
+ * @summary Respond with list of registered users
  */
-router.get('/', usersController.creators);
+router.get('/:role((?:creator|admin)?)', usersController.users);
 
 /**
  * GET /v1/users/:id
@@ -39,5 +39,13 @@ router.patch('/:id(\\d+)',
     securityService.isConnected,
     validationService.checkUpdateData,
     usersController.update);
+
+/**
+ * DELETE /v1/users/:id
+ * @summary Delete an user profil
+ */
+router.delete('/:id(\\d+)',
+    securityService.isConnected,
+    usersController.delete);
 
 module.exports = router;

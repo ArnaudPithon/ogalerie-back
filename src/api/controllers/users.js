@@ -90,14 +90,16 @@ const usersController = {
             }
         }
     },
-    creators: async (req, res, next) => {
-        const { error, creators } = await dataMapper.getCreators();
+    users: async (req, res, next) => {
+        const role = req.params.role ? req.params.role : 'user';
+
+        const { error, users } = await dataMapper.getUsers(role);
 
         if (error) {
             next(error);
         }
         else {
-            res.json(creators);
+            res.json(users);
         }
     },
 
@@ -122,6 +124,25 @@ const usersController = {
         }
         else {
             res.json(user);
+        }
+    },
+
+    /**
+     * Remove a user from DB
+     * @param {*} req
+     * @param {*} res
+     * @param {*} next
+     * @return string
+     */
+    delete: async (req, res, next) => {
+        const { id } = req.params;
+        const { error } = await dataMapper.delete({ id });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json('User deleted');
         }
     },
 };
