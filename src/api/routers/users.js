@@ -43,6 +43,7 @@ router.patch('/:id(\\d+)',
 /**
  * DELETE /v1/users/:id
  * @summary Delete an user profil
+ * @return string 200 - confirmation
  */
 router.delete('/:id(\\d+)',
     securityService.isConnected,
