@@ -1,3 +1,4 @@
+// vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
 // URL préfixée par /users
@@ -55,5 +56,12 @@ router.delete('/:id(\\d+)',
  * @return [Collections] 200 - 
  */
 router.get('/:id(\\d+)/collections', usersController.getCollections);
+
+/**
+ * GET /v1/users/:id/artworks
+ * @summary Respond with a list completed of a user's collections
+ * @return [Artworks] 200 - 
+ */
+router.get('/:id(\\d+)/artworks', usersController.getArtworks);
 
 module.exports = router;

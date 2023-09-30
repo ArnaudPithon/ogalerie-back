@@ -157,6 +157,18 @@ const usersController = {
             res.json(collections);
         }
     },
+
+    getArtworks: async(req, res, next) => {
+        const { id } = req.params;
+        const { error, artworks } = await dataMapper.getArtworks(id);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(artworks);
+        }
+    },
 };
 
 module.exports = usersController;

@@ -1,3 +1,4 @@
+// vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
 const client = require('../services/pgClient');
@@ -222,20 +223,51 @@ const dataMapper = {
             error = new APIError(err.message, 500, err);
         }
 
+        // Je reformate les données obtenues dans un format plus
+        // utilisable en front.
         result.forEach(c => {
             const { id, title } = c;
 
+            // Je vérifie que la collection a son entrée dans le
+            // dictionnaire des collections. Sinon, je la créé.
             if (!collectionsTemp[id]) {
                 collectionsTemp[id] = { id, title, artworks: [] };
             }
-            collectionsTemp[c.id].artworks.push(c.artwork);
+            // J'ajoute le artwork courant à la liste des
+            // artworks de cette collection.
+            collectionsTemp[id].artworks.push(c.artwork);
         });
 
+        // J'épure mon dictionnaire de collections pour ne garder
+        // qu'un tableau d'objets collection.
         const collections = Object.values(collectionsTemp);
 
         debug(collections);
 
         return { error, collections };
+    },
+
+    async getArtworks (id) {
+        const sqlQuery = `
+        select * from get_user_artworks($1)
+        ;`;
+        const values = [id];
+        let error, result;
+
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows;
+            if (!result) {
+                error = new APIError('informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, result };
     },
 
 };

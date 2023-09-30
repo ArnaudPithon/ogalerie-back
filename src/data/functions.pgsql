@@ -193,6 +193,15 @@ begin;
         ;
     $$ language sql security definer;
 
+    -- Retourne les artworks d'un utilisateur
+    drop function if exists public.get_user_artworks;
+    create function public.get_user_artworks (p_id int) returns setof artwork as
+    $$
+        select *
+        from artwork
+        where person_id = p_id ;
+    $$ language sql security definer;
+
     -- Retourne les œuvres liées à une collection
     drop function if exists public.get_collection_artwork;
     create function get_collection_artwork (c_id int) returns setof artwork as
