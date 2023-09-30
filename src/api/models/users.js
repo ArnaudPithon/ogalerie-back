@@ -1,3 +1,4 @@
+// vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
 const client = require('../services/pgClient');
@@ -97,29 +98,30 @@ const dataMapper = {
     },
 
     /**
-     * Récupère la liste des artistes / créateurs
+     * Récupère la liste des utilisateurs en fonction de leur rôle
      */
-    async getCreators () {
+    async getUsers (role) {
         const sqlQuery = `
-        select * from get_creators()
+        select * from get_users($1)
         ;`;
+        const values = [role];
         let error;
-        let creators;
+        let users;
 
         try {
-            const response = await client.query(sqlQuery);
+            const response = await client.query(sqlQuery, values);
 
-            creators = response.rows.map(e => {
-                return e.get_creators;
+            users = response.rows.map(e => {
+                return e.get_users;
             });
 
-            debug(creators);
+            debug(users);
         }
         catch (err) {
             error = new APIError(err.message, 500, err);
         }
 
-        return { error, creators };
+        return { error, users };
     },
 
     async getUserById (id) {
@@ -147,7 +149,7 @@ const dataMapper = {
         return {error, user};
     },
 
-    async updateUser (newInfos) {
+    async update (newInfos) {
         const sqlQuery = `
         select * from update_person($1)
         ;`;
@@ -174,6 +176,98 @@ const dataMapper = {
         }
 
         return {error, user};
+    },
+
+    async delete (id) {
+        const sqlQuery = `
+        select * from delete_person($1)
+        ;`;
+        const values = [id];
+        let error;
+        let result;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows[0].delete_person;
+
+            debug(result);
+            if (!result) {
+                error = new APIError('Informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return {error, result};
+    },
+
+    async getCollections (id) {
+        const sqlQuery = `
+        select * from get_user_collections($1)
+        ;`;
+        const values = [id];
+        let error, result;
+        const collectionsTemp = {};
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows.map(e => e.get_user_collections);
+            if (!result) {
+                error = new APIError('informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        // Je reformate les données obtenues dans un format plus
+        // utilisable en front.
+        result.forEach(c => {
+            const { id, title } = c;
+
+            // Je vérifie que la collection a son entrée dans le
+            // dictionnaire des collections. Sinon, je la créé.
+            if (!collectionsTemp[id]) {
+                collectionsTemp[id] = { id, title, artworks: [] };
+            }
+            // J'ajoute le artwork courant à la liste des
+            // artworks de cette collection.
+            collectionsTemp[id].artworks.push(c.artwork);
+        });
+
+        // J'épure mon dictionnaire de collections pour ne garder
+        // qu'un tableau d'objets collection.
+        const collections = Object.values(collectionsTemp);
+
+        debug(collections);
+
+        return { error, collections };
+    },
+
+    async getArtworks (id) {
+        const sqlQuery = `
+        select * from get_user_artworks($1)
+        ;`;
+        const values = [id];
+        let error, result;
+
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows;
+            if (!result) {
+                error = new APIError('informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, result };
     },
 
 };
