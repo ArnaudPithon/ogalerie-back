@@ -252,14 +252,14 @@ const dataMapper = {
         select * from get_user_artworks($1)
         ;`;
         const values = [id];
-        let error, result;
+        let error, artworks;
 
 
         try {
             const response = await client.query(sqlQuery, values);
 
-            result = response.rows;
-            if (!result) {
+            artworks = response.rows;
+            if (!artworks) {
                 error = new APIError('informations erronnées', 403);
             }
         }
@@ -267,7 +267,9 @@ const dataMapper = {
             error = new APIError(err.message, 500, err);
         }
 
-        return { error, result };
+        debug(artworks);
+
+        return { error, artworks };
     },
 
 };
