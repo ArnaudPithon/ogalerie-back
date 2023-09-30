@@ -166,6 +166,7 @@ const usersController = {
             next(error);
         }
         else {
+            debug(artworks);
             res.json(artworks);
         }
     },
