@@ -201,6 +201,43 @@ const dataMapper = {
 
         return {error, result};
     },
+
+    async getCollections (id) {
+        const sqlQuery = `
+        select * from get_user_collections($1)
+        ;`;
+        const values = [id];
+        let error, result;
+        const collectionsTemp = {};
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows.map(e => e.get_user_collections);
+            if (!result) {
+                error = new APIError('informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        result.forEach(c => {
+            const { id, title } = c;
+
+            if (!collectionsTemp[id]) {
+                collectionsTemp[id] = { id, title, artworks: [] };
+            }
+            collectionsTemp[c.id].artworks.push(c.artwork);
+        });
+
+        const collections = Object.values(collectionsTemp);
+
+        debug(collections);
+
+        return { error, collections };
+    },
+
 };
 
 module.exports = dataMapper;

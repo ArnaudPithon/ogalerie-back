@@ -145,6 +145,18 @@ const usersController = {
             res.json('User deleted');
         }
     },
+
+    getCollections: async(req, res, next) => {
+        const { id } = req.params;
+        const { error, collections } = await dataMapper.getCollections(id);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(collections);
+        }
+    },
 };
 
 module.exports = usersController;

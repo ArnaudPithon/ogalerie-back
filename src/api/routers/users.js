@@ -49,4 +49,11 @@ router.delete('/:id(\\d+)',
     securityService.isConnected,
     usersController.delete);
 
+/**
+ * GET /v1/users/:id/collections
+ * @summary Respond with a list completed of a user's collections
+ * @return [Collections] 200 - 
+ */
+router.get('/:id(\\d+)/collections', usersController.getCollections);
+
 module.exports = router;
