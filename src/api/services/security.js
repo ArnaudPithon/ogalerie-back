@@ -17,12 +17,13 @@ const securityService = {
         debug(req.session.users);
 
         const { id } = req.params;
-        // TODO Manque la vérification du token
 
         if (!req.session.users) {
             req.session.users = {};
         }
         if (req.session.users[id]) {
+            securityService.checkToken(req, id);
+
             next();
         }
         else {
@@ -52,9 +53,13 @@ const securityService = {
      * @param {*} res
      * @param {*} next
      */
-    checkToken (req, res, next) {
+    checkToken (req, id) {
         try {
-            const { id } = req.params;
+            if (!req.headers.authorization) {
+                const error = new APIError('Missing token', 403);
+
+                throw (error);
+            }
             const token = req.headers.authorization.split(' ')[1];
 
             // Je vérifie qu'il ne s'agit pas d'un token enregistré lors
@@ -62,19 +67,18 @@ const securityService = {
             // Si le serveur a redémarré, je veux que l'utilisateur se
             // reconnecte.
             if (req.session.users[id] !== token) {
-                throw {message: 'Bad token'};
+                const error = new APIError('Bad token', 403);
+
+                throw (error);
             }
+            jwt.verify(token, process.env.JWT_SECRET);
 
-            debug('HEADERS : ', req.headers);
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-            debug('DECODED : ', decoded);
-            next();
+            return;
         }
         catch (err) {
             const error = new APIError(err.message, 403);
 
-            next(error);
+            throw (error);
         }
     },
 };

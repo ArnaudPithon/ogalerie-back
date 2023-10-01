@@ -30,7 +30,6 @@ router.get('/:role((?:creator|admin)?)', usersController.users);
  */
 router.get('/:id(\\d+)',
     securityService.isConnected,
-    securityService.checkToken,
     usersController.getUserById);
 
 /**
@@ -39,7 +38,6 @@ router.get('/:id(\\d+)',
  */
 router.patch('/:id(\\d+)',
     securityService.isConnected,
-    securityService.checkToken,
     validationService.checkUpdateData,
     usersController.update);
 
@@ -50,7 +48,6 @@ router.patch('/:id(\\d+)',
  */
 router.delete('/:id(\\d+)',
     securityService.isConnected,
-    securityService.checkToken,
     usersController.delete);
 
 /**
