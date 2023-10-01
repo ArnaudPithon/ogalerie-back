@@ -26,7 +26,7 @@ const securityService = {
             next();
         }
         else {
-            const error = new APIError('Vous devez être connecté', 401);
+            const error = new APIError('You must be connected', 401);
 
             next(error);
         }
@@ -38,21 +38,44 @@ const securityService = {
      * @returns
      */
     getToken (user) {
-        return jwt.sign(user, process.env.JWT_SECRET);
+        return jwt.sign(user,
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '2h',
+            },
+        );
     },
 
     /**
      * Token validation
-     * @param {*} user
-     * @param {*} token
-     * @return {boolean}
+     * @param {*} req
+     * @param {*} res
+     * @param {*} next
      */
-    checkToken (user, token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    checkToken (req, res, next) {
+        try {
+            const { id } = req.params;
+            const token = req.headers.authorization.split(' ')[1];
 
-        return user.nickname === decoded.nickname
-            && user.mail === decoded.mail
-            && user.role === decoded.role;
+            // Je vérifie qu'il ne s'agit pas d'un token enregistré lors
+            // d'une précédente session.
+            // Si le serveur a redémarré, je veux que l'utilisateur se
+            // reconnecte.
+            if (req.session.users[id] !== token) {
+                throw {message: 'Bad token'};
+            }
+
+            debug('HEADERS : ', req.headers);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            debug('DECODED : ', decoded);
+            next();
+        }
+        catch (err) {
+            const error = new APIError(err.message, 403);
+
+            next(error);
+        }
     },
 };
 
