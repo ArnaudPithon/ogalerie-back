@@ -41,7 +41,7 @@ const usersController = {
             }
             req.session.users[user.id] = token;
 
-            res.json(response);
+            res.status('201').json(response);
         }
     },
     /**
