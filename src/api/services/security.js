@@ -22,7 +22,9 @@ const securityService = {
             req.session.users = {};
         }
         if (req.session.users[id]) {
-            securityService.checkToken(req, id);
+            const recordedToken = req.session.users[id];
+
+            securityService.checkToken(req, recordedToken);
 
             next();
         }
@@ -50,10 +52,9 @@ const securityService = {
     /**
      * Token validation
      * @param {*} req
-     * @param {*} res
-     * @param {*} next
+     * @param {int} id
      */
-    checkToken (req, id) {
+    checkToken (req, recordedToken) {
         try {
             if (!req.headers.authorization) {
                 const error = new APIError('Missing token', 403);
@@ -66,7 +67,7 @@ const securityService = {
             // d'une précédente session.
             // Si le serveur a redémarré, je veux que l'utilisateur se
             // reconnecte.
-            if (req.session.users[id] !== token) {
+            if (recordedToken !== token) {
                 const error = new APIError('Bad token', 403);
 
                 throw (error);
