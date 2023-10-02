@@ -4,7 +4,11 @@
 // URL préfixée par /users
 
 const router = require('express').Router();
-const { usersController, collectionsController } = require('../controllers');
+const {
+    usersController,
+    collectionsController,
+    artworksController,
+} = require('../controllers');
 const validationService = require('../services/validation');
 const securityService = require('../services/security.js');
 
@@ -65,13 +69,20 @@ router.post('/:id(\\d+)/collections',
     securityService.isConnected,
     collectionsController.create);
 
-
 /**
  * GET /v1/users/:id/artworks
  * @summary Respond with a list completed of a user's collections
  * @return [Artworks] 200 - 
  */
 router.get('/:id(\\d+)/artworks', usersController.getArtworks);
+
+/**
+ * POST /v1/users/:id/artworks
+ * @summary 
+ */
+router.post('/:id(\\d+)/artworks',
+    securityService.isConnected,
+    artworksController.create);
 
 
 module.exports = router;

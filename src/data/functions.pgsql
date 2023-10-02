@@ -227,5 +227,31 @@ begin;
     );
     $$ language sql security definer;
 
+    -- Créer un artwork
+    drop function if exists public.create_artwork;
+    create function create_artwork (n json) returns json as
+    $$
+    insert into public.artwork as a
+    ( title, uri, date, description, mature, collection_id, person_id )
+    select
+        n->>'title',
+        n->>'uri',
+        (n->>'date')::date,
+        n->>'description',
+        (n->>'mature')::boolean,
+        (n->>'collection_id')::int,
+        (n->>'ownerId')::int
+    returning json_build_object(
+        'id', a.id,
+        'title', a.title,
+        'date', a.date,
+        'description', a.description,
+        'mature', a.mature,
+        'collection_id', a.collection_id,
+        'ownerId', a.person_id,
+        'created_at', a.created_at
+    );
+    $$ language sql security definer;
+
     commit;
 reset role;
