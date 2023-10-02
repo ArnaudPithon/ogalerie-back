@@ -214,6 +214,8 @@ const dataMapper = {
         try {
             const response = await client.query(sqlQuery, values);
 
+            debug(response.rows);
+
             result = response.rows.map(e => e.get_user_collections);
             if (!result) {
                 error = new APIError('informations erronnées', 403);
