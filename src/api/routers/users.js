@@ -1,10 +1,10 @@
-// vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
+// vim: foldmethod=syntax:foldlevel=0:foldnestmax=2
 'use strict';
 
 // URL préfixée par /users
 
 const router = require('express').Router();
-const { usersController } = require('../controllers');
+const { usersController, collectionsController } = require('../controllers');
 const validationService = require('../services/validation');
 const securityService = require('../services/security.js');
 
@@ -58,10 +58,20 @@ router.delete('/:id(\\d+)',
 router.get('/:id(\\d+)/collections', usersController.getCollections);
 
 /**
+ * POST /v1/users/:id/collections
+ * @summary 
+ */
+router.post('/:id(\\d+)/collections',
+    securityService.isConnected,
+    collectionsController.create);
+
+
+/**
  * GET /v1/users/:id/artworks
  * @summary Respond with a list completed of a user's collections
  * @return [Artworks] 200 - 
  */
 router.get('/:id(\\d+)/artworks', usersController.getArtworks);
+
 
 module.exports = router;
