@@ -211,5 +211,21 @@ begin;
         where collection_id = c_id;
     $$ language sql security definer;
 
+    -- Créer une collection
+    drop function if exists public.create_collection;
+    create function create_collection (n json) returns json as
+    $$
+    insert into public.collection as c
+    ( title, person_id )
+    select
+        n->>'title',
+        (n->>'ownerId')::int
+    returning json_build_object(
+        'id', c.id,
+        'title', c.title,
+        'ownerId', c.person_id
+    );
+    $$ language sql security definer;
+
     commit;
 reset role;
