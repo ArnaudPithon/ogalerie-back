@@ -43,6 +43,7 @@ begin;
         birthday date not null,
         town text,
         country text,
+        biography text,
         avatar text,
         situation situation not null,
         created_at timestamptz not null default now(),

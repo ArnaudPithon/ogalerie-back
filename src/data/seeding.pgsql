@@ -22,7 +22,8 @@ begin;
     insert into person (
         firstname, lastname, nickname, email,
         hash,
-        birthday, town, country, avatar, situation
+        birthday, town, country, avatar, situation,
+        biography
     )
     values
     (
@@ -30,21 +31,24 @@ begin;
         '$2b$10$DVVeanj0y8T8gPjrkxtf.u5MjgV94W5TmlqBIgZxOLRVeOruvRI3q', -- password1
         '1970-01-01', 'MIT', 'Massachusetts',
         'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/UNIX_logo.svg/250px-UNIX_logo.svg.png',
-        'admin'
+        'admin',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
     ),
     (
         'Giselle', 'Knowles-Carter', 'Beyonce', 'beyonce@destiny.com',
         '$2b$10$CdID6r3CoEmKqJ4YQkpn7.rpeTI5EcFcvJOGyx7NGGO8V34up6HL2', -- password2
         '1981-09-04', 'Houston', 'Texas',
         'https://i.pinimg.com/originals/bd/56/8e/bd568e9fc16a2e5a37b7abcb7a183dee.jpg',
-        'creator'
+        'creator',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
     ),
     (
         'Philip', 'J. Fry', 'Fry', 'fry@futurama.com',
         '$2b$10$J0kyBTEc0R2ABpgYQkUPUuh5QtpfIysCOh9hnM2RuOCZzY/1xrY2y', -- password3
         '1999-01-01', 'New York', 'U.S.A.',
         'https://upload.wikimedia.org/wikipedia/en/2/28/Philip_Fry.png',
-        'user'
+        'user',
+        'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.'
     )
     ;
 

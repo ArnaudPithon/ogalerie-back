@@ -2,26 +2,6 @@
 set role ogalerie_admin;
 begin;
 
-    -- Retourne les infos d'un visiteur identifié par son email
-    drop function if exists public.get_user_by_email;
-    create function public.get_user_by_email (json) returns json as
-    $$
-        select json_build_object(
-            'id', p.id,
-            'firstname', p.firstname,
-            'lastname', p.lastname,
-            'nickname', p.nickname,
-            'email', p.email,
-            'birthday', p.birthday,
-            'town', p.town,
-            'country', p.country,
-            'avatar', p.avatar,
-            'situation', p.situation
-        )
-        from public.person p
-        where p.email = $1->>'email';
-    $$ language sql strict security definer;
-
     -- Retourne les infos d'un visiteur identifié par son id
     drop function if exists public.get_user_by_id;
     create function public.get_user_by_id (u_id int) returns json as
@@ -35,6 +15,7 @@ begin;
             'birthday', p.birthday,
             'town', p.town,
             'country', p.country,
+            'biography', p.biography,
             'avatar', p.avatar,
             'like', (
                 select count(*) from appraise
@@ -118,6 +99,7 @@ begin;
         birthday,
         town,
         country,
+        biography,
         avatar,
         situation
     )
@@ -130,6 +112,7 @@ begin;
         (new_user->>'birthday')::date,
         new_user->>'town',
         new_user->>'country',
+        new_user->>'biography',
         new_user->>'avatar',
         (new_user->>'situation')::situation
     returning json_build_object(
@@ -189,6 +172,10 @@ begin;
         then
             person_db.country = p->>'country';
         end if;
+        if p->>'biography' is not null
+        then
+            person_db.biography = p->>'biography';
+        end if;
         if p->>'avatar' is not null
         then
             person_db.avatar = p->>'avatar';
@@ -205,6 +192,7 @@ begin;
             birthday = person_db.birthday,
             town = person_db.town,
             country = person_db.country,
+            biography = person_db.biography,
             avatar = person_db.avatar,
             updated_at = person_db.updated_at
         where id = (p->>'id')::int;
