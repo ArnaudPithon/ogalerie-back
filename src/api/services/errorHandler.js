@@ -50,7 +50,8 @@ const errorHandler = {
         await appendFile(path, text);
     },
     notFound(req, res, next) {
-        const err = new APIError('Url not found !', 404);
+        const message = `Url ${req.url} not found !`;
+        const err = new APIError(message, 404);
 
         next(err);
     },
