@@ -2,13 +2,8 @@
 set role ogalerie_admin;
 begin;
 
-    drop function if exists public.get_user_by_email;
-    drop function if exists public.get_user_by_id;
-    drop function if exists public.insert_user;
-    drop function if exists public.sign_in;
-    drop function if exists public.update_person;
-
     -- Retourne les infos d'un visiteur identifié par son email
+    drop function if exists public.get_user_by_email;
     create function public.get_user_by_email (json) returns json as
     $$
         select json_build_object(
@@ -28,6 +23,7 @@ begin;
     $$ language sql strict security definer;
 
     -- Retourne les infos d'un visiteur identifié par son id
+    drop function if exists public.get_user_by_id;
     create function public.get_user_by_id (u_id int) returns json as
     $$
         select json_build_object(
@@ -46,6 +42,8 @@ begin;
         where p.id = u_id;
     $$ language sql strict security definer;
 
+    -- Connexion
+    drop function if exists public.sign_in;
     create function public.sign_in (json) returns json as
     $$
         select json_build_object(
@@ -58,7 +56,18 @@ begin;
         where p.email = $1->>'email';
     $$ language sql strict security definer;
 
+    -- Retire un utilisateur
+    drop function if exists public.delete_person;
+    create function public.delete_person (json) returns json as
+    $$
+        delete from public.person p
+        where p.id = ($1->>'id')::int
+        returning $1
+        ;
+    $$ language sql strict security definer;
+
     -- Enregistre un nouvel utilisateur
+    drop function if exists public.insert_user;
     create function public.insert_user (new_user json) returns json as
     $$
     insert into public.person as p
@@ -86,15 +95,15 @@ begin;
         new_user->>'avatar',
         (new_user->>'situation')::situation
     returning json_build_object(
+        'id', p.id,
         'nickname', p.nickname,
         'situation', p.situation
     );
     $$ language sql security definer;
 
-    -- Fournit la liste des utilisateurs creator
-    drop function if exists get_creators;
-
-    create function get_creators() returns setof json as
+    -- Fournit la liste des utilisateurs en fonction de leur situation
+    drop function if exists public.get_users;
+    create function get_users(s situation) returns setof json as
     $$
         select json_build_object(
             'id', p.id,
@@ -103,10 +112,11 @@ begin;
             'nickname', p.nickname
         )
         from public.person p
-        where p.situation = 'creator';
+        where p.situation = s ;
     $$ language sql security definer;
 
     -- Met à jour les infos d'un utilisateur
+    drop function if exists public.update_person;
     create function update_person(p json) returns public.person as
     $$
     declare
@@ -166,6 +176,83 @@ begin;
         -- TODO : Je préfèrerai ne pas renvoyer le hash
     end;
     $$ language plpgsql security definer;
+
+    -- Retourne les collections d'un utilisateur
+    drop function if exists public.get_user_collections;
+    create function public.get_user_collections (p_id int) returns setof json as
+    $$
+        select json_build_object(
+            'id', c.id,
+            'title', c.title,
+            'artwork', a.*
+        )
+        from collection as c
+        join artwork as a
+        on collection_id = c.id
+        where c.person_id = p_id
+        ;
+    $$ language sql security definer;
+
+    -- Retourne les artworks d'un utilisateur
+    drop function if exists public.get_user_artworks;
+    create function public.get_user_artworks (p_id int) returns setof artwork as
+    $$
+        select *
+        from artwork
+        where person_id = p_id ;
+    $$ language sql security definer;
+
+    -- Retourne les œuvres liées à une collection
+    drop function if exists public.get_collection_artwork;
+    create function get_collection_artwork (c_id int) returns setof artwork as
+    $$
+        select *
+        from artwork
+        where collection_id = c_id;
+    $$ language sql security definer;
+
+    -- Créer une collection
+    drop function if exists public.create_collection;
+    create function create_collection (n json) returns json as
+    $$
+    insert into public.collection as c
+    ( title, person_id )
+    select
+        n->>'title',
+        (n->>'ownerId')::int
+    returning json_build_object(
+        'id', c.id,
+        'title', c.title,
+        'ownerId', c.person_id
+    );
+    $$ language sql security definer;
+
+    -- Créer un artwork
+    drop function if exists public.create_artwork;
+    create function create_artwork (n json) returns json as
+    $$
+    insert into public.artwork as a
+    ( title, uri, date, description, mature, collection_id, person_id )
+    select
+        n->>'title',
+        n->>'uri',
+        (n->>'date')::date,
+        n->>'description',
+        (n->>'mature')::boolean,
+        (n->>'collection_id')::int,
+        (n->>'ownerId')::int
+    returning json_build_object(
+        'id', a.id,
+        'title', a.title,
+        'date', a.date,
+        'description', a.description,
+        'mature', a.mature,
+        'uri', a.uri,
+        'collection_id', a.collection_id,
+        'ownerId', a.person_id,
+        'created_at', a.created_at
+    );
+    $$ language sql security definer;
 
     commit;
 reset role;

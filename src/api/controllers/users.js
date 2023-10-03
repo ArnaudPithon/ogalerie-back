@@ -1,7 +1,7 @@
 // vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
-const dataMapper = require('../models/dataMapper');
+const dataMapper = require('../models/users');
 const bcrypt = require('bcrypt');
 const securityService = require('../services/security');
 const APIError = require('../services/APIError');
@@ -35,13 +35,7 @@ const usersController = {
             const token = securityService.getToken(user);
             const response = { ...user, token, 'logged': true };
 
-            // Enregistre l'user comme connecté avec son token.
-            if (!req.session.users) {
-                req.session.users = {};
-            }
-            req.session.users[user.id] = token;
-
-            res.json(response);
+            res.status('201').json(response);
         }
     },
     /**
@@ -73,13 +67,6 @@ const usersController = {
 
                 const response = { ...user, token, 'logged': true };
 
-                // Enregistre l'user comme connecté avec son token.
-                if (!req.session.users) {
-                    req.session.users = {};
-                }
-                req.session.users[user.id] = token;
-                debug(req.session.users);
-
                 res.json(response);
             }
             else {
@@ -90,14 +77,16 @@ const usersController = {
             }
         }
     },
-    creators: async (req, res, next) => {
-        const { error, creators } = await dataMapper.getCreators();
+    users: async (req, res, next) => {
+        const role = req.params.role ? req.params.role : 'user';
+
+        const { error, users } = await dataMapper.getUsers(role);
 
         if (error) {
             next(error);
         }
         else {
-            res.json(creators);
+            res.json(users);
         }
     },
 
@@ -115,13 +104,57 @@ const usersController = {
 
     update: async (req, res, next) => {
         const { id } = req.params;
-        const { error, user } = await dataMapper.updateUser({ id, ...req.body });
+        const { error, user } = await dataMapper.update({ id, ...req.body });
 
         if (error) {
             next(error);
         }
         else {
             res.json(user);
+        }
+    },
+
+    /**
+     * Remove a user from DB
+     * @param {*} req
+     * @param {*} res
+     * @param {*} next
+     * @return string
+     */
+    delete: async (req, res, next) => {
+        const { id } = req.params;
+        const { error } = await dataMapper.delete({ id });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json('User deleted');
+        }
+    },
+
+    getCollections: async(req, res, next) => {
+        const { id } = req.params;
+        const { error, collections } = await dataMapper.getCollections(id);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(collections);
+        }
+    },
+
+    getArtworks: async(req, res, next) => {
+        const { id } = req.params;
+        const { error, artworks } = await dataMapper.getArtworks(id);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            debug(artworks);
+            res.json(artworks);
         }
     },
 };

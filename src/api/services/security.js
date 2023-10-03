@@ -13,23 +13,11 @@ const securityService = {
      */
     isConnected (req, res, next) {
         // Utilisée sur une route dynamique avec un id d'utilisateur en paramètre
-        debug(req.url);
-        debug(req.session.users);
+        debug('url', req.url);
 
-        const { id } = req.params;
-        // TODO Manque la vérification du token
+        securityService.checkToken(req);
 
-        if (!req.session.users) {
-            req.session.users = {};
-        }
-        if (req.session.users[id]) {
-            next();
-        }
-        else {
-            const error = new APIError('Vous devez être connecté', 401);
-
-            next(error);
-        }
+        next();
     },
 
     /**
@@ -38,21 +26,37 @@ const securityService = {
      * @returns
      */
     getToken (user) {
-        return jwt.sign(user, process.env.JWT_SECRET);
+        return jwt.sign(user,
+            process.env.JWT_SECRET,
+            {
+                expiresIn: '2h',
+            },
+        );
     },
 
     /**
      * Token validation
-     * @param {*} user
-     * @param {*} token
-     * @return {boolean}
+     * @param {*} req
+     * @param {int} id
      */
-    checkToken (user, token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    checkToken (req) {
+        try {
+            if (!req.headers.authorization) {
+                const error = new APIError('Missing token', 403);
 
-        return user.nickname === decoded.nickname
-            && user.mail === decoded.mail
-            && user.role === decoded.role;
+                throw (error);
+            }
+            const token = req.headers.authorization.split(' ')[1];
+
+            jwt.verify(token, process.env.JWT_SECRET);
+
+            return;
+        }
+        catch (err) {
+            const error = new APIError(err.message, 403);
+
+            throw (error);
+        }
     },
 };
 
