@@ -2,6 +2,7 @@
 'use strict';
 
 const dataMapper = require('../models/artworks');
+const userDataMapper = require('../models/users');
 const securityService = require('../services/security');
 const APIError = require('../services/APIError');
 const debug = require('debug')('controller');
@@ -12,10 +13,21 @@ const artworksController = {
         const newArtwork = req.body;
 
         if (!req.isOwner) {
-            next(new APIError('Forbidden', 403));
+            return next(new APIError('Forbidden', 403));
+        }
+
+        const response = await userDataMapper.getCollections(id);
+        const userCollections = response.collections;
+
+        // Confirme que l'artwork appartient bien à une collection de l'utilisateur
+        if (!userCollections
+            .filter(c => c.id === Number(newArtwork.collection_id)).length)
+        {
+            next(new APIError("La collection cible n'appartient pas à l'utilisateur", 403));
 
             return;
         }
+
         newArtwork.ownerId = Number(id);
 
         debug(newArtwork);
