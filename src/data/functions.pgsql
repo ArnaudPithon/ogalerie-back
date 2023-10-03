@@ -247,6 +247,7 @@ begin;
         'date', a.date,
         'description', a.description,
         'mature', a.mature,
+        'uri', a.uri,
         'collection_id', a.collection_id,
         'ownerId', a.person_id,
         'created_at', a.created_at
