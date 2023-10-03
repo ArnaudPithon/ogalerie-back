@@ -22,7 +22,7 @@ database: drop_database users
 tables: create_tables.pgsql
 	$(PG) -W -U $(DB)_api -d $(DB) -f $<
 
-functions: functions.pgsql
+functions: functions/*.pgsql
 	$(PG) -W -U $(DB)_api -d $(DB) -f $<
 
 populate: seeding.pgsql
