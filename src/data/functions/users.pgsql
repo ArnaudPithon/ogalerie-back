@@ -210,11 +210,10 @@ begin;
         select json_build_object(
             'id', c.id,
             'title', c.title,
-            'artwork', a.*
+            'created_at', c.created_at,
+            'updated_at', c.updated_at
         )
         from collection as c
-        join artwork as a
-        on collection_id = c.id
         where c.person_id = p_id
         ;
     $$ language sql security definer;
