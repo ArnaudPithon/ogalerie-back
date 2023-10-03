@@ -46,6 +46,8 @@ Pensez à créer le fichier _.env_ d'après le modèle fournit !
 
 ## Documentation
 
-Les MCD, dictionnaire de données et autres MPD peuvent être trouvés dans
+- Les MCD, dictionnaire de données et autres MPD peuvent être trouvés dans
 le repo de la partie front du projet :
 [O'Galerie](https://github.com/O-clock-Yost/projet-06-o-galerie-front)
+
+- [Changelog](./Changelog.md)
