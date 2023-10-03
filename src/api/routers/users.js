@@ -34,7 +34,8 @@ router.get('/:role((?:creator|admin)?)', usersController.users);
  */
 router.get('/:id(\\d+)',
     securityService.isConnected,
-    usersController.getUserById);
+    securityService.isOwner,
+    usersController.getUser);
 
 /**
  * PATCH /v1/users/:id

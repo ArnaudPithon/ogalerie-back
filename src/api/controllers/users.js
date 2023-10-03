@@ -90,13 +90,11 @@ const usersController = {
         }
     },
 
-    getUserById: async (req, res, next) => {
+    getUser: async (req, res, next) => {
         const { id } = req.params;
-        const token = req.headers.authorization.split(' ')[1];
-        const isOwner = securityService.isOwner(id, token);
         let request;
 
-        if (isOwner) {
+        if (req.isOwner) {
             request = dataMapper.getUser;
         }
         else {

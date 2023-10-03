@@ -160,7 +160,6 @@ const dataMapper = {
         try {
             const response = await client.query(sqlQuery, values);
 
-            debug(response);
             user = response.rows[0].get_user_profil;
 
             debug(user);

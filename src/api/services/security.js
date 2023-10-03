@@ -54,10 +54,18 @@ const securityService = {
         }
     },
 
-    isOwner (ownerId, token) {
+    isOwner (req, res, next) {
+        const { id } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
         const decoded = securityService.checkToken(token);
 
-        return (Number(ownerId) === decoded.id);
+        if (Number(id) === decoded.id) {
+            req.isOwner = true;
+        }
+        else {
+            req.isOwner = false;
+        }
+        next();
     },
 };
 
