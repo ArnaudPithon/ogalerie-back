@@ -113,6 +113,13 @@ const usersController = {
 
     update: async (req, res, next) => {
         const { id } = req.params;
+
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+
         const { error, user } = await dataMapper.update({ id, ...req.body });
 
         if (error) {
@@ -132,6 +139,13 @@ const usersController = {
      */
     delete: async (req, res, next) => {
         const { id } = req.params;
+
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+
         const { error } = await dataMapper.delete({ id });
 
         if (error) {

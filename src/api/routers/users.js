@@ -43,6 +43,7 @@ router.get('/:id(\\d+)',
  */
 router.patch('/:id(\\d+)',
     securityService.isConnected,
+    securityService.isOwner,
     validationService.checkUpdateData,
     usersController.update);
 
@@ -53,6 +54,7 @@ router.patch('/:id(\\d+)',
  */
 router.delete('/:id(\\d+)',
     securityService.isConnected,
+    securityService.isOwner,
     usersController.delete);
 
 /**
@@ -68,6 +70,7 @@ router.get('/:id(\\d+)/collections', usersController.getCollections);
  */
 router.post('/:id(\\d+)/collections',
     securityService.isConnected,
+    securityService.isOwner,
     collectionsController.create);
 
 /**
@@ -83,6 +86,7 @@ router.get('/:id(\\d+)/artworks', usersController.getArtworks);
  */
 router.post('/:id(\\d+)/artworks',
     securityService.isConnected,
+    securityService.isOwner,
     artworksController.create);
 
 
