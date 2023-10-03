@@ -35,12 +35,6 @@ const usersController = {
             const token = securityService.getToken(user);
             const response = { ...user, token, 'logged': true };
 
-            // Enregistre l'user comme connecté avec son token.
-            if (!req.session.users) {
-                req.session.users = {};
-            }
-            req.session.users[user.id] = token;
-
             res.status('201').json(response);
         }
     },
@@ -72,13 +66,6 @@ const usersController = {
                  */
 
                 const response = { ...user, token, 'logged': true };
-
-                // Enregistre l'user comme connecté avec son token.
-                if (!req.session.users) {
-                    req.session.users = {};
-                }
-                req.session.users[user.id] = token;
-                debug(req.session.users);
 
                 res.json(response);
             }

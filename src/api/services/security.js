@@ -13,26 +13,11 @@ const securityService = {
      */
     isConnected (req, res, next) {
         // Utilisée sur une route dynamique avec un id d'utilisateur en paramètre
-        debug(req.url);
-        debug(req.session.users);
+        debug('url', req.url);
 
-        const { id } = req.params;
+        securityService.checkToken(req);
 
-        if (!req.session.users) {
-            req.session.users = {};
-        }
-        if (req.session.users[id]) {
-            const recordedToken = req.session.users[id];
-
-            securityService.checkToken(req, recordedToken);
-
-            next();
-        }
-        else {
-            const error = new APIError('You must be connected', 401);
-
-            next(error);
-        }
+        next();
     },
 
     /**
@@ -54,7 +39,7 @@ const securityService = {
      * @param {*} req
      * @param {int} id
      */
-    checkToken (req, recordedToken) {
+    checkToken (req) {
         try {
             if (!req.headers.authorization) {
                 const error = new APIError('Missing token', 403);
@@ -63,15 +48,6 @@ const securityService = {
             }
             const token = req.headers.authorization.split(' ')[1];
 
-            // Je vérifie qu'il ne s'agit pas d'un token enregistré lors
-            // d'une précédente session.
-            // Si le serveur a redémarré, je veux que l'utilisateur se
-            // reconnecte.
-            if (recordedToken !== token) {
-                const error = new APIError('Bad token', 403);
-
-                throw (error);
-            }
             jwt.verify(token, process.env.JWT_SECRET);
 
             return;
