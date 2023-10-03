@@ -124,7 +124,7 @@ const dataMapper = {
         return { error, users };
     },
 
-    async getUserById (id) {
+    async getUser (id) {
         const sqlQuery = `
         select * from get_user_by_id($1)
         ;`;
@@ -136,6 +136,32 @@ const dataMapper = {
             const response = await client.query(sqlQuery, values);
 
             user = response.rows[0].get_user_by_id;
+
+            debug(user);
+            if (!user) {
+                error = new APIError('Informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return {error, user};
+    },
+
+    async getProfilPublic (id) {
+        const sqlQuery = `
+        select * from get_user_profil($1)
+        ;`;
+        const values = [id];
+        let error;
+        let user;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            debug(response);
+            user = response.rows[0].get_user_profil;
 
             debug(user);
             if (!user) {

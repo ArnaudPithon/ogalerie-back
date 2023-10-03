@@ -92,7 +92,18 @@ const usersController = {
 
     getUserById: async (req, res, next) => {
         const { id } = req.params;
-        const { error, user } = await dataMapper.getUserById(id);
+        const token = req.headers.authorization.split(' ')[1];
+        const isOwner = securityService.isOwner(id, token);
+        let request;
+
+        if (isOwner) {
+            request = dataMapper.getUser;
+        }
+        else {
+            request = dataMapper.getProfilPublic;
+        }
+
+        const { error, user } = await request(id);
 
         if (error) {
             next(error);
