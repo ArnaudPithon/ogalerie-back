@@ -90,9 +90,18 @@ const usersController = {
         }
     },
 
-    getUserById: async (req, res, next) => {
+    getUser: async (req, res, next) => {
         const { id } = req.params;
-        const { error, user } = await dataMapper.getUserById(id);
+        let request;
+
+        if (req.isOwner) {
+            request = dataMapper.getUser;
+        }
+        else {
+            request = dataMapper.getProfilPublic;
+        }
+
+        const { error, user } = await request(id);
 
         if (error) {
             next(error);
@@ -104,6 +113,13 @@ const usersController = {
 
     update: async (req, res, next) => {
         const { id } = req.params;
+
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+
         const { error, user } = await dataMapper.update({ id, ...req.body });
 
         if (error) {
@@ -123,6 +139,13 @@ const usersController = {
      */
     delete: async (req, res, next) => {
         const { id } = req.params;
+
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+
         const { error } = await dataMapper.delete({ id });
 
         if (error) {

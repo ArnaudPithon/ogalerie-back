@@ -36,7 +36,45 @@ begin;
             'town', p.town,
             'country', p.country,
             'avatar', p.avatar,
+            'like', (
+                select count(*) from appraise
+                where person_id = id
+            ),
+            'liked', (
+                select count(*) from appraise
+                where artwork_id in (
+                    select id from artwork where person_id = p.id
+                )
+            ),
             'situation', p.situation
+        )
+        from public.person p
+        where p.id = u_id;
+    $$ language sql strict security definer;
+
+    -- Retourne le profil public d'un visiteur identifié par son id
+    drop function if exists public.get_user_profil;
+    create function public.get_user_profil (u_id int) returns json as
+    $$
+        select json_build_object(
+            'id', p.id,
+            'firstname', p.firstname,
+            'lastname', p.lastname,
+            'nickname', p.nickname,
+            'birthday', p.birthday,
+            'town', p.town,
+            'country', p.country,
+            'avatar', p.avatar,
+            'like', (
+                select count(*) from appraise
+                where person_id = id
+            ),
+            'liked', (
+                select count(*) from appraise
+                where artwork_id in (
+                    select id from artwork where person_id = p.id
+                )
+            )
         )
         from public.person p
         where p.id = u_id;

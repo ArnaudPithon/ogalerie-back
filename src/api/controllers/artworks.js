@@ -11,6 +11,11 @@ const artworksController = {
         const { id } = req.params;
         const newArtwork = req.body;
 
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
         newArtwork.ownerId = Number(id);
 
         debug(newArtwork);

@@ -11,11 +11,15 @@ const collectionsController = {
         const { id } = req.params;
         const { title } = req.body;
 
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
         if (!title) {
-            next({
-                message: 'Collection need a title',
-                code: 400,
-            });
+            next(new APIError('Collection need a title', 400));
+
+            return;
         }
 
         const newCollection = { title, ownerId: Number(id) };

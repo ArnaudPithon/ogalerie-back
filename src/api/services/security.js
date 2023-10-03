@@ -12,10 +12,14 @@ const securityService = {
      * @param {*} next
      */
     isConnected (req, res, next) {
-        // Utilisée sur une route dynamique avec un id d'utilisateur en paramètre
-        debug('url', req.url);
+        if (!req.headers.authorization) {
+            const error = new APIError('Missing token', 403);
 
-        securityService.checkToken(req);
+            next(error);
+        }
+        const token = req.headers.authorization.split(' ')[1];
+
+        securityService.checkToken(token);
 
         next();
     },
@@ -39,24 +43,29 @@ const securityService = {
      * @param {*} req
      * @param {int} id
      */
-    checkToken (req) {
+    checkToken (token) {
         try {
-            if (!req.headers.authorization) {
-                const error = new APIError('Missing token', 403);
-
-                throw (error);
-            }
-            const token = req.headers.authorization.split(' ')[1];
-
-            jwt.verify(token, process.env.JWT_SECRET);
-
-            return;
+            return jwt.verify(token, process.env.JWT_SECRET);
         }
         catch (err) {
             const error = new APIError(err.message, 403);
 
             throw (error);
         }
+    },
+
+    isOwner (req, res, next) {
+        const { id } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = securityService.checkToken(token);
+
+        if (Number(id) === decoded.id) {
+            req.isOwner = true;
+        }
+        else {
+            req.isOwner = false;
+        }
+        next();
     },
 };
 
