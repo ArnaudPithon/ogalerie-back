@@ -17,11 +17,11 @@ begin;
             'country', p.country,
             'biography', p.biography,
             'avatar', p.avatar,
-            'like', (
+            'like', (   -- likes donnés
                 select count(*) from appraise
                 where person_id = id
             ),
-            'liked', (
+            'liked', (  -- likes reçus
                 select count(*) from appraise
                 where artwork_id in (
                     select id from artwork where person_id = p.id
@@ -39,18 +39,16 @@ begin;
     $$
         select json_build_object(
             'id', p.id,
-            'firstname', p.firstname,
-            'lastname', p.lastname,
             'nickname', p.nickname,
-            'birthday', p.birthday,
             'town', p.town,
             'country', p.country,
+            'biography', p.biography,
             'avatar', p.avatar,
-            'like', (
+            'like', (   -- likes donnés
                 select count(*) from appraise
                 where person_id = id
             ),
-            'liked', (
+            'liked', (  -- likes reçus
                 select count(*) from appraise
                 where artwork_id in (
                     select id from artwork where person_id = p.id
@@ -202,83 +200,6 @@ begin;
         -- TODO : Je préfèrerai ne pas renvoyer le hash
     end;
     $$ language plpgsql security definer;
-
-    -- Retourne les collections d'un utilisateur
-    drop function if exists public.get_user_collections;
-    create function public.get_user_collections (p_id int) returns setof json as
-    $$
-        select json_build_object(
-            'id', c.id,
-            'title', c.title,
-            'artwork', a.*
-        )
-        from collection as c
-        join artwork as a
-        on collection_id = c.id
-        where c.person_id = p_id
-        ;
-    $$ language sql security definer;
-
-    -- Retourne les artworks d'un utilisateur
-    drop function if exists public.get_user_artworks;
-    create function public.get_user_artworks (p_id int) returns setof artwork as
-    $$
-        select *
-        from artwork
-        where person_id = p_id ;
-    $$ language sql security definer;
-
-    -- Retourne les œuvres liées à une collection
-    drop function if exists public.get_collection_artwork;
-    create function get_collection_artwork (c_id int) returns setof artwork as
-    $$
-        select *
-        from artwork
-        where collection_id = c_id;
-    $$ language sql security definer;
-
-    -- Créer une collection
-    drop function if exists public.create_collection;
-    create function create_collection (n json) returns json as
-    $$
-    insert into public.collection as c
-    ( title, person_id )
-    select
-        n->>'title',
-        (n->>'ownerId')::int
-    returning json_build_object(
-        'id', c.id,
-        'title', c.title,
-        'ownerId', c.person_id
-    );
-    $$ language sql security definer;
-
-    -- Créer un artwork
-    drop function if exists public.create_artwork;
-    create function create_artwork (n json) returns json as
-    $$
-    insert into public.artwork as a
-    ( title, uri, date, description, mature, collection_id, person_id )
-    select
-        n->>'title',
-        n->>'uri',
-        (n->>'date')::date,
-        n->>'description',
-        (n->>'mature')::boolean,
-        (n->>'collection_id')::int,
-        (n->>'ownerId')::int
-    returning json_build_object(
-        'id', a.id,
-        'title', a.title,
-        'date', a.date,
-        'description', a.description,
-        'mature', a.mature,
-        'uri', a.uri,
-        'collection_id', a.collection_id,
-        'ownerId', a.person_id,
-        'created_at', a.created_at
-    );
-    $$ language sql security definer;
 
     commit;
 reset role;

@@ -15,8 +15,7 @@ const securityService = require('../services/security.js');
 /**
  * POST /v1/users
  * @summary Respond with a newly registered user
- * @route PUT /signUp
- * @returns {User} 200 - A newly registered user
+ * @returns {User} 201 - A newly registered user
  */
 router.post('/',
     validationService.checkSignUpData,
@@ -66,7 +65,8 @@ router.get('/:id(\\d+)/collections', usersController.getCollections);
 
 /**
  * POST /v1/users/:id/collections
- * @summary 
+ * @summary Create a collection
+ * @return {Collection} 201 - 
  */
 router.post('/:id(\\d+)/collections',
     securityService.isConnected,
@@ -75,14 +75,15 @@ router.post('/:id(\\d+)/collections',
 
 /**
  * GET /v1/users/:id/artworks
- * @summary Respond with a list completed of a user's collections
+ * @summary Respond with a user's artworks list
  * @return [Artworks] 200 - 
  */
 router.get('/:id(\\d+)/artworks', usersController.getArtworks);
 
 /**
  * POST /v1/users/:id/artworks
- * @summary 
+ * @summary Create an artwork
+ * @return {Artwork} 201 - 
  */
 router.post('/:id(\\d+)/artworks',
     securityService.isConnected,
