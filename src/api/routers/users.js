@@ -90,5 +90,6 @@ router.post('/:id(\\d+)/artworks',
     securityService.isOwner,
     artworksController.create);
 
+router.get('/:id(\\d+)/favorites', usersController.getFavorites);
 
 module.exports = router;

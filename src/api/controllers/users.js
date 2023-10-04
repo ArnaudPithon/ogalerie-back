@@ -180,6 +180,19 @@ const usersController = {
             res.json(artworks);
         }
     },
+
+    getFavorites: async(req, res, next) => {
+        const { id } = req.params;
+        const { error, favorites } = await dataMapper.getFavorites(id);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            debug(favorites);
+            res.json(favorites);
+        }
+    },
 };
 
 module.exports = usersController;

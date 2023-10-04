@@ -278,7 +278,6 @@ const dataMapper = {
         const values = [id];
         let error, artworks;
 
-
         try {
             const response = await client.query(sqlQuery, values);
 
@@ -294,6 +293,32 @@ const dataMapper = {
         debug(artworks);
 
         return { error, artworks };
+    },
+
+    async getFavorites (id) {
+        const sqlQuery = `
+        select * from get_user_favorites($1)
+        ;`;
+        const values = [id];
+        let error, favorites;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            favorites = response.rows.map(e => {
+                return e.get_user_favorites;
+            });
+            if (!favorites) {
+                error = new APIError('informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        debug(favorites);
+
+        return { error, favorites };
     },
 
 };
