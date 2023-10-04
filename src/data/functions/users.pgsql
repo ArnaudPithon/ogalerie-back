@@ -17,11 +17,11 @@ begin;
             'country', p.country,
             'biography', p.biography,
             'avatar', p.avatar,
-            'like', (
+            'like', (   -- likes donnés
                 select count(*) from appraise
                 where person_id = id
             ),
-            'liked', (
+            'liked', (  -- likes reçus
                 select count(*) from appraise
                 where artwork_id in (
                     select id from artwork where person_id = p.id
@@ -39,18 +39,16 @@ begin;
     $$
         select json_build_object(
             'id', p.id,
-            'firstname', p.firstname,
-            'lastname', p.lastname,
             'nickname', p.nickname,
-            'birthday', p.birthday,
             'town', p.town,
             'country', p.country,
+            'biography', p.biography,
             'avatar', p.avatar,
-            'like', (
+            'like', (   -- likes donnés
                 select count(*) from appraise
                 where person_id = id
             ),
-            'liked', (
+            'liked', (  -- likes reçus
                 select count(*) from appraise
                 where artwork_id in (
                     select id from artwork where person_id = p.id
