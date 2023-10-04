@@ -12,6 +12,7 @@ const securityService = {
      * @param {*} next
      */
     isConnected (req, res, next) {
+        debug(req.headers);
         if (!req.headers.authorization) {
             const error = new APIError('Missing token', 403);
 
