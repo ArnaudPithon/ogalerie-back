@@ -42,6 +42,67 @@ const artworksController = {
             res.status(201).json(artwork);
         }
     },
+
+    getArtwork: async (req, res, next) => {
+        const { id } = req.params;
+        // On affecte par défaut une id qui ne peut exister en BDD pour un utilisateur
+        // qui n'est pas connecté.
+        let viewverId = 0;
+
+        if (req.isConnected) {
+            const token = req.headers?.authorization.split(' ')[1];
+            const decoded = securityService.checkToken(token);
+
+            viewverId = decoded.id;
+        }
+
+        const { error, artwork } = await dataMapper.getArtwork(id, viewverId);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(artwork);
+        }
+    },
+
+    update:  async (req, res, next) => {
+        const { id } = req.params;
+
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+
+        const { error, artwork } = await dataMapper.update({ id, ...req.body });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(artwork);
+        }
+    },
+
+    delete:  async (req, res, next) => {
+        const { id } = req.params;
+
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+
+        const { error } = await dataMapper.delete({ id });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json('Artwork deleted');
+        }
+    },
 };
 
 module.exports = artworksController;

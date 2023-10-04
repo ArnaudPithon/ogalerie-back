@@ -10,17 +10,21 @@ const securityService = {
      * @param {*} req
      * @param {*} res
      * @param {*} next
+     * @returns boolean
      */
     isConnected (req, res, next) {
         debug(req.headers);
-        if (!req.headers.authorization) {
-            const error = new APIError('Missing token', 403);
 
-            next(error);
+        if (req.headers?.authorization) {
+            const token = req.headers?.authorization.split(' ')[1];
+
+            if (securityService.checkToken(token)) {
+                req.isConnected = true;
+            }
+            else {
+                req.isConnected = false;
+            }
         }
-        const token = req.headers.authorization.split(' ')[1];
-
-        securityService.checkToken(token);
 
         next();
     },
@@ -55,6 +59,13 @@ const securityService = {
         }
     },
 
+    /**
+     * @summary Vérification de la propriété
+     * @param {*} req
+     * @param {*} res
+     * @param {*} next
+     * @returns boolean
+     */
     isOwner (req, res, next) {
         const { id } = req.params;
         const token = req.headers.authorization.split(' ')[1];

@@ -29,7 +29,49 @@ const dataMapper = {
         }
 
         return {error, artwork};
+    },
 
+    async getArtwork (artworkId, viewverId) {
+        const queryArtwork = 'select * from get_artwork($1, $2);';
+        const queryTags = 'select * from get_artwork_tags($1);';
+        const queryComments = 'select * from get_artwork_comment($1);';
+        const valuesArtwork = [artworkId, viewverId];
+        const valuesOther = [artworkId];
+        let error, artwork;
+
+        try {
+            const artworkRes = await client.query(queryArtwork, valuesArtwork);
+
+            artwork = artworkRes.rows[0].get_artwork;
+
+            if (!artwork) {
+                error = new APIError('Artwork not found', 404);
+            }
+
+            const tagsRes = await client.query(queryTags, valuesOther);
+
+            if (tagsRes.rowCount) {
+                artwork.tags = tagsRes.rows.map(e => e.get_artwork_tags);
+            }
+
+            const commentsRes = await client.query(queryComments, valuesOther);
+
+            if (commentsRes.rowCount) {
+                artwork.comment = commentsRes.rows.map(e => e.get_artwork_comment);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+        debug(artwork);
+
+        return {error, artwork};
+    },
+
+    async update (newInfos) {
+    },
+
+    async delete (id) {
     },
 };
 
