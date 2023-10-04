@@ -5,24 +5,31 @@ const { collectionsController } = require('../controllers');
 const securityService = require('../services/security.js');
 
 /**
- * GET /v1/collections
- * @summary 
+ * GET /v1/collections/:id
+ * @summary Return a collection
  */
-router.get('/', collectionsController.getCollections);
+router.get('/:id(\\d+)',
+    securityService.isConnected,
+    securityService.isOwner,
+    collectionsController.read);
 
 /**
- * POST /v1/collections
- * @summary 
+ * PATCH /v1/collections/:id
+ * @summary Update a collection
  */
-router.post('/',
+router.patch('/:id(\\d+)',
     securityService.isConnected,
-    securityService.checkToken,
-    collectionsController.create);
+    securityService.isOwner,
+    collectionsController.update);
 
-router.get('/:id', collectionsController.read);
-router.patch('/:id', collectionsController.update);
-router.delete('/:id', collectionsController.delete);
-
-router.get('/:id/artworks', collectionsController.getArtworks);
+/**
+ * DELETE /v1/collections/:id
+ * @summary Delete a collection
+ * @return string 200 - confirmation
+ */
+router.delete('/:id(\\d+)',
+    securityService.isConnected,
+    securityService.isOwner,
+    collectionsController.delete);
 
 module.exports = router;

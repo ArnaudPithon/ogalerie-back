@@ -2,19 +2,33 @@
 
 const router = require('express').Router();
 const { artworksController } = require('../controllers');
+const securityService = require('../services/security.js');
 
 /**
- * GET /v1/artworks
- * @summary Respond with an artwork list
+ * GET /v1/artworks/:id
+ * @summary Return an artwork
  */
-router.get('/', artworksController.artworks);
+router.get('/:id(\\d+)',
+    securityService.isConnected,
+    securityService.isOwner,
+    artworksController.getArtwork);
 
-router.post('/', artworksController.artworks);
+/**
+ * PATCH /v1/artworks/:id
+ * @summary Update an artwork
+ */
+router.patch('/:id(\\d+)',
+    securityService.isConnected,
+    securityService.isOwner,
+    artworksController.update);
 
-router.get('/:id', artworksController.getArtwork);
-
-router.patch('/:id', artworksController.patchArtwork);
-
-router.delete('/:id', artworksController.deleteArtworks);
+/**
+ * DELETE /v1/artworks/:id
+ * @summary Delete an artwork
+ */
+router.delete('/:id(\\d+)',
+    securityService.isConnected,
+    securityService.isOwner,
+    artworksController.delete);
 
 module.exports = router;

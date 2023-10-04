@@ -103,6 +103,7 @@ begin;
     );
 
     create table favorite (
+        id int generated always as identity primary key,
         person_id int references person(id),
         artwork_id int references artwork(id),
         created_at timestamptz not null default now(),
