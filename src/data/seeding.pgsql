@@ -130,6 +130,10 @@ begin;
     (
         (select id from person where nickname = 'Fry'),
         (select id from artwork where title = 'artist')
+    ),
+    (
+        (select id from person where nickname = 'Fry'),
+        (select id from artwork where title = 'cover')
     )
     ;
 
