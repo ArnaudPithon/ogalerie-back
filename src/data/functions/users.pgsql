@@ -201,5 +201,26 @@ begin;
     end;
     $$ language plpgsql security definer;
 
+    -- Retourne la liste de favoris d'un utilisateur
+    drop function if exists public.get_user_favorites;
+    create function get_user_favorites(i int) returns setof json as
+    $$
+        select json_build_object(
+            'id', a.id,
+            'title', a.title,
+            'mature', a.mature,
+            'collection', a.collection_id,
+            'owner', p.nickname,
+            'date', a.date,
+            'description', a.description,
+            'created_at', a.created_at,
+            'updated_at', a.updated_at
+        )
+        from person p
+        join favorite f on person_id = p.id
+        join artwork a on artwork_id = a.id
+        where p.id = i ;
+    $$ language sql security definer;
+
     commit;
 reset role;
