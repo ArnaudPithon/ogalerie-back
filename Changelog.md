@@ -1,5 +1,11 @@
 # Changelog
 
+## jeu. 05 oct. 2023 17:03:48 CEST
+
+- Meilleure modularité dans la gestion des authorisations;
+- Implémentation des routes artworks complètes;
+- passage en release 0.4.0
+
 ## mar. 03 oct. 2023 18:40:11 CEST
 
 ### Réécriture de l'identification par token
@@ -21,5 +27,3 @@ Les routes qui les utilisent actuellement :
 
 - nombre de like _donnés_ par l'utilisateur
 - nombre de like _reçus_ par les œuvres de l'utilisateur
-
-
