@@ -1,4 +1,4 @@
-// vim: foldmethod=syntax:foldlevel=0:foldnestmax=2
+// vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
 // URL préfixée par /users
@@ -33,7 +33,7 @@ router.get('/:role((?:creator|admin)?)', usersController.users);
  */
 router.get('/:id(\\d+)',
     securityService.isConnected,
-    securityService.isOwner,
+    securityService.isUser,
     usersController.getUser);
 
 /**
@@ -42,7 +42,7 @@ router.get('/:id(\\d+)',
  */
 router.patch('/:id(\\d+)',
     securityService.isConnected,
-    securityService.isOwner,
+    securityService.isUser,
     validationService.checkUpdateData,
     usersController.update);
 
@@ -53,7 +53,7 @@ router.patch('/:id(\\d+)',
  */
 router.delete('/:id(\\d+)',
     securityService.isConnected,
-    securityService.isOwner,
+    securityService.isUser,
     usersController.delete);
 
 /**
@@ -70,7 +70,7 @@ router.get('/:id(\\d+)/collections', usersController.getCollections);
  */
 router.post('/:id(\\d+)/collections',
     securityService.isConnected,
-    securityService.isOwner,
+    securityService.isUser,
     collectionsController.create);
 
 /**
@@ -87,7 +87,7 @@ router.get('/:id(\\d+)/artworks', usersController.getArtworks);
  */
 router.post('/:id(\\d+)/artworks',
     securityService.isConnected,
-    securityService.isOwner,
+    securityService.isUser,
     artworksController.create);
 
 router.get('/:id(\\d+)/favorites', usersController.getFavorites);

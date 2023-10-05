@@ -2,6 +2,15 @@
 begin;
     set role ogalerie_admin;
 
+    -- Retourne le propriétaire d'une œuvre
+    drop function if exists public.get_artwork_owner;
+    create function public.get_artwork_owner (i int) returns int as
+    $$
+        select person_id
+        from artwork
+        where id = i ;
+    $$ language sql security definer;
+
     -- Retourne les artworks d'un utilisateur
     drop function if exists public.get_user_artworks;
     create function public.get_user_artworks (p_id int) returns setof artwork as
@@ -10,6 +19,16 @@ begin;
         from artwork
         where person_id = p_id ;
     $$ language sql security definer;
+
+    -- Retire un artwork
+    drop function if exists public.delete_artwork;
+    create function public.delete_artwork (json) returns json as
+    $$
+        delete from public.artwork a
+        where a.id = ($1->>'id')::int
+        returning $1
+        ;
+    $$ language sql strict security definer;
 
     -- Créer un artwork
     drop function if exists public.create_artwork;
@@ -94,6 +113,61 @@ begin;
         join person p on p.id = c.person_id
         where artwork_id = i ;
     $$ language sql security definer;
+
+    -- Met à jour les informations d'une œuvre
+    drop function if exists public.update_artwork;
+    create function update_artwork(maj json) returns artwork as
+    $$
+    declare
+        art_db public.artwork;
+    begin
+        -- On récupère l'artwork en BDD et le stocke dans art_db
+        select * into art_db
+        from public.artwork where id = (maj->>'id')::int;
+
+        -- On met à jour ce qui doit l'être
+        if maj->>'title' is not null
+        then
+            art_db.title = maj->>'title';
+        end if;
+        if maj->>'mature' is not null
+        then
+            art_db.mature = maj->>'mature';
+        end if;
+        if maj->>'collection_id' is not null
+        then
+            art_db.collection_id = maj->>'collection_id';
+        end if;
+        if maj->>'date' is not null
+        then
+            art_db.date = maj->>'date';
+        end if;
+        if maj->>'description' is not null
+        then
+            art_db.description = maj->>'description';
+        end if;
+        if maj->>'uri' is not null
+        then
+            art_db.uri = maj->>'uri';
+        end if;
+
+        art_db.updated_at = now();
+
+        -- Réintroduit les infos dans la BDD
+        update public.artwork
+        set
+            title = art_db.title,
+            mature = art_db.mature,
+            date = art_db.date,
+            description = art_db.description,
+            uri = art_db.uri,
+            collection_id = art_db.collection_id
+        where id = (maj->>'id')::int;
+
+        -- return les valeurs actualisées.
+        return art_db;
+    end;
+    $$ language plpgsql security definer;
 
     reset role;
 commit;

@@ -10,7 +10,7 @@ const securityService = require('../services/security.js');
  */
 router.get('/:id(\\d+)',
     securityService.isConnected,
-    securityService.isOwner,
+    securityService.isArtworkOwner,
     artworksController.getArtwork);
 
 /**
@@ -19,7 +19,7 @@ router.get('/:id(\\d+)',
  */
 router.patch('/:id(\\d+)',
     securityService.isConnected,
-    securityService.isOwner,
+    securityService.isArtworkOwner,
     artworksController.update);
 
 /**
@@ -28,7 +28,7 @@ router.patch('/:id(\\d+)',
  */
 router.delete('/:id(\\d+)',
     securityService.isConnected,
-    securityService.isOwner,
+    securityService.isArtworkOwner,
     artworksController.delete);
 
 module.exports = router;

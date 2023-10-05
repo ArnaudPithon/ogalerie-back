@@ -69,9 +69,73 @@ const dataMapper = {
     },
 
     async update (newInfos) {
+        const sqlQuery = `
+        select * from update_artwork($1)
+        ;`;
+        const values = [newInfos];
+        let error, artwork;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            artwork = response.rows[0];
+
+            if (!artwork) {
+                error = new APIError('Bad Request', 400);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, artwork };
     },
 
     async delete (id) {
+        const sqlQuery = `
+        select * from delete_artwork($1)
+        ;`;
+        const values = [id];
+        let error, result;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows[0].delete_artwork;
+
+            debug(result);
+            if (!result) {
+                error = new APIError('Informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return {error, result};
+    },
+
+    async getOwner (id) {
+        const sqlQuery = `
+        select * from get_artwork_owner($1)
+        ;`;
+        const values = [id];
+        let error, ownerId;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            ownerId = response.rows[0].get_artwork_owner;
+
+            if (!ownerId) {
+                error = new APIError("Can't define owner", 400);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, ownerId };
     },
 };
 

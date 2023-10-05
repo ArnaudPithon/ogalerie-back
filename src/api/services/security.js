@@ -60,18 +60,66 @@ const securityService = {
     },
 
     /**
-     * @summary Vérification de la propriété
+     * @summary Vérification de l'identité
      * @param {*} req
      * @param {*} res
      * @param {*} next
      * @returns boolean
      */
-    isOwner (req, res, next) {
+    isUser (req, res, next) {
         const { id } = req.params;
         const token = req.headers.authorization.split(' ')[1];
         const decoded = securityService.checkToken(token);
 
         if (Number(id) === decoded.id) {
+            req.isUser = true;
+        }
+        else {
+            req.isUser = false;
+        }
+        next();
+    },
+
+    /**
+     * @summary Vérification de la propriété d'un artwork
+     * @param {*} req
+     * @param {*} res
+     * @param {*} next
+     * @returns boolean
+     */
+    async isArtworkOwner (req, res, next) {
+        const { id } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = securityService.checkToken(token);
+        const dataMapper = require('../models/artworks');
+
+        const { ownerId } = await dataMapper.getOwner(id);
+
+        if (ownerId === decoded.id) {
+            req.isOwner = true;
+        }
+        else {
+            req.isOwner = false;
+        }
+        next();
+    },
+
+    /**
+     * @summary Vérification de la propriété d'une collection
+     * @param {*} req
+     * @param {*} res
+     * @param {*} next
+     * @returns boolean
+     */
+    async isCollectionOwner (req, res, next) {
+        const { id } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = securityService.checkToken(token);
+        const dataMapper = require('../models/collection');
+
+        const { ownerId } = await dataMapper.getOwner(id);
+
+        if (ownerId === decoded.id) {
             req.isOwner = true;
         }
         else {

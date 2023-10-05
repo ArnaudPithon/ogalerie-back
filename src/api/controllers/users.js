@@ -94,7 +94,7 @@ const usersController = {
         const { id } = req.params;
         let request;
 
-        if (req.isOwner) {
+        if (req.isUser) {
             request = dataMapper.getUser;
         }
         else {
@@ -109,7 +109,7 @@ const usersController = {
         else {
             let response;
 
-            if (req.isOwner) {
+            if (req.isUser) {
                 response = { ...user, 'logged': true };
             }
             else {
@@ -122,7 +122,7 @@ const usersController = {
     update: async (req, res, next) => {
         const { id } = req.params;
 
-        if (!req.isOwner) {
+        if (!req.isUser) {
             next(new APIError('Forbidden', 403));
 
             return;
@@ -148,7 +148,7 @@ const usersController = {
     delete: async (req, res, next) => {
         const { id } = req.params;
 
-        if (!req.isOwner) {
+        if (!req.isUser) {
             next(new APIError('Forbidden', 403));
 
             return;
