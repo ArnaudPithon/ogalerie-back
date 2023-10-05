@@ -16,6 +16,7 @@ const schemaUserInput = Joi.object({
     town:Joi.string().pattern(/[a-zA-Z-]{2,24}$/),
     country:Joi.string().pattern(/[a-zA-Z-]{2,32}$/),
     avatar:Joi.string(),
+    biography:Joi.string().pattern(/^.{0,140}$/),
 }).required();
 
 // Schéma des données attendues à la modification d'un profil
@@ -27,6 +28,7 @@ const schemaUserPatch = Joi.object({
     town:Joi.string().pattern(/[a-zA-Z-]{2,24}$/),
     country:Joi.string().pattern(/[a-zA-Z-]{2,32}$/),
     avatar:Joi.string(),
+    biography:Joi.string().pattern(/^.{0,140}$/),
 }).required();
 
 // Schéma des données attendues au formulaire de connexion

@@ -107,7 +107,15 @@ const usersController = {
             next(error);
         }
         else {
-            res.json(user);
+            let response;
+
+            if (req.isOwner) {
+                response = { ...user, 'logged': true };
+            }
+            else {
+                response = { ...user, 'logged': false };
+            }
+            res.json(response);
         }
     },
 
