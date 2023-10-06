@@ -106,6 +106,7 @@ begin;
             'content', c.content,
             'owner', p.nickname,
             'owner_id', p.id,
+            'avatar', p.avatar,
             'created_at', c.created_at,
             'updated_at', c.updated_at
         )
