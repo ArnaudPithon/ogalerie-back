@@ -221,5 +221,19 @@ begin;
         where p.id = i ;
     $$ language sql security definer;
 
+    -- Ajoute un artwork à la liste des favoris
+    drop function if exists public.set_user_favorite;
+    create function set_user_favorite(f json) returns int as
+    $$
+        insert into favorite (
+            person_id, artwork_id
+        )
+        select
+            (f->>'userId')::int,
+            (f->>'artworkId')::int
+        returning 1
+        ;
+    $$ language sql security definer;
+
     commit;
 reset role;

@@ -92,4 +92,15 @@ router.post('/:id(\\d+)/artworks',
 
 router.get('/:id(\\d+)/favorites', usersController.getFavorites);
 
+/**
+ * POST /v1/users/:id/favorites
+ * @summary Create a favorite
+ * @return {Int} 201 - 
+ */
+router.post('/:id(\\d+)/favorites',
+    securityService.isConnected,
+    securityService.isUser,
+    artworksController.setFavorite);
+
+
 module.exports = router;

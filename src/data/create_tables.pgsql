@@ -104,10 +104,11 @@ begin;
 
     create table favorite (
         id int generated always as identity primary key,
-        person_id int references person(id),
-        artwork_id int references artwork(id),
+        person_id int not null references person(id),
+        artwork_id int not null references artwork(id),
         created_at timestamptz not null default now(),
-        updated_at timestamptz
+        updated_at timestamptz,
+        unique (person_id, artwork_id)
     );
 
     reset role;
