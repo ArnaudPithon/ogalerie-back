@@ -1,5 +1,9 @@
 # Changelog
 
+## ven. 06 oct. 2023 09:54:27 CEST
+
+
+
 ## jeu. 05 oct. 2023 17:03:48 CEST
 
 - Meilleure modularité dans la gestion des authorisations;

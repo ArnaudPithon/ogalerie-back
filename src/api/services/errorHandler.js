@@ -15,7 +15,6 @@ const errorHandler = {
         // j'écris dans le fichier de logs
         errorHandler.log(err);
 
-        // si je suis en dev, j'affiche l'erreur dans le terminal
         debug(err.error);
 
         res.status(err.code).json({ error: err.message });

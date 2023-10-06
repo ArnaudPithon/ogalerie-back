@@ -16,7 +16,7 @@ const securityService = {
         debug(req.headers);
 
         if (req.headers?.authorization) {
-            const token = req.headers?.authorization.split(' ')[1];
+            const token = req.headers.authorization?.split(' ')[1];
 
             if (securityService.checkToken(token)) {
                 req.isConnected = true;
@@ -68,7 +68,7 @@ const securityService = {
      */
     isUser (req, res, next) {
         const { id } = req.params;
-        const token = req.headers.authorization.split(' ')[1];
+        const token = req.headers.authorization?.split(' ')[1];
         const decoded = securityService.checkToken(token);
 
         if (Number(id) === decoded.id) {
@@ -89,7 +89,7 @@ const securityService = {
      */
     async isArtworkOwner (req, res, next) {
         const { id } = req.params;
-        const token = req.headers.authorization.split(' ')[1];
+        const token = req.headers.authorization?.split(' ')[1];
         const decoded = securityService.checkToken(token);
         const dataMapper = require('../models/artworks');
 
@@ -113,7 +113,7 @@ const securityService = {
      */
     async isCollectionOwner (req, res, next) {
         const { id } = req.params;
-        const token = req.headers.authorization.split(' ')[1];
+        const token = req.headers.authorization?.split(' ')[1];
         const decoded = securityService.checkToken(token);
         const dataMapper = require('../models/collection');
 
