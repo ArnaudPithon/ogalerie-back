@@ -117,7 +117,7 @@ router.delete('/:id(\\d+)/favorites',
  * @summary Add a like
  * @return {Int} 201 - 
  */
-router.post('/:id(\\d+)/like',
+router.post('/:id(\\d+)/likes',
     securityService.isConnected,
     securityService.isUser,
     artworksController.setAppraise);
@@ -127,7 +127,7 @@ router.post('/:id(\\d+)/like',
  * @summary Retire a like
  * @return {Int} 200 - 
  */
-router.delete('/:id(\\d+)/like',
+router.delete('/:id(\\d+)/likes',
     securityService.isConnected,
     securityService.isUser,
     artworksController.deleteAppraise);
