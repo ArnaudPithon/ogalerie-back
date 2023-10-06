@@ -210,10 +210,7 @@ begin;
             'title', a.title,
             'mature', a.mature,
             'collection', a.collection_id,
-            'owner', p.nickname,
-            'owner_id', p.id,
             'date', a.date,
-            'description', a.description,
             'uri', a.uri,
             'created_at', a.created_at,
             'updated_at', a.updated_at
