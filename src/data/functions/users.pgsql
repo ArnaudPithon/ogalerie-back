@@ -128,7 +128,8 @@ begin;
             'id', p.id,
             'firstname', p.firstname,
             'lastname', p.lastname,
-            'nickname', p.nickname
+            'nickname', p.nickname,
+            'avatar', p.avatar
         )
         from public.person p
         where p.situation = s ;
