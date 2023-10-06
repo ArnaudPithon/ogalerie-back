@@ -321,6 +321,31 @@ const dataMapper = {
         return { error, favorites };
     },
 
+    async deleteFavorites (id) {
+        const sqlQuery = `
+        select * from delete_user_favorites($1)
+        ;`;
+        const values = [id];
+        let error, result;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows.map(e => {
+                return e.get_user_result;
+            });
+            if (!result) {
+                error = new APIError('informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        debug(result);
+
+        return { error, result };
+    },
 };
 
 module.exports = dataMapper;

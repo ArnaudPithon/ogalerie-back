@@ -235,5 +235,16 @@ begin;
         ;
     $$ language sql security definer;
 
+    -- Retire un favori
+    drop function if exists public.delete_user_favorite;
+    create function delete_user_favorite(f json) returns int as
+    $$
+        delete from favorite
+        where person_id=(f->>'userId')::int
+        and artwork_id=(f->>'artworkId')::int
+        returning 1
+        ;
+    $$ language sql security definer;
+
     commit;
 reset role;

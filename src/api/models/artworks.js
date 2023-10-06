@@ -161,6 +161,30 @@ const dataMapper = {
 
         return { error, result };
     },
+
+    async deleteFavorite (infos) {
+        const sqlQuery = `
+        select * from delete_user_favorite($1)
+        ;`;
+        const values = [infos];
+        let error, result;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows[0].delete_user_favorite;
+
+            debug(response.rows[0]);
+            if (!result) {
+                error = new APIError("Can't delete favorite", 400);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, result };
+    },
 };
 
 module.exports = dataMapper;

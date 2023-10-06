@@ -102,5 +102,14 @@ router.post('/:id(\\d+)/favorites',
     securityService.isUser,
     artworksController.setFavorite);
 
+/**
+ * DELETE /v1/users/:id/favorites
+ * @summary Retire a favorite
+ * @return {Int} 201 - 
+ */
+router.delete('/:id(\\d+)/favorites',
+    securityService.isConnected,
+    securityService.isUser,
+    artworksController.deleteFavorite);
 
 module.exports = router;

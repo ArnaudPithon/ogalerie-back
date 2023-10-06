@@ -122,6 +122,25 @@ const artworksController = {
             res.json(result);
         }
     },
+
+    deleteFavorite: async (req, res, next) => {
+        const { id } = req.params;
+        const { artworkId } = req.body;
+
+        if (!req.isUser) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+        const { error, result } = await dataMapper.deleteFavorite({ artworkId, userId: id });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(result);
+        }
+    },
 };
 
 module.exports = artworksController;
