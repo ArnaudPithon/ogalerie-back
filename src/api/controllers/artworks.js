@@ -119,7 +119,7 @@ const artworksController = {
             next(error);
         }
         else {
-            res.json(result);
+            res.status(201).json(result);
         }
     },
 
@@ -133,6 +133,44 @@ const artworksController = {
             return;
         }
         const { error, result } = await dataMapper.deleteFavorite({ artworkId, userId: id });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(result);
+        }
+    },
+
+    setAppraise: async (req, res, next) => {
+        const { id } = req.params;
+        const { artworkId } = req.body;
+
+        if (!req.isUser) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+        const { error, result } = await dataMapper.setAppraise({ artworkId, userId: id });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.status(201).json(result);
+        }
+    },
+
+    deleteAppraise: async (req, res, next) => {
+        const { id } = req.params;
+        const { artworkId } = req.body;
+
+        if (!req.isUser) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+        const { error, result } = await dataMapper.deleteAppraise({ artworkId, userId: id });
 
         if (error) {
             next(error);

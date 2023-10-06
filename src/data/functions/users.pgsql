@@ -247,5 +247,30 @@ begin;
         ;
     $$ language sql security definer;
 
+    -- Ajoute un like à un artwork
+    drop function if exists public.set_appraise;
+    create function set_appraise(f json) returns int as
+    $$
+        insert into appraise (
+            person_id, artwork_id
+        )
+        select
+            (f->>'userId')::int,
+            (f->>'artworkId')::int
+        returning 1
+        ;
+    $$ language sql security definer;
+
+    -- Retire un like à un artwork
+    drop function if exists public.delete_appraise;
+    create function delete_appraise(f json) returns int as
+    $$
+        delete from appraise
+        where person_id=(f->>'userId')::int
+        and artwork_id=(f->>'artworkId')::int
+        returning 1
+        ;
+    $$ language sql security definer;
+
     commit;
 reset role;

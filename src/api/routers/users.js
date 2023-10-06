@@ -105,11 +105,31 @@ router.post('/:id(\\d+)/favorites',
 /**
  * DELETE /v1/users/:id/favorites
  * @summary Retire a favorite
- * @return {Int} 201 - 
+ * @return {Int} 200 - 
  */
 router.delete('/:id(\\d+)/favorites',
     securityService.isConnected,
     securityService.isUser,
     artworksController.deleteFavorite);
+
+/**
+ * POST /v1/users/:id/like
+ * @summary Add a like
+ * @return {Int} 201 - 
+ */
+router.post('/:id(\\d+)/like',
+    securityService.isConnected,
+    securityService.isUser,
+    artworksController.setAppraise);
+
+/**
+ * DELETE /v1/users/:id/like
+ * @summary Retire a like
+ * @return {Int} 200 - 
+ */
+router.delete('/:id(\\d+)/like',
+    securityService.isConnected,
+    securityService.isUser,
+    artworksController.deleteAppraise);
 
 module.exports = router;

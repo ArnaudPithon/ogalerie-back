@@ -185,6 +185,54 @@ const dataMapper = {
 
         return { error, result };
     },
+
+    async setAppraise (infos) {
+        const sqlQuery = `
+        select * from set_appraise($1)
+        ;`;
+        const values = [infos];
+        let error, result;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows[0].set_appraise;
+
+            debug(response.rows[0]);
+            if (!result) {
+                error = new APIError("Can't add a appraise", 400);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, result };
+    },
+
+    async deleteAppraise (infos) {
+        const sqlQuery = `
+        select * from delete_appraise($1)
+        ;`;
+        const values = [infos];
+        let error, result;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows[0].delete_appraise;
+
+            debug(response.rows[0]);
+            if (!result) {
+                error = new APIError("Can't delete appraise", 400);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, result };
+    },
 };
 
 module.exports = dataMapper;

@@ -38,7 +38,7 @@ const securityService = {
         return jwt.sign(user,
             process.env.JWT_SECRET,
             {
-                expiresIn: '2h',
+                expiresIn: '12h',
             },
         );
     },
