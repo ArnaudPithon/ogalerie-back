@@ -11,7 +11,7 @@ const collectionsController = {
         const { id } = req.params;
         const { title } = req.body;
 
-        if (!req.isOwner) {
+        if (!req.isUser) {
             next(new APIError('Forbidden', 403));
 
             return;
