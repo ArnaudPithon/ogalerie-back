@@ -55,7 +55,7 @@ const securityService = {
         catch (err) {
             const error = new APIError(err.message, 403);
 
-            throw (error);
+            return(error);
         }
     },
 
@@ -116,7 +116,7 @@ const securityService = {
         const token = req.headers.authorization?.split(' ')[1];
         const decoded = securityService.checkToken(token);
 
-        const dataMapper = require('../models/collection');
+        const dataMapper = require('../models/collections');
         const { ownerId } = await dataMapper.getOwner(id);
 
         if (ownerId === decoded.id) {

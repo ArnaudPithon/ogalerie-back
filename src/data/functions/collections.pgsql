@@ -18,8 +18,8 @@ begin;
     $$ language sql security definer;
 
     -- Retourne les œuvres liées à une collection
-    drop function if exists public.get_collection_artwork;
-    create function get_collection_artwork (c_id int) returns setof artwork as
+    drop function if exists public.get_collection_artworks;
+    create function get_collection_artworks (c_id int) returns setof artwork as
     $$
         select *
         from artwork
@@ -41,6 +41,32 @@ begin;
         'ownerId', c.person_id
     );
     $$ language sql security definer;
+
+    -- Retourne le propriétaire d'une collection
+    drop function if exists public.get_collection_owner;
+    create function public.get_collection_owner (i int) returns int as
+    $$
+        select person_id
+        from collection
+        where id = i ;
+    $$ language sql security definer;
+
+    -- Retourne les infos d'une collection
+    drop function if exists public.get_collection;
+    create function public.get_collection (i int) returns json as
+    $$
+        select json_build_object(
+        'id', id,
+        'title', title,
+        'owner_id', person_id,
+        'owner', (select nickname from person where id = person_id),
+        'created_at', created_at,
+        'updated_at', updated_at
+        )
+        from collection
+        where id = i ;
+    $$ language sql security definer;
+
 
     commit;
 reset role;

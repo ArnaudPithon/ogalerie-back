@@ -36,6 +36,17 @@ const collectionsController = {
     },
 
     read: async (req, res, next) => {
+        const { id } = req.params;
+
+        const { error, collection } = await dataMapper.read(id);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.status(201).json(collection);
+        }
+
     },
 
     update: async (req, res, next) => {

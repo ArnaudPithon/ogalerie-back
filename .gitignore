@@ -2,3 +2,4 @@
 .pgpass
 log/*.log
 tags
+*/node_modules/
