@@ -32,6 +32,8 @@ const dataMapper = {
     },
 
     async getArtwork (artworkId, viewverId) {
+        // Connaitre le spectateur permet de déterminer s'il a déjà liké l'œuvre
+        // ou mise dans ses favoris.
         const queryArtwork = 'select * from get_artwork($1, $2);';
         const queryTags = 'select * from get_artwork_tags($1);';
         const queryComments = 'select * from get_artwork_comment($1);';

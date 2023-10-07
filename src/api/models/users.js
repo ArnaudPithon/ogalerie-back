@@ -229,46 +229,32 @@ const dataMapper = {
     },
 
     async getCollections (id) {
-        const sqlQuery = `
-        select * from get_user_collections($1)
-        ;`;
+        const queryCollections = 'select * from get_user_collections($1);';
+        const queryArtworks = 'select * from get_collection_artwork($1);';
         const values = [id];
-        let error, result;
-        const collectionsTemp = {};
+        let error, collections;
 
         try {
-            const response = await client.query(sqlQuery, values);
+            const response = await client.query(queryCollections, values);
 
-            result = response.rows.map(e => e.get_user_collections);
-            if (!result) {
+            collections = response.rows.map(e => e.get_user_collections);
+            if (!collections) {
                 error = new APIError('informations erronnées', 403);
             }
-            debug(result);
+            debug(collections);
+
+            for (let c of collections) {
+                const artworks = await client.query(queryArtworks, [c.id]);
+
+                c.artworks = artworks.rows;
+            }
+            debug(collections);
         }
         catch (err) {
             error = new APIError(err.message, 500, err);
         }
 
-        //// Je reformate les données obtenues dans un format plus
-        //// utilisable en front.
-        //result.forEach(c => {
-        //    const { id, title } = c;
-
-        //    // Je vérifie que la collection a son entrée dans le
-        //    // dictionnaire des collections. Sinon, je la créé.
-        //    if (!collectionsTemp[id]) {
-        //        collectionsTemp[id] = { id, title, artworks: [] };
-        //    }
-        //    // J'ajoute le artwork courant à la liste des
-        //    // artworks de cette collection.
-        //    collectionsTemp[id].artworks.push(c.artwork);
-        //});
-
-        //// J'épure mon dictionnaire de collections pour ne garder
-        //// qu'un tableau d'objets collection.
-        //const collections = Object.values(collectionsTemp);
-
-        return { error, collections: result };
+        return { error, collections };
     },
 
     async getArtworks (id) {

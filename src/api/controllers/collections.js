@@ -47,8 +47,6 @@ const collectionsController = {
     getArtworks: async (req, res, next) => {
     },
 
-    getCollections: async (req, res, next) => {
-    },
 };
 
 module.exports = collectionsController;
