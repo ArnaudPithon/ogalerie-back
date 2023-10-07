@@ -179,6 +179,17 @@ const artworksController = {
             res.json(result);
         }
     },
+
+    random: async (req, res, next) => {
+        const { error, result } = await dataMapper.random();
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(result);
+        }
+    },
 };
 
 module.exports = artworksController;

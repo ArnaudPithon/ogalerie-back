@@ -1,8 +1,24 @@
 # Changelog
 
+## sam. 07 oct. 2023 23:45:41 CEST
+
+- FIX: bug d'identification à la création d'une collection
+- `GET /users/:id/collections` - complète la liste des collections avec les œuvres
+- `GET /collections/:id` - route d'une collection en particulier
+- `GET /artworks/random` - liste de 12 œuvres aléatoires
+
 ## ven. 06 oct. 2023 09:54:27 CEST
 
-
+- routes nécessaires pour liker une œuvre
+    - `POST /users/:id/likes`
+    - `DELETE /users/:id/likes`
+- routes nécessaires pour mettre une œuvre en favoris
+    - `POST /users/:id/favorites`
+    - `DELETE /users/:id/favorites`
+- ajout de l'avatar dans les commentaires
+- amélioration de la création des tables _favorite_ et _appraise_
+- FIX: évite un crash dans le cas d'un token mal formé
+- Retrait d'infos inutiles dans la liste de favoris
 
 ## jeu. 05 oct. 2023 17:03:48 CEST
 

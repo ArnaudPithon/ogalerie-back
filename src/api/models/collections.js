@@ -41,7 +41,6 @@ const dataMapper = {
 
             collection = response.rows[0].get_collection;
 
-            debug(collection);
             if (!collection) {
                 error = new APIError('Informations erronnées', 403);
             }
@@ -52,6 +51,7 @@ const dataMapper = {
         catch (err) {
             error = new APIError(err.message, 500, err);
         }
+        debug(collection);
 
         return {error, collection};
     },

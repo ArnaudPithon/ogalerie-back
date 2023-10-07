@@ -50,12 +50,14 @@ const dataMapper = {
                 error = new APIError('Artwork not found', 404);
             }
 
+            // Add tags
             const tagsRes = await client.query(queryTags, valuesOther);
 
             if (tagsRes.rowCount) {
                 artwork.tags = tagsRes.rows.map(e => e.get_artwork_tags);
             }
 
+            // Add comments
             const commentsRes = await client.query(queryComments, valuesOther);
 
             if (commentsRes.rowCount) {
@@ -228,6 +230,24 @@ const dataMapper = {
             if (!result) {
                 error = new APIError("Can't delete appraise", 400);
             }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, result };
+    },
+
+    async random () {
+        const sqlQuery = `
+        select * from random_artworks();
+        ;`;
+
+        let error, result;
+
+        try {
+            const response = await client.query(sqlQuery);
+            result = response.rows.map(e => e.random_artworks);
         }
         catch (err) {
             error = new APIError(err.message, 500, err);

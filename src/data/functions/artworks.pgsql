@@ -170,5 +170,28 @@ begin;
     end;
     $$ language plpgsql security definer;
 
+    -- Retourne une sélection aléatoire
+    drop function if exists public.random_artworks;
+    create function random_artworks () returns setof json as
+    $$
+    select json_build_object(
+        'id', a.id,
+        'title', a.title,
+        'uri', a.uri,
+        'collection_id', a.collection_id,
+        'collection', c.title,
+        'owner_id', a.person_id,
+        'owner', p.nickname
+    )
+    from artwork a
+    join collection c on c.id = a.collection_id
+    join person p on p.id = a.person_id
+    order by random()
+    limit 12;
+
+    $$ language sql security definer;
+
+
+
     reset role;
 commit;

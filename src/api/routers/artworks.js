@@ -31,4 +31,10 @@ router.delete('/:id(\\d+)',
     securityService.isArtworkOwner,
     artworksController.delete);
 
+/**
+ * GET /v1/artworks/random
+ * @summary Return a random artworks list
+ */
+router.get('/random', artworksController.random);
+
 module.exports = router;
