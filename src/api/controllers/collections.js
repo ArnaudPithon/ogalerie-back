@@ -44,9 +44,8 @@ const collectionsController = {
             next(error);
         }
         else {
-            res.status(201).json(collection);
+            res.status(200).json(collection);
         }
-
     },
 
     update: async (req, res, next) => {

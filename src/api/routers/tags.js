@@ -7,7 +7,7 @@ const { tagsController } = require('../controllers');
  * GET /v1/tags
  * @summary 
  */
-router.get('/:id/artwork', tagsController.getArtworkByTag);
+router.get('/:id', tagsController.read);
 
 router.get('/', tagsController.getTags);
 

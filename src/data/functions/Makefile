@@ -4,7 +4,7 @@ DB := ogalerie
 DEBUG :=  # -e
 fnc_files := users.pgsql artworks.pgsql collections.pgsql
 
-all: users.pgsql artworks.pgsql collections.pgsql
+all: users.pgsql artworks.pgsql collections.pgsql tags.pgsql
 
 users.pgsql:
 	$(PG) -U $(DB)_api -d $(DB) -f $@
@@ -15,4 +15,7 @@ artworks.pgsql:
 collections.pgsql:
 	$(PG) -U $(DB)_api -d $(DB) -f $@
 
-.PHONY: all users.pgsql artworks.pgsql collections.pgsql
+tags.pgsql:
+	$(PG) -U $(DB)_api -d $(DB) -f $@
+
+.PHONY: all users.pgsql artworks.pgsql collections.pgsql tags.pgsql

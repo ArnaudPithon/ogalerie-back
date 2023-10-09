@@ -7,12 +7,12 @@ const validationService = require('../services/validation');
 
 const artworksRouter = require('./artworks');
 const collectionsRouter = require('./collections');
-//const tagsRouter = require('./tags');
+const tagsRouter = require('./tags');
 const usersRouter = require('./users');
 
 mainRouter.use('/artworks', artworksRouter);
 mainRouter.use('/collections', collectionsRouter);
-//mainRouter.use('/tags', tagsRouter);
+mainRouter.use('/tags', tagsRouter);
 mainRouter.use('/users', usersRouter);
 
 /**
