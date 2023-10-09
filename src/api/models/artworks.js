@@ -56,12 +56,18 @@ const dataMapper = {
             if (tagsRes.rowCount) {
                 artwork.tags = tagsRes.rows.map(e => e.get_artwork_tags);
             }
+            else {
+                artwork.tags = [];
+            }
 
             // Add comments
             const commentsRes = await client.query(queryComments, valuesOther);
 
             if (commentsRes.rowCount) {
                 artwork.comment = commentsRes.rows.map(e => e.get_artwork_comment);
+            }
+            else {
+                artwork.comment = [];
             }
         }
         catch (err) {
