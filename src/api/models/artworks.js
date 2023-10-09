@@ -36,7 +36,7 @@ const dataMapper = {
         // ou mise dans ses favoris.
         const queryArtwork = 'select * from get_artwork($1, $2);';
         const queryTags = 'select * from get_artwork_tags($1);';
-        const queryComments = 'select * from get_artwork_comment($1);';
+        const queryComments = 'select * from get_artwork_comments($1);';
         const valuesArtwork = [artworkId, viewverId];
         const valuesOther = [artworkId];
         let error, artwork;
@@ -64,7 +64,7 @@ const dataMapper = {
                 const commentsRes = await client.query(queryComments, valuesOther);
 
                 if (commentsRes.rowCount) {
-                    artwork.comment = commentsRes.rows.map(e => e.get_artwork_comment);
+                    artwork.comment = commentsRes.rows.map(e => e.get_artwork_comments);
                 }
                 else {
                     artwork.comment = [];

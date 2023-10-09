@@ -8,6 +8,7 @@ const {
     usersController,
     collectionsController,
     artworksController,
+    commentsController,
 } = require('../controllers');
 const validationService = require('../services/validation');
 const securityService = require('../services/security.js');
@@ -89,6 +90,24 @@ router.post('/:id(\\d+)/artworks',
     securityService.isConnected,
     securityService.isUser,
     artworksController.create);
+
+/**
+ * POST /v1/users/:id/comments
+ * @summary Add a comment
+ */
+router.post('/:id(\\d+)/comments',
+    securityService.isConnected,
+    securityService.isUser,
+    commentsController.create);
+
+/**
+ * GET /v1/users/:id/comments
+ * @summary Return all user comments
+ */
+router.get('/:id(\\d+)/comments',
+    securityService.isConnected,
+    securityService.isUser,
+    commentsController.getAll);
 
 router.get('/:id(\\d+)/favorites', usersController.getFavorites);
 

@@ -119,24 +119,6 @@ begin;
         where artwork_id = i ;
     $$ language sql security definer;
 
-    -- Retourne les commentaires associés à une œuvre
-    drop function if exists public.get_artwork_comment;
-    create function get_artwork_comment (i int) returns setof json as
-    $$
-        select json_build_object(
-            'id', c.id,
-            'content', c.content,
-            'owner', p.nickname,
-            'owner_id', p.id,
-            'avatar', p.avatar,
-            'created_at', c.created_at,
-            'updated_at', c.updated_at
-        )
-        from art_comment c
-        join person p on p.id = c.person_id
-        where artwork_id = i ;
-    $$ language sql security definer;
-
     -- Met à jour les informations d'une œuvre
     drop function if exists public.update_artwork;
     create function update_artwork(maj json) returns artwork as
