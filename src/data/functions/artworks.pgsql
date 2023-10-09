@@ -192,7 +192,14 @@ begin;
 
     $$ language sql security definer;
 
-
+    -- Retourne tous les artworks
+    drop function if exists public.get_artworks;
+    create function public.get_artworks () returns setof artwork as
+    $$
+        select *
+        from artwork
+        ;
+    $$ language sql security definer;
 
     reset role;
 commit;

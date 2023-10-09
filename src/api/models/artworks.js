@@ -262,6 +262,29 @@ const dataMapper = {
 
         return { error, result };
     },
+
+    async getAllArtworks () {
+        const sqlQuery = `
+        select * from get_artworks()
+        ;`;
+        let error, artworks;
+
+        try {
+            const response = await client.query(sqlQuery);
+
+            artworks = response.rows;
+            if (!artworks) {
+                error = new APIError('informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        debug(artworks);
+
+        return { error, artworks };
+    },
 };
 
 module.exports = dataMapper;

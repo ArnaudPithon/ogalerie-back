@@ -190,6 +190,18 @@ const artworksController = {
             res.json(result);
         }
     },
+
+    getAllArtworks: async(req, res, next) => {
+        const { error, artworks } = await dataMapper.getAllArtworks();
+
+        if (error) {
+            next(error);
+        }
+        else {
+            debug(artworks);
+            res.json(artworks);
+        }
+    },
 };
 
 module.exports = artworksController;
