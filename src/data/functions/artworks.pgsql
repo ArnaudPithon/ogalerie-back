@@ -44,17 +44,27 @@ begin;
         (n->>'mature')::boolean,
         (n->>'collection_id')::int,
         (n->>'ownerId')::int
-    returning json_build_object(
-        'id', a.id,
-        'title', a.title,
-        'date', a.date,
-        'description', a.description,
-        'mature', a.mature,
-        'uri', a.uri,
-        'collection_id', a.collection_id,
-        'ownerId', a.person_id,
-        'created_at', a.created_at
-    );
+    ;
+    insert into public.mark as m
+    (artwork_id, tag_id)
+    values
+        (
+            (select id from artwork where uri = n->>'uri'),
+            (select id from tag t where t.category = 'type' and t.name = (n->>'type')::sticker)
+        ),
+        (
+            (select id from artwork where uri = n->>'uri'),
+            (select id from tag t where t.category = 'support' and t.name = (n->>'support')::sticker)
+        ),
+        (
+            (select id from artwork where uri = n->>'uri'),
+            (select id from tag t where t.category = 'style' and t.name = (n->>'style')::sticker)
+        )
+    ;
+    select * from get_artwork(
+        (select id from artwork where uri = n->>'uri'),
+        0
+    ) ;
     $$ language sql security definer;
 
     -- Retourne un artwork
@@ -137,11 +147,11 @@ begin;
         end if;
         if maj->>'collection_id' is not null
         then
-            art_db.collection_id = maj->>'collection_id';
+            art_db.collection_id = (maj->>'collection_id')::int;
         end if;
         if maj->>'date' is not null
         then
-            art_db.date = maj->>'date';
+            art_db.date = (maj->>'date')::date;
         end if;
         if maj->>'description' is not null
         then
@@ -153,6 +163,46 @@ begin;
         end if;
 
         art_db.updated_at = now();
+
+        if maj->>'type' is not null
+        then
+            delete from mark
+            where artwork_id = (maj->>'id')::int
+            and tag_id = (select id from tag t where t.category = 'type' and t.name = (maj->>'type')::sticker);
+            insert into mark
+            (artwork_id, tag_id)
+            values
+            (
+                (maj->>'id')::int,
+                (select id from tag t where t.category = 'type' and t.name = (maj->>'type')::sticker)
+            );
+        end if;
+        if maj->>'support' is not null
+        then
+            delete from mark
+            where artwork_id = (maj->>'id')::int
+            and tag_id = (select id from tag t where t.category = 'support' and t.name = (maj->>'support')::sticker);
+            insert into mark
+            (artwork_id, tag_id)
+            values
+            (
+                (maj->>'id')::int,
+                (select id from tag t where t.category = 'support' and t.name = (maj->>'support')::sticker)
+            );
+        end if;
+        if maj->>'style' is not null
+        then
+            delete from mark
+            where artwork_id = (maj->>'id')::int
+            and tag_id = (select id from tag t where t.category = 'style' and t.name = (maj->>'style')::sticker);
+            insert into mark
+            (artwork_id, tag_id)
+            values
+            (
+                (maj->>'id')::int,
+                (select id from tag t where t.category = 'style' and t.name = (maj->>'style')::sticker)
+            );
+        end if;
 
         -- Réintroduit les infos dans la BDD
         update public.artwork

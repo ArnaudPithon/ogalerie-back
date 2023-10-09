@@ -33,12 +33,11 @@ const artworksController = {
         debug(newArtwork);
         const { error, artwork } = await dataMapper.create(newArtwork);
 
-        debug(artwork);
-
         if (error) {
             next(error);
         }
         else {
+            debug(artwork);
             res.status(201).json(artwork);
         }
     },
