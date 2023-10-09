@@ -9,11 +9,13 @@ const artworksRouter = require('./artworks');
 const collectionsRouter = require('./collections');
 const tagsRouter = require('./tags');
 const usersRouter = require('./users');
+const commentsRouter = require('./comments');
 
 mainRouter.use('/artworks', artworksRouter);
 mainRouter.use('/collections', collectionsRouter);
 mainRouter.use('/tags', tagsRouter);
 mainRouter.use('/users', usersRouter);
+mainRouter.use('/comments', commentsRouter);
 
 /**
  * Respond with a user identified by its email

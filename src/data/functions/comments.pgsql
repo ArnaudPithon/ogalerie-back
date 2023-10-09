@@ -10,7 +10,10 @@ begin;
             'id', c.id::int,
             'content', c.content,
             'created_at', c.created_at,
-            'updated_at', c.updated_at
+            'updated_at', c.updated_at,
+            'artwork_uri', a.uri,
+            'artwork_title', a.title,
+            'collection_id', a.collection_id
         )
         from art_comment c
         join artwork a on a.id = c.artwork_id::int
@@ -72,6 +75,36 @@ begin;
         (select * from get_comment(c.id))
         ;
     $$ language sql security definer;
+
+    -- Modifier un commentaire
+    drop function if exists public.update_comment;
+    create function public.update_comment (n json) returns json as
+    $$
+        update public.art_comment
+        set content = n->>'content'
+        where id = (n->>'id')::int
+        returning (select * from get_comment(id))
+        ;
+    $$ language sql security definer;
+
+    -- Retourne le propriétaire d'un commentaire
+    drop function if exists public.get_comment_owner;
+    create function public.get_comment_owner (i int) returns int as
+    $$
+        select person_id
+        from art_comment
+        where id = i ;
+    $$ language sql security definer;
+
+    -- Retire une commentaire
+    drop function if exists public.delete_comment;
+    create function public.delete_comment (json) returns json as
+    $$
+        delete from public.art_comment c
+        where c.id = ($1->>'id')::int
+        returning $1
+        ;
+    $$ language sql strict security definer;
 
     commit;
 reset role;

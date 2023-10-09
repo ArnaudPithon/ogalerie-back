@@ -137,6 +137,36 @@ const securityService = {
         }
         next();
     },
+
+    /**
+     * @summary Vérification de la propriété d'un commentaire
+     * @param {*} req
+     * @param {*} res
+     * @param {*} next
+     * @returns boolean
+     */
+    async isCommentOwner (req, res, next) {
+        const { id } = req.params;
+        const token = req.headers.authorization?.split(' ')[1];
+        const decoded = securityService.checkToken(token);
+
+        const dataMapper = require('../models/comments');
+        const { ownerId } = await dataMapper.getOwner(id);
+
+        console.log(ownerId, decoded);
+        if (!ownerId) {
+            const error = new APIError('Comment not found', 404);
+
+            next(error);
+        }
+        else if (ownerId === decoded.id) {
+            req.isOwner = true;
+        }
+        else {
+            req.isOwner = false;
+        }
+        next();
+    },
 };
 
 module.exports = securityService;

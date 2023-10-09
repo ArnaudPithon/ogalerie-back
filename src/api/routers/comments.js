@@ -5,15 +5,6 @@ const { commentsController } = require('../controllers');
 const securityService = require('../services/security.js');
 
 /**
- * GET /v1/comments/:id
- * @summary Return a comment
- */
-router.get('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isCommentOwner,
-    commentsController.read);
-
-/**
  * PATCH /v1/comments/:id
  * @summary Update a comment
  */

@@ -125,8 +125,6 @@ const dataMapper = {
 
         return {error, result};
     },
-
-
 };
 
 module.exports = dataMapper;
