@@ -28,30 +28,30 @@ const dataMapper = {
         return { error, comment };
     },
 
-    async getFavorites (id) {
+    async getAll (id) {
         const sqlQuery = `
-        select * from get_user_favorites($1)
+        select * from get_user_comments($1)
         ;`;
         const values = [id];
-        let error, favorites;
+        let error, comments;
 
         try {
             const response = await client.query(sqlQuery, values);
 
-            favorites = response.rows.map(e => {
-                return e.get_user_favorites;
+            comments = response.rows.map(e => {
+                return e.get_user_comments;
             });
-            if (!favorites) {
-                error = new APIError('informations erronnées', 403);
+            if (!comments) {
+                error = new APIError('Fail', 403);
             }
         }
         catch (err) {
             error = new APIError(err.message, 500, err);
         }
 
-        debug(favorites);
+        debug(comments);
 
-        return { error, favorites };
+        return { error, comments };
     },
 };
 

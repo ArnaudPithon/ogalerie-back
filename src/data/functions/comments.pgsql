@@ -2,6 +2,23 @@
 set role ogalerie_admin;
 begin;
 
+    -- Retourne les commentaires associés à un utilisateur
+    drop function if exists public.get_user_comments;
+    create function get_user_comments (i int) returns setof json as
+    $$
+        select json_build_object(
+            'id', c.id::int,
+            'content', c.content,
+            'created_at', c.created_at,
+            'updated_at', c.updated_at
+        )
+        from art_comment c
+        join artwork a on a.id = c.artwork_id::int
+        where c.person_id = i
+        order by c.created_at desc
+        ;
+    $$ language sql security definer;
+
     -- Retourne les commentaires associés à une œuvre
     drop function if exists public.get_artwork_comments;
     create function get_artwork_comments (i int) returns setof json as
@@ -17,7 +34,9 @@ begin;
         )
         from art_comment c
         join person p on p.id = c.person_id
-        where artwork_id = i ;
+        where artwork_id = i
+        order by c.created_at desc
+        ;
     $$ language sql security definer;
 
     -- Retourne un commentaire par son id

@@ -10,6 +10,7 @@ const commentsController = {
         const { id } = req.params;
         const newComment = req.body;
 
+        debug(req.isUser);
         if (req.isUser) {
             return next(new APIError('Forbidden', 403));
         }
@@ -26,6 +27,22 @@ const commentsController = {
     },
 
     getAll: async (req, res, next) => {
+        const { id } = req.params;
+
+        debug(req.isUser);
+        if (req.isUser) {
+            return next(new APIError('Forbidden', 403));
+        }
+
+        const { error, comments } = await dataMapper.getAll(id);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            debug(comments);
+            res.status(200).json(comments);
+        }
     },
 
     update: async (req, res, next) => {
