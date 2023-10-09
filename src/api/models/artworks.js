@@ -254,6 +254,7 @@ const dataMapper = {
 
         try {
             const response = await client.query(sqlQuery);
+
             result = response.rows.map(e => e.random_artworks);
         }
         catch (err) {
@@ -272,7 +273,7 @@ const dataMapper = {
         try {
             const response = await client.query(sqlQuery);
 
-            artworks = response.rows;
+            artworks = response.rows.map(e => e.get_artworks);
             if (!artworks) {
                 error = new APIError('informations erronnées', 403);
             }
