@@ -22,11 +22,23 @@ begin;
 
     -- Retire un artwork
     drop function if exists public.delete_artwork;
-    create function public.delete_artwork (json) returns json as
+    create function public.delete_artwork (json) returns int as
     $$
+        delete from mark
+        where artwork_id = ($1->>'id')::int
+        ;
+        delete from art_comment
+        where artwork_id = ($1->>'id')::int
+        ;
+        delete from appraise
+        where artwork_id = ($1->>'id')::int
+        ;
+        delete from favorite
+        where artwork_id = ($1->>'id')::int
+        ;
         delete from public.artwork a
         where a.id = ($1->>'id')::int
-        returning $1
+        returning 1
         ;
     $$ language sql strict security definer;
 
