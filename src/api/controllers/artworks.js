@@ -12,7 +12,7 @@ const artworksController = {
         const { id } = req.params;
         const newArtwork = req.body;
 
-        if (!req.isOwner) {
+        if (!req.isUser) {
             return next(new APIError('Forbidden', 403));
         }
 
