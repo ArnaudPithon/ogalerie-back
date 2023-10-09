@@ -49,25 +49,26 @@ const dataMapper = {
             if (!artwork) {
                 error = new APIError('Artwork not found', 404);
             }
-
-            // Add tags
-            const tagsRes = await client.query(queryTags, valuesOther);
-
-            if (tagsRes.rowCount) {
-                artwork.tags = tagsRes.rows.map(e => e.get_artwork_tags);
-            }
             else {
-                artwork.tags = [];
-            }
+                // Complete tags
+                const tagsRes = await client.query(queryTags, valuesOther);
 
-            // Add comments
-            const commentsRes = await client.query(queryComments, valuesOther);
+                if (tagsRes.rowCount) {
+                    artwork.tags = tagsRes.rows.map(e => e.get_artwork_tags);
+                }
+                else {
+                    artwork.tags = [];
+                }
 
-            if (commentsRes.rowCount) {
-                artwork.comment = commentsRes.rows.map(e => e.get_artwork_comment);
-            }
-            else {
-                artwork.comment = [];
+                // Complete comments
+                const commentsRes = await client.query(queryComments, valuesOther);
+
+                if (commentsRes.rowCount) {
+                    artwork.comment = commentsRes.rows.map(e => e.get_artwork_comment);
+                }
+                else {
+                    artwork.comment = [];
+                }
             }
         }
         catch (err) {
