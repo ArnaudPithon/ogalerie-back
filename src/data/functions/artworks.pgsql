@@ -194,10 +194,20 @@ begin;
 
     -- Retourne tous les artworks
     drop function if exists public.get_artworks;
-    create function public.get_artworks () returns setof artwork as
+    create function public.get_artworks () returns setof json as
     $$
-        select *
-        from artwork
+        select json_build_object(
+            'id', a.id,
+            'title', a.title,
+            'uri', a.uri,
+            'collection_id', a.collection_id,
+            'collection', c.title,
+            'owner_id', a.person_id,
+            'owner', p.nickname
+        )
+        from artwork a
+        join collection c on c.id = a.collection_id
+        join person p on p.id = a.person_id
         ;
     $$ language sql security definer;
 
