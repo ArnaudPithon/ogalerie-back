@@ -162,7 +162,8 @@ begin;
             date = art_db.date,
             description = art_db.description,
             uri = art_db.uri,
-            collection_id = art_db.collection_id
+            collection_id = art_db.collection_id,
+            updated_at = art_db.updated_at
         where id = (maj->>'id')::int;
 
         -- return les valeurs actualisées.

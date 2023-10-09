@@ -79,6 +79,54 @@ const dataMapper = {
         return { error, ownerId };
     },
 
+    async update (newInfos) {
+        const sqlQuery = `
+        select * from update_collection($1)
+        ;`;
+        const values = [newInfos];
+        let error, collection;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            collection = response.rows[0];
+
+            if (!collection) {
+                error = new APIError('Bad Request', 400);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return { error, collection };
+    },
+
+    async delete (id) {
+        const sqlQuery = `
+        select * from delete_collection($1)
+        ;`;
+        const values = [id];
+        let error, result;
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            result = response.rows[0].delete_collection;
+
+            debug(response);
+            if (!result) {
+                error = new APIError('Informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+
+        return {error, result};
+    },
+
+
 };
 
 module.exports = dataMapper;

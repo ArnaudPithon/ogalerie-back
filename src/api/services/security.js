@@ -95,7 +95,12 @@ const securityService = {
         const dataMapper = require('../models/artworks');
         const { ownerId } = await dataMapper.getOwner(id);
 
-        if (ownerId === decoded.id) {
+        if (!ownerId) {
+            const error = new APIError('Artwork not found', 404);
+
+            next(error);
+        }
+        else if (ownerId === decoded.id) {
             req.isOwner = true;
         }
         else {
@@ -119,7 +124,12 @@ const securityService = {
         const dataMapper = require('../models/collections');
         const { ownerId } = await dataMapper.getOwner(id);
 
-        if (ownerId === decoded.id) {
+        if (!ownerId) {
+            const error = new APIError('Collection not found', 404);
+
+            next(error);
+        }
+        else if (ownerId === decoded.id) {
             req.isOwner = true;
         }
         else {

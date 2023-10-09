@@ -50,9 +50,41 @@ const collectionsController = {
     },
 
     update: async (req, res, next) => {
+        const { id } = req.params;
+
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+
+        const { error, collection } = await dataMapper.update({ id, ...req.body });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json(collection);
+        }
     },
 
     delete: async (req, res, next) => {
+        const { id } = req.params;
+
+        if (!req.isOwner) {
+            next(new APIError('Forbidden', 403));
+
+            return;
+        }
+
+        const { error } = await dataMapper.delete({ id });
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.json('Collection deleted');
+        }
     },
 
     getArtworks: async (req, res, next) => {

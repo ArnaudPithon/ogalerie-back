@@ -67,6 +67,42 @@ begin;
         where id = i ;
     $$ language sql security definer;
 
+    -- Met à jour les informations d'une collection
+    drop function if exists public.update_collection;
+    create function update_collection(maj json) returns collection as
+    $$
+    declare
+        col_db public.collection;
+    begin
+        select * into col_db
+        from public.collection where id = (maj->>'id')::int;
+
+        if maj->>'title' is not null
+        then
+            col_db.title = maj->>'title';
+        end if;
+
+        col_db.updated_at = now();
+
+        update public.collection
+        set
+            title = col_db.title,
+            updated_at = col_db.updated_at
+        where id = (maj->>'id')::int;
+
+        return col_db;
+    end;
+    $$ language plpgsql security definer;
+
+    -- Retire une collection
+    drop function if exists public.delete_collection;
+    create function public.delete_collection (json) returns json as
+    $$
+        delete from public.collection c
+        where c.id = ($1->>'id')::int
+        returning $1
+        ;
+    $$ language sql strict security definer;
 
     commit;
 reset role;
