@@ -16,7 +16,6 @@ const dataMapper = {
         try {
             const response = await client.query(sqlQuery, values);
 
-            debug(response.rows);
             comment = response.rows[0].post_comment;
             if (!comment) {
                 error = new APIError('Fail', 403);

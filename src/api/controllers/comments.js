@@ -10,6 +10,8 @@ const commentsController = {
         const { id } = req.params;
         const newComment = req.body;
 
+        debug(newComment);
+
         if (!req.isUser) {
             return next(new APIError('Forbidden', 403));
         }
