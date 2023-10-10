@@ -28,10 +28,6 @@ const commentsController = {
     getAll: async (req, res, next) => {
         const { id } = req.params;
 
-        if (!req.isUser) {
-            return next(new APIError('Forbidden', 403));
-        }
-
         const { error, comments } = await dataMapper.getAll(id);
 
         if (error) {

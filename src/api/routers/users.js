@@ -105,8 +105,6 @@ router.post('/:id(\\d+)/comments',
  * @summary Return all user comments
  */
 router.get('/:id(\\d+)/comments',
-    securityService.isConnected,
-    securityService.isUser,
     commentsController.getAll);
 
 router.get('/:id(\\d+)/favorites', usersController.getFavorites);
