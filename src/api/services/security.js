@@ -1,3 +1,4 @@
+// vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
 const APIError = require('./APIError');
@@ -13,7 +14,7 @@ const securityService = {
      * @returns boolean
      */
     isConnected (req, res, next) {
-        debug(req.headers);
+        debug(req.headers?.authorization);
 
         if (req.headers?.authorization) {
             const token = req.headers.authorization?.split(' ')[1];
@@ -25,7 +26,7 @@ const securityService = {
                 req.isConnected = false;
             }
         }
-
+        debug(`token valide : ${req.isConnected}`);
         next();
     },
 
@@ -77,6 +78,7 @@ const securityService = {
         else {
             req.isUser = false;
         }
+        debug(`isUser : ${req.isUser}`);
         next();
     },
 
@@ -106,6 +108,7 @@ const securityService = {
         else {
             req.isOwner = false;
         }
+        debug(`isOwner : ${req.isOwner}`);
         next();
     },
 
