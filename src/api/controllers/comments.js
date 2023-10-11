@@ -8,7 +8,7 @@ const debug = require('debug')('controller');
 const commentsController = {
     create: async (req, res, next) => {
         const { id } = req.params;
-        const newComment = req.body;
+        const newComment = req.body.data;
 
         debug(newComment);
 
