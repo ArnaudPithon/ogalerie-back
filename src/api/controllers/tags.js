@@ -28,6 +28,17 @@ const tagsController = {
             res.status(201).json(tags);
         }
     },
+
+    getTags2: async (req, res, next) => {
+        const { error, tags } = await dataMapper.getTags2();
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.status(201).json(tags);
+        }
+    },
 };
 
 module.exports = tagsController;

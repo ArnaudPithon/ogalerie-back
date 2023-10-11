@@ -43,6 +43,34 @@ const dataMapper = {
         catch (err) {
             error = new APIError(err.message, 500, err);
         }
+        debug(tags);
+
+        return { error, tags };
+    },
+
+    async getTags2 () {
+        const sqlQuery = 'select * from get_tags()';
+        let tags, error;
+
+        try {
+            const response = await client.query(sqlQuery);
+
+            const result = response.rows;
+
+            if (!result) {
+                error = new APIError('error', 404);
+            }
+
+            const typeTags = result.filter(t => t.category === 'type');
+            const supportTags = result.filter(t => t.category === 'support');
+            const styleTags = result.filter(t => t.category === 'style');
+
+            tags = { style: styleTags, support: supportTags, type: typeTags };
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+        debug(tags);
 
         return { error, tags };
     },
