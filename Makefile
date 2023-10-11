@@ -18,4 +18,8 @@ dev:
 test:
 	make -C src test
 
-.PHONY: all database functions build start dev test
+update:
+	make -C src/data/update
+
+
+.PHONY: all database functions build start dev test update

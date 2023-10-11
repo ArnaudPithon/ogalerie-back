@@ -3,7 +3,7 @@ PG := /usr/bin/env psql
 DB := ogalerie
 DEBUG :=  # -e
 
-all: database tables functions populate
+all: database tables functions populate update
 
 drop_database:
 	sudo -u postgres dropdb $(DEBUG) -U postgres --if-exists $(DB)
@@ -25,7 +25,10 @@ tables: create_tables.pgsql
 functions:
 	make -C functions
 
+update:
+	make -C update
+
 populate: seeding.pgsql
 	$(PG) -W -U $(DB)_api -d $(DB) -f $<
 
-.PHONY: all drop_users drop_database users database tables functions populate
+.PHONY: all drop_users drop_database users database tables functions populate update

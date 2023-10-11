@@ -16,7 +16,7 @@ begin;
 
     create type sticker as enum (
         'peinture', 'dessin', 'aquarelle', 'sculpture', 'photographie',
-        'toile', 'papier', 'bois', 'textile',
+        'toile', 'papier', 'bois', 'textile', 'numérique',
         'portrait', 'figuratif', 'paysage', 'abstrait',
         'autre'
     );
@@ -30,7 +30,8 @@ begin;
     create table tag (
         id int generated always as identity primary key,
         name sticker not null,
-        category category not null
+        category category not null,
+        unique (name, category)
     );
 
     create table person (
