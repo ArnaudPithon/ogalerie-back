@@ -138,6 +138,7 @@ const securityService = {
         else {
             req.isOwner = false;
         }
+        debug(`isOwner : ${req.isOwner}`);
         next();
     },
 
@@ -168,6 +169,7 @@ const securityService = {
         else {
             req.isOwner = false;
         }
+        debug(`isOwner : ${req.isOwner}`);
         next();
     },
 };
