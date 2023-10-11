@@ -39,6 +39,7 @@ const tagsController = {
             res.status(201).json(tags);
         }
     },
+
 };
 
 module.exports = tagsController;

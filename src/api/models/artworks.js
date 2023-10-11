@@ -286,6 +286,53 @@ const dataMapper = {
 
         return { error, artworks };
     },
+
+    async filter (query) {
+        let sqlQuery = 'select * from get_artworks() as a';
+        const filters = {
+            1: " where (a->>'id')::int in (select * from filter_tag($1))",
+            2: " and (a->>'id')::int in (select * from filter_tag($2))",
+            3: " and (a->>'id')::int in (select * from filter_tag($3))",
+        };
+        const filter = [];
+        let error, artworks;
+
+        debug(query);
+        // On récupère les filtres passés en query.
+        if (query?.type) {
+            filter.push(query.type);
+        }
+        if (query?.support) {
+            filter.push(query.support);
+        }
+        if (query?.style) {
+            filter.push(query.style);
+        }
+        // On construit la requête SQL en fonction du nombre de
+        // filtres transmis.
+        for (let i = 1; i <= filter.length; i++) {
+            sqlQuery += filters[i];
+        }
+        sqlQuery += ' ;';
+
+        const values = [...filter];
+
+        try {
+            const response = await client.query(sqlQuery, values);
+
+            // On nettoie le résultat raw
+            artworks = response.rows.map(e => e.a);
+            if (!artworks) {
+                error = new APIError('informations erronnées', 403);
+            }
+        }
+        catch (err) {
+            error = new APIError(err.message, 500, err);
+        }
+        debug(artworks);
+
+        return { error, artworks };
+    },
 };
 
 module.exports = dataMapper;
