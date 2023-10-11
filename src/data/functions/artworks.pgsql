@@ -255,5 +255,15 @@ begin;
         ;
     $$ language sql security definer;
 
+    drop function if exists public.filter_tag;
+    create function public.filter_tag (t int) returns setof int as
+    $$
+        select a.id
+        from artwork a
+        join mark on artwork_id = a.id
+        join tag on tag_id = tag.id
+        where tag.id = t ;
+    $$ language sql security definer;
+
     reset role;
 commit;

@@ -201,6 +201,18 @@ const artworksController = {
             res.json(artworks);
         }
     },
+
+    filter: async (req, res, next) => {
+        const { error, artworks } = await dataMapper.filter(req.query);
+
+        if (error) {
+            next(error);
+        }
+        else {
+            res.status(200).json(artworks);
+        }
+    },
+
 };
 
 module.exports = artworksController;

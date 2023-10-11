@@ -44,4 +44,6 @@ router.get('/random', artworksController.random);
  */
 router.get('/', artworksController.getAllArtworks);
 
+router.get('/filter', artworksController.filter);
+
 module.exports = router;
