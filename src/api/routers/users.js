@@ -14,23 +14,81 @@ const validationService = require('../services/validation');
 const securityService = require('../services/security.js');
 
 /**
- * POST /v1/users
- * @summary Respond with a newly registered user
- * @returns {User} 201 - A newly registered user
+ * @swagger
+ * /v1/users:
+ *   post:
+ *      summary: Create a user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *      responses:
+ *          201:
+ *              description: A newly registered user
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/UserNew'
  */
 router.post('/',
     validationService.checkSignUpData,
     usersController.signUp);
 
 /**
- * GET /v1/users
- * @summary Respond with list of registered users
+ * @swagger
+ * /v1/users/{role}:
+ *   get:
+ *      summary: Respond with a list of users
+ *      parameters:
+ *        - in: path
+ *          name: role
+ *          required: false
+ *          description: description of the users situation.
+ *          schema:
+ *              type: string
+ *              example: creator
+ *      responses:
+ *          200:
+ *              description: A list of users
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              type: object
+ *                              properties:
+ *                                  id:
+ *                                      type: integer
+ *                                      description: The user ID
+ *                                      example: 1
+ *                                  nickname:
+ *                                      type: string
+ *                                      description: The user nickname
+ *                                      example: tux
  */
 router.get('/:role((?:creator|admin)?)', usersController.users);
 
 /**
- * GET /v1/users/:id
- * @summary Respond with an user
+ * @swagger
+ * /v1/users/{id}:
+ *   get:
+ *      summary: Respond with user informations
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: Numeric ID of the user to retrieve.
+ *          schema:
+ *              type: integer
+ *      responses:
+ *          200:
+ *              description: A single user
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/User'
  */
 router.get('/:id(\\d+)',
     securityService.isConnected,
@@ -38,8 +96,30 @@ router.get('/:id(\\d+)',
     usersController.getUser);
 
 /**
- * PATCH /v1/users/:id
- * @summary Modify an user profil
+ * @swagger
+ * /v1/users/{id}:
+ *   patch:
+ *      summary: Modify an user profil
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *          description: Numeric ID of the user to retrieve.
+ *          schema:
+ *              type: integer
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *      responses:
+ *          200:
+ *              description: User informations
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
  */
 router.patch('/:id(\\d+)',
     securityService.isConnected,
@@ -48,9 +128,13 @@ router.patch('/:id(\\d+)',
     usersController.update);
 
 /**
- * DELETE /v1/users/:id
- * @summary Delete an user profil
- * @return string 200 - confirmation
+ * @swagger
+ * /v1/users/{id}:
+ *   delete:
+ *      summary: delete an user profil
+ *      responses:
+ *          200:
+ *              description: Confirmation
  */
 router.delete('/:id(\\d+)',
     securityService.isConnected,
@@ -150,3 +234,48 @@ router.delete('/:id(\\d+)/likes',
     artworksController.deleteAppraise);
 
 module.exports = router;
+
+// Schemas Definitions
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *      UserShort:
+ *          type: object
+ *          properties:
+ *              id:
+ *                  type: integer
+ *                  description: The user ID
+ *                  example: 1
+ *              nickname:
+ *                  type: string
+ *                  description: The user nickname
+ *                  example: tux
+ *              situation:
+ *                  type: string
+ *                  description: The user role. One of user, creator or admin
+ *                  example: admin
+ *      UserNew:
+ *          allOf:
+ *            - $ref: '#/components/schemas/UserShort'
+ *            - type: object
+ *              properties:
+ *                  token:
+ *                      type: string
+ *                      description: The user token for identification
+ *                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmlja25hbWUiOiJ1bml4Iiwic2l0dWF0aW9uIjoiYWRtaW4iLCJpYXQiOjE2OTY5NDI3NTIsImV4cCI6MTY5Njk4NTk1Mn0.Zsd4U4KJ9DD28_JF-l6RZPN4AXnIXF5tcYTgKJdI5eI
+ *      User:
+ *          allOf:
+ *            - $ref: '#/components/schemas/UserShort'
+ *            - type: object
+ *              properties:
+ *                  firstname:
+ *                      type: string
+ *                      description: The user firstname.
+ *                      example: Leonard
+ *                  lastname:
+ *                      type: string
+ *                      description: The user lastname.
+ *                      example: De Vinci
+ */
+
