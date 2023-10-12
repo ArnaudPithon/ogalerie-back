@@ -5,8 +5,10 @@ const { commentsController } = require('../controllers');
 const securityService = require('../services/security.js');
 
 /**
- * PATCH /v1/comments/:id
- * @summary Update a comment
+ * @swagger
+ * /v1/comments/{id}:
+ *   patch:
+ *      summary: Modify a comment
  */
 router.patch('/:id(\\d+)',
     securityService.isConnected,
@@ -14,9 +16,10 @@ router.patch('/:id(\\d+)',
     commentsController.update);
 
 /**
- * DELETE /v1/comments/:id
- * @summary Delete a comment
- * @return string 200 - confirmation
+ * @swagger
+ * /v1/comments/{id}:
+ *   delete:
+ *      summary: Delete a comment
  */
 router.delete('/:id(\\d+)',
     securityService.isConnected,

@@ -15,7 +15,7 @@ const securityService = require('../services/security.js');
 
 /**
  * @swagger
- * /v1/login:
+ * /v1/users/login:
  *   post:
  *      summary: Sign in
  *      description: Respond with a user identified by its email
@@ -64,6 +64,7 @@ router.post('/',
  *          description: description of the users situation.
  *          schema:
  *              type: string
+ *              enum: ['user', 'creator', 'admin']
  *              example: creator
  *      responses:
  *          200:

@@ -22,8 +22,10 @@ begin;
     create function get_collection_artworks (c_id int) returns setof artwork as
     $$
         select *
-        from artwork
-        where collection_id = c_id;
+        from artwork a
+        where collection_id = c_id
+        and a.id not in (select * from artworks_to_hide())
+        ;
     $$ language sql security definer;
 
     -- Créer une collection

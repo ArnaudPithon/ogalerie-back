@@ -18,6 +18,7 @@ begin;
         from art_comment c
         join artwork a on a.id = c.artwork_id::int
         where c.person_id = i
+        and c.id not in (select * from comments_to_hide())
         order by c.created_at desc
         ;
     $$ language sql security definer;
@@ -38,6 +39,7 @@ begin;
         from art_comment c
         join person p on p.id = c.person_id
         where artwork_id = i
+        and c.id not in (select * from comments_to_hide())
         order by c.created_at desc
         ;
     $$ language sql security definer;
@@ -57,7 +59,9 @@ begin;
         )
         from art_comment c
         join person p on p.id = c.person_id
-        where c.id = i ;
+        where c.id = i
+        and c.id not in (select * from comments_to_hide())
+        ;
     $$ language sql security definer;
 
     -- Post un commentaire

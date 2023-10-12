@@ -16,8 +16,10 @@ begin;
     create function public.get_user_artworks (p_id int) returns setof artwork as
     $$
         select *
-        from artwork
-        where person_id = p_id ;
+        from artwork as a
+        where a.person_id = p_id
+        and a.id not in (select * from artworks_to_hide())
+        ;
     $$ language sql security definer;
 
     -- Retire un artwork
@@ -106,7 +108,9 @@ begin;
         from artwork a
         join collection c on c.id = a.collection_id
         join person p on p.id = a.person_id
-        where a.id = a_id ;
+        where a.id = a_id
+        and a.id not in (select * from artworks_to_hide())
+        ;
     $$ language sql security definer;
 
     -- Retourne les tags associés à une œuvre
@@ -234,9 +238,10 @@ begin;
     from artwork a
     join collection c on c.id = a.collection_id
     join person p on p.id = a.person_id
+    where a.id not in (select * from artworks_to_hide())
     order by random()
-    limit 12;
-
+    limit 12
+    ;
     $$ language sql security definer;
 
     -- Retourne tous les artworks
@@ -255,6 +260,7 @@ begin;
         from artwork a
         join collection c on c.id = a.collection_id
         join person p on p.id = a.person_id
+        where a.id not in (select * from artworks_to_hide())
         ;
     $$ language sql security definer;
 

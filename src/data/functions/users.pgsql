@@ -2,7 +2,7 @@
 set role ogalerie_admin;
 begin;
 
-    -- Retourne les infos d'un visiteur identifié par son id
+    -- Retourne les infos d'un utilisateur connecté
     drop function if exists public.get_user_by_id;
     create function public.get_user_by_id (u_id int) returns json as
     $$
@@ -17,16 +17,8 @@ begin;
             'country', p.country,
             'biography', p.biography,
             'avatar', p.avatar,
-            'like', (   -- likes donnés
-                select count(*) from appraise
-                where person_id = id
-            ),
-            'liked', (  -- likes reçus
-                select count(*) from appraise
-                where artwork_id in (
-                    select id from artwork where person_id = p.id
-                )
-            ),
+            'like', (select * from like_given(p.id)),   -- likes donnés
+            'liked', (select * from like_received(p.id)),  -- likes reçus
             'situation', p.situation
         )
         from public.person p
@@ -44,16 +36,8 @@ begin;
             'country', p.country,
             'biography', p.biography,
             'avatar', p.avatar,
-            'like', (   -- likes donnés
-                select count(*) from appraise
-                where person_id = id
-            ),
-            'liked', (  -- likes reçus
-                select count(*) from appraise
-                where artwork_id in (
-                    select id from artwork where person_id = p.id
-                )
-            )
+            'like', (select * from like_given(p.id)),   -- likes donnés
+            'liked', (select * from like_received(p.id))  -- likes reçus
         )
         from public.person p
         where p.id = u_id;
@@ -219,7 +203,9 @@ begin;
         from person p
         join favorite f on person_id = p.id
         join artwork a on artwork_id = a.id
-        where p.id = i ;
+        where p.id = i
+        and a.id not in (select * from artworks_to_hide())
+        ;
     $$ language sql security definer;
 
     -- Ajoute un artwork à la liste des favoris
@@ -245,13 +231,6 @@ begin;
         and artwork_id=(f->>'artworkId')::int
         returning 1
         ;
-    $$ language sql security definer;
-
-    -- Retourne le total de like reçus par une œuvre
-    drop function if exists public.get_appraises_count;
-    create function get_appraises_count(i int) returns int as
-    $$
-    select count(*)::int from appraise where artwork_id = i ;
     $$ language sql security definer;
 
     -- Ajoute un like à un artwork

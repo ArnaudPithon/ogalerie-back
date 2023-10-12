@@ -18,7 +18,7 @@ const dataMapper = {
 
             comment = response.rows[0].post_comment;
             if (!comment) {
-                error = new APIError('Fail', 403);
+                error = new APIError('Fail', 400);
             }
         } catch (err) {
             error = new APIError(err.message, 500, err);
@@ -41,7 +41,7 @@ const dataMapper = {
                 return e.get_user_comments;
             });
             if (!comments) {
-                error = new APIError('Fail', 403);
+                error = new APIError('Fail', 400);
             }
         }
         catch (err) {
@@ -64,7 +64,7 @@ const dataMapper = {
 
             comment = response.rows[0].update_comment;
             if (!comment) {
-                error = new APIError('Fail', 403);
+                error = new APIError('Fail', 400);
             }
         } catch (err) {
             error = new APIError(err.message, 500, err);
@@ -111,7 +111,7 @@ const dataMapper = {
 
             debug(result);
             if (!result) {
-                error = new APIError('Informations erronnées', 403);
+                error = new APIError('Informations erronnées', 400);
             }
         }
         catch (err) {
