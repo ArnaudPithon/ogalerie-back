@@ -15,6 +15,22 @@ const securityService = require('../services/security.js');
 
 /**
  * @swagger
+ * /v1/login:
+ *   post:
+ *      summary: Sign in
+ *      description: Respond with a user identified by its email
+ *      responses:
+ *          200:
+ *              description: An identified user
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                            $ref: '#/components/schemas/UserNew'
+ */
+router.post('/login', validationService.checkLoginData, usersController.signIn);
+
+/**
+ * @swagger
  * /v1/users:
  *   post:
  *      summary: Create a user
