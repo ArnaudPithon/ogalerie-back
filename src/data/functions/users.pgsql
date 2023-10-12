@@ -251,7 +251,7 @@ begin;
     drop function if exists public.get_appraises_count;
     create function get_appraises_count(i int) returns int as
     $$
-    select count(*) from appraise where artwork_id = i ;
+    select count(*)::int from appraise where artwork_id = i ;
     $$ language sql security definer;
 
     -- Ajoute un like à un artwork
