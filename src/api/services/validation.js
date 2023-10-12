@@ -11,8 +11,8 @@ const schemaUserInput = Joi.object({
     password:Joi.string().pattern(/^[ -~]{8,32}$/).required(),    // tous les caractères imprimables
     situation:Joi.string().pattern(/^(?:user|creator|admin)?$/).required(),
     birthday:Joi.string().pattern(/^\d{4}(?:-\d{2}){2}$/).required(),
-    firstname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
-    lastname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
+    firstname:Joi.string().pattern(/^[\d\p{L}\p{M}-]{3,24}$/um),
+    lastname:Joi.string().pattern(/^[\d\p{L}\p{M}-]{3,24}$/um),
     town:Joi.string().pattern(/[a-zA-Z-]{2,24}$/),
     country:Joi.string().pattern(/[a-zA-Z-]{2,32}$/),
     avatar:Joi.string(),
@@ -21,8 +21,8 @@ const schemaUserInput = Joi.object({
 
 // Schéma des données attendues à la modification d'un profil
 const schemaUserPatch = Joi.object({
-    firstname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
-    lastname:Joi.string().pattern(/[a-zA-Z]{2,14}$/),
+    firstname:Joi.string().pattern(/^[\d\p{L}\p{M}-]{3,24}$/um),
+    lastname:Joi.string().pattern(/^[\d\p{L}\p{M}-]{3,24}$/um),
     nickname:Joi.string().pattern(/^[\d\p{L}\p{M}_-]{3,24}$/um),
     birthday:Joi.string().pattern(/^\d{4}(?:-\d{2}){2}$/),
     town:Joi.string().pattern(/[a-zA-Z-]{2,24}$/),

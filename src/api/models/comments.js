@@ -109,7 +109,7 @@ const dataMapper = {
 
             result = response.rows[0].delete_comment;
 
-            debug(response);
+            debug(result);
             if (!result) {
                 error = new APIError('Informations erronnées', 403);
             }
