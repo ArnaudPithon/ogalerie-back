@@ -209,7 +209,7 @@ const dataMapper = {
 
             result = response.rows[0].set_appraise;
 
-            debug(response.rows[0]);
+            debug(response.rows);
             if (!result) {
                 error = new APIError("Can't add a appraise", 400);
             }
@@ -234,7 +234,7 @@ const dataMapper = {
             result = response.rows[0].delete_appraise;
 
             debug(response.rows[0]);
-            if (!result) {
+            if (!result && result != 0) {
                 error = new APIError("Can't delete appraise", 400);
             }
         }

@@ -247,6 +247,13 @@ begin;
         ;
     $$ language sql security definer;
 
+    -- Retourne le total de like reçus par une œuvre
+    drop function if exists public.get_appraises_count;
+    create function get_appraises_count(i int) returns int as
+    $$
+    select count(*) from appraise where artwork_id = i ;
+    $$ language sql security definer;
+
     -- Ajoute un like à un artwork
     drop function if exists public.set_appraise;
     create function set_appraise(f json) returns int as
@@ -257,7 +264,7 @@ begin;
         select
             (f->>'userId')::int,
             (f->>'artworkId')::int
-        returning 1
+        returning (select get_appraises_count((f->>'artworkId')::int))
         ;
     $$ language sql security definer;
 
@@ -268,7 +275,7 @@ begin;
         delete from appraise
         where person_id=(f->>'userId')::int
         and artwork_id=(f->>'artworkId')::int
-        returning 1
+        returning (select get_appraises_count((f->>'artworkId')::int))
         ;
     $$ language sql security definer;
 

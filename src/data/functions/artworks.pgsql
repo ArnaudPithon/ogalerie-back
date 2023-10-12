@@ -96,8 +96,11 @@ begin;
             'uri', a.uri,
             'created_at', a.created_at,
             'updated_at', a.updated_at,
-            'likes', (select count(*) from appraise l where l.artwork_id = a.id),
+            -- Nombre de like reçus
+            'likes', (select get_appraises_count(a.id)),
+            -- liké par le visiteur
             'liked_by', (select count(*) from appraise where artwork_id = a_id and person_id = v_id),
+            -- dans la liste de favoris du visiteur
             'favorite_by', (select count(*) from favorite where artwork_id = a_id and person_id = v_id)
         )
         from artwork a
