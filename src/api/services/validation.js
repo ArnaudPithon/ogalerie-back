@@ -29,6 +29,7 @@ const schemaUserPatch = Joi.object({
     country:Joi.string().pattern(/[a-zA-Z-]{2,32}$/),
     avatar:Joi.string(),
     biography:Joi.string().pattern(/^.{0,140}$/),
+    situation:Joi.string().pattern(/^(?:user|creator|admin)?$/),
 }).required();
 
 // Schéma des données attendues au formulaire de connexion

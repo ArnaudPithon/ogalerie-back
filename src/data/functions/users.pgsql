@@ -163,6 +163,10 @@ begin;
         then
             person_db.avatar = p->>'avatar';
         end if;
+        if p->>'situation' is not null
+        then
+            person_db.situation = p->>'situation';
+        end if;
 
         person_db.updated_at = now();
 
@@ -177,6 +181,7 @@ begin;
             country = person_db.country,
             biography = person_db.biography,
             avatar = person_db.avatar,
+            situation = person_db.situation,
             updated_at = person_db.updated_at
         where id = (p->>'id')::int;
 
