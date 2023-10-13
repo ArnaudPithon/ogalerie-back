@@ -33,7 +33,7 @@ begin;
     drop function if exists public.like_given;
     create function public.like_given(i int) returns int as
     $$
-        select count(*) from appraise
+        select count(*)::int from appraise
         where person_id = i ;
     $$ language sql security definer;
 
@@ -41,7 +41,7 @@ begin;
     drop function if exists public.like_received;
     create function public.like_received(i int) returns int as
     $$
-        select count(*) from appraise
+        select count(*)::int from appraise
         where artwork_id in (
             select id
             from artwork
