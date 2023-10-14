@@ -38,8 +38,8 @@ app.listen(PORT, () => {
 
 try {
     const server = https.createServer({
-        key: fs.readFileSync(`${__dirname}/privkey.pem`),
-        cert: fs.readFileSync(`${__dirname}/fullchain.pem`),
+        key: fs.readFileSync(`${__dirname}/../ssl/privkey.pem`),
+        cert: fs.readFileSync(`${__dirname}/../ssl/fullchain.pem`),
     }, app);
 
     (async () => {
