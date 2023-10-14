@@ -2,8 +2,11 @@
 
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 8080;
+const PORTS = process.env.PORTS || 8443;
 
+const fs = require('fs');
+const https = require('https');
 const express = require('express');
 const session = require('express-session');
 
@@ -32,3 +35,16 @@ app.use(routers);
 app.listen(PORT, () => {
     console.log(`listening at http://localhost:${PORT} …`);
 });
+
+try {
+    const server = https.createServer({
+        key: fs.readFileSync(`${__dirname}/privkey.pem`),
+        cert: fs.readFileSync(`${__dirname}/fullchain.pem`),
+    }, app);
+
+    (async () => {
+        await server.listen(PORTS);
+    })();
+} catch (err) {
+    console.error(err);
+}
