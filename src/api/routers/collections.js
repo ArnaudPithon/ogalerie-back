@@ -5,8 +5,14 @@ const { collectionsController } = require('../controllers');
 const securityService = require('../services/security.js');
 
 /**
- * GET /v1/collections/:id
- * @summary Return a collection
+ * @swagger
+ * /v1/collections/{id}:
+ *   get:
+ *      summary: Return a collection
+ *      tags:
+ *          - collections
+ *      responses:
+ *          200:
  */
 router.get('/:id(\\d+)',
     securityService.isConnected,
@@ -14,8 +20,14 @@ router.get('/:id(\\d+)',
     collectionsController.read);
 
 /**
- * PATCH /v1/collections/:id
- * @summary Update a collection
+ * @swagger
+ * /v1/collections/{id}:
+ *   patch:
+ *      summary: Update a collection
+ *      tags:
+ *          - collections
+ *      responses:
+ *          200:
  */
 router.patch('/:id(\\d+)',
     securityService.isConnected,
@@ -23,8 +35,14 @@ router.patch('/:id(\\d+)',
     collectionsController.update);
 
 /**
- * DELETE /v1/collections/:id
- * @summary Delete a collection
+ * @swagger
+ * /v1/collections/{id}:
+ *   delete:
+ *      summary: Delete a collection
+ *      tags:
+ *          - collections
+ *      responses:
+ *          200:
  * @return string 200 - confirmation
  */
 router.delete('/:id(\\d+)',

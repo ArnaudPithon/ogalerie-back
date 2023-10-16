@@ -9,8 +9,10 @@ const securityService = require('../services/security.js');
  * /v1/artworks/{id}:
  *   get:
  *      summary: Return an artwork
+ *      tags:
+ *          - artworks
  *      responses:
- *          200:
+ *          201:
  */
 router.get('/:id(\\d+)',
     securityService.isConnected,
@@ -18,8 +20,14 @@ router.get('/:id(\\d+)',
     artworksController.getArtwork);
 
 /**
- * PATCH /v1/artworks/:id
- * @summary Update an artwork
+ * @swagger
+ * /v1/artworks/{id}:
+ *   patch:
+ *      summary: Update an artwork
+ *      tags:
+ *          - artworks
+ *      responses:
+ *          200:
  */
 router.patch('/:id(\\d+)',
     securityService.isConnected,
@@ -27,8 +35,14 @@ router.patch('/:id(\\d+)',
     artworksController.update);
 
 /**
- * DELETE /v1/artworks/:id
- * @summary Delete an artwork
+ * @swagger
+ * /v1/artworks/{id}:
+ *   delete:
+ *      summary: Delete an artwork
+ *      tags:
+ *          - artworks
+ *      responses:
+ *          200:
  */
 router.delete('/:id(\\d+)',
     securityService.isConnected,
@@ -36,15 +50,26 @@ router.delete('/:id(\\d+)',
     artworksController.delete);
 
 /**
- * GET /v1/artworks/random
- * @summary Return a random artworks list
+ * @swagger
+ * /v1/artworks/random:
+ *   get:
+ *      summary: Return a random artworks list
+ *      tags:
+ *          - artworks
+ *      responses:
+ *          200:
  */
 router.get('/random', artworksController.random);
 
 /**
- * GET /v1/artworks
- * @summary Respond with an artworks list
- * @return [Artworks] 200 - 
+ * @swagger
+ * /v1/artworks:
+ *   get:
+ *      summary: Return an artworks list
+ *      tags:
+ *          - artworks
+ *      responses:
+ *          200:
  */
 router.get('/', artworksController.getAllArtworks);
 
@@ -52,6 +77,8 @@ router.get('/', artworksController.getAllArtworks);
  * @swagger
  * /v1/artworks/filter:
  *   get:
+ *      tags:
+ *          - artworks
  *      parameters:
  *        - in: query
  *          name: type
