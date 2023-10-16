@@ -1,5 +1,7 @@
 # O'Gallerie API
 
+API du projet de fin de formation [O'Gallerie](https://github.com/O-clock-Yost/projet-06-o-galerie-front).
+
 ## Technologies utilisées
 
 - Javascript dans l'environement NodeJS pour le langage
