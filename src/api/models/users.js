@@ -139,7 +139,7 @@ const dataMapper = {
 
             debug(user);
             if (!user) {
-                error = new APIError('Informations erronnées', 403);
+                error = new APIError('User not found', 404);
             }
         }
         catch (err) {

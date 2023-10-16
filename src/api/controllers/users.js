@@ -35,7 +35,7 @@ const usersController = {
             const token = securityService.getToken(user);
             const response = { ...user, token, 'logged': true };
 
-            res.status('201').json(response);
+            res.status(201).json(response);
         }
     },
     /**
