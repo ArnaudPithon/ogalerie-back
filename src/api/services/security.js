@@ -14,8 +14,6 @@ const securityService = {
      * @returns boolean
      */
     isConnected (req, res, next) {
-        debug(req.headers?.authorization);
-
         if (req.headers?.authorization) {
             const token = req.headers.authorization?.split(' ')[1];
 
