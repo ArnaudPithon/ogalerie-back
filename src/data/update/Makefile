@@ -2,7 +2,7 @@ SHELL := /usr/bin/env sh
 PG := /usr/bin/env psql
 DB := ogalerie
 DEBUG :=  # -e
-maj_files := patch-01.pgsql patch-02.pgsql
+maj_files := patch-01.pgsql patch-02.pgsql patch-03.pgsql
 
 all: $(maj_files)
 
