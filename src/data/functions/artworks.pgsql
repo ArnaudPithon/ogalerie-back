@@ -44,6 +44,38 @@ begin;
         ;
     $$ language sql strict security definer;
 
+    -- Retourne un artwork
+    drop function if exists public.get_artwork;
+    create function public.get_artwork (a_id int, v_id int) returns json as
+    $$
+        select json_build_object(
+            'id', a.id,
+            'title', a.title,
+            'mature', a.mature,
+            'collection_id', a.collection_id,
+            'collection', c.title,
+            'owner_id', a.person_id,
+            'owner', p.nickname,
+            'date', a.date,
+            'description', a.description,
+            'uri', a.uri,
+            'created_at', a.created_at,
+            'updated_at', a.updated_at,
+            -- Nombre de like reçus
+            'likes', (select get_appraises_count(a.id)),
+            -- liké par le visiteur
+            'liked_by', (select count(*) from appraise where artwork_id = a_id and person_id = v_id),
+            -- dans la liste de favoris du visiteur
+            'favorite_by', (select count(*) from favorite where artwork_id = a_id and person_id = v_id)
+        )
+        from artwork a
+        join collection c on c.id = a.collection_id
+        join person p on p.id = a.person_id
+        where a.id = a_id
+        and a.id not in (select * from artworks_to_hide())
+        ;
+    $$ language sql security definer;
+
     -- Créer un artwork
     drop function if exists public.create_artwork;
     create function create_artwork (n json) returns json as
@@ -79,38 +111,6 @@ begin;
         (select id from artwork where uri = n->>'uri'),
         0
     ) ;
-    $$ language sql security definer;
-
-    -- Retourne un artwork
-    drop function if exists public.get_artwork;
-    create function public.get_artwork (a_id int, v_id int) returns json as
-    $$
-        select json_build_object(
-            'id', a.id,
-            'title', a.title,
-            'mature', a.mature,
-            'collection_id', a.collection_id,
-            'collection', c.title,
-            'owner_id', a.person_id,
-            'owner', p.nickname,
-            'date', a.date,
-            'description', a.description,
-            'uri', a.uri,
-            'created_at', a.created_at,
-            'updated_at', a.updated_at,
-            -- Nombre de like reçus
-            'likes', (select get_appraises_count(a.id)),
-            -- liké par le visiteur
-            'liked_by', (select count(*) from appraise where artwork_id = a_id and person_id = v_id),
-            -- dans la liste de favoris du visiteur
-            'favorite_by', (select count(*) from favorite where artwork_id = a_id and person_id = v_id)
-        )
-        from artwork a
-        join collection c on c.id = a.collection_id
-        join person p on p.id = a.person_id
-        where a.id = a_id
-        and a.id not in (select * from artworks_to_hide())
-        ;
     $$ language sql security definer;
 
     -- Retourne les tags associés à une œuvre
