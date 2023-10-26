@@ -2,6 +2,7 @@ SHELL := /usr/bin/env sh
 PG := /usr/bin/env psql
 DB := ogalerie
 DEBUG :=  # -e
+SEEDS := seedOgalerie.pgsql # seeding.pgsql
 
 all: database tables functions populate update
 
@@ -28,7 +29,7 @@ functions:
 update:
 	make -C update
 
-populate: seeding.pgsql
+populate: $(SEEDS)
 	$(PG) -W -U $(DB)_api -d $(DB) -f $<
 
 .PHONY: all drop_users drop_database users database tables functions populate update
