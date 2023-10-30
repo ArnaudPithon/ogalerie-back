@@ -230,7 +230,7 @@ const dataMapper = {
 
     async getCollections (id) {
         const queryCollections = 'select * from get_user_collections($1);';
-        const queryArtworks = 'select * from get_collection_artwork($1);';
+        const queryArtworks = 'select * from get_collection_artworks($1);';
         const values = [id];
         let error, collections;
 

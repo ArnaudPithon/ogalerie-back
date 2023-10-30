@@ -32,7 +32,7 @@ const dataMapper = {
 
     async read ( id ) {
         const queryCollection= 'select * from get_collection($1);';
-        const queryArtworks = 'select * from get_collection_artwork($1);';
+        const queryArtworks = 'select * from get_collection_artworks($1);';
         const values = [id];
         let collection, error;
 
