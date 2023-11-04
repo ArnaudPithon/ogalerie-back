@@ -326,5 +326,14 @@ COPY public.favorite (id, person_id, artwork_id, created_at) FROM stdin;
 21	13	44	2023-10-16 15:27:34.775381+02
 \.
 
+-- Initialise les séquences ID aux bonnes valeurs pour éviter les conflits
+
+SELECT pg_catalog.setval('public.art_comment_id_seq', 128, true);
+SELECT pg_catalog.setval('public.artwork_id_seq', 88, true);
+SELECT pg_catalog.setval('public.collection_id_seq', 27, true);
+SELECT pg_catalog.setval('public.favorite_id_seq', 21, true);
+SELECT pg_catalog.setval('public.person_id_seq', 17, true);
+SELECT pg_catalog.setval('public.tag_id_seq', 18, true);
+
 reset role;
 commit;
