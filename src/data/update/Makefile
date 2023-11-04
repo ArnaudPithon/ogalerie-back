@@ -12,4 +12,7 @@ patch-01.pgsql:
 patch-02.pgsql:
 	$(PG) -U $(DB)_api -d $(DB) -f $@
 
+patch-03.pgsql:
+	$(PG) -U $(DB)_api -d $(DB) -f $@
+
 .PHONY: all $(maj_files)
