@@ -14,10 +14,10 @@ const securityService = require('../services/security.js');
  *      responses:
  *          201:
  */
-router.get('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isArtworkOwner,
-    artworksController.getArtwork);
+router.get('/:id',
+  securityService.isConnected,
+  securityService.isArtworkOwner,
+  artworksController.getArtwork);
 
 /**
  * @swagger
@@ -29,10 +29,10 @@ router.get('/:id(\\d+)',
  *      responses:
  *          200:
  */
-router.patch('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isArtworkOwner,
-    artworksController.update);
+router.patch('/:id',
+  securityService.isConnected,
+  securityService.isArtworkOwner,
+  artworksController.update);
 
 /**
  * @swagger
@@ -44,10 +44,10 @@ router.patch('/:id(\\d+)',
  *      responses:
  *          200:
  */
-router.delete('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isArtworkOwner,
-    artworksController.delete);
+router.delete('/:id',
+  securityService.isConnected,
+  securityService.isArtworkOwner,
+  artworksController.delete);
 
 /**
  * @swagger

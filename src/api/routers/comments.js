@@ -12,10 +12,10 @@ const securityService = require('../services/security.js');
  *      tags:
  *          - comments
  */
-router.patch('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isCommentOwner,
-    commentsController.update);
+router.patch('/:id',
+  securityService.isConnected,
+  securityService.isCommentOwner,
+  commentsController.update);
 
 /**
  * @swagger
@@ -25,9 +25,9 @@ router.patch('/:id(\\d+)',
  *      tags:
  *          - comments
  */
-router.delete('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isCommentOwner,
-    commentsController.delete);
+router.delete('/:id',
+  securityService.isConnected,
+  securityService.isCommentOwner,
+  commentsController.delete);
 
 module.exports = router;
