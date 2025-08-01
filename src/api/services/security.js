@@ -1,9 +1,10 @@
 // vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
-const APIError = require('./APIError');
-const jwt = require('jsonwebtoken');
-const debug = require('debug')('service:security');
+import APIError from './APIError';
+import jwt from 'jsonwebtoken';
+import debugFactory from 'debug';
+const debug = debugFactory('service:security');
 
 const securityService = {
     /**
@@ -172,4 +173,4 @@ const securityService = {
     },
 };
 
-module.exports = securityService;
+export default securityService;

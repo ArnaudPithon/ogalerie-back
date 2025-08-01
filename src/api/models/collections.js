@@ -1,9 +1,10 @@
 // vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
-const client = require('../services/pgClient');
-const APIError = require('../services/APIError');
-const debug = require('debug')('datamapper');
+import client from '../services/pgClient';
+import APIError from '../services/APIError';
+import debugFactory from 'debug';
+const debug = debugFactory('datamapper');
 
 const dataMapper = {
     async create ({ title, ownerId }) {
@@ -127,4 +128,4 @@ const dataMapper = {
     },
 };
 
-module.exports = dataMapper;
+export default dataMapper;

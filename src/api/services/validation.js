@@ -1,8 +1,9 @@
 'use strict';
 
-const Joi = require('joi');
-const APIError = require('./APIError');
-const debug = require('debug')('service:validation');
+import Joi from 'joi';
+import APIError from './APIError';
+import debugFactory from 'debug';
+const debug = debugFactory('service:validation');
 
 // Schéma des données attendues au formulaire d'inscription
 const schemaUserInput = Joi.object({
@@ -90,4 +91,4 @@ function checkUpdateData (req, res, next) {
     }
 }
 
-module.exports = { checkSignUpData, checkLoginData, checkUpdateData };
+export default { checkSignUpData, checkLoginData, checkUpdateData };

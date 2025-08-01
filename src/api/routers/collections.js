@@ -1,8 +1,8 @@
 'use strict';
 
 const router = require('express').Router();
-const { collectionsController } = require('../controllers');
-const securityService = require('../services/security.js');
+import { collectionsController } from '../controllers';
+import securityService from '../services/security.js';
 
 /**
  * @swagger
@@ -50,4 +50,4 @@ router.delete('/:id',
   securityService.isCollectionOwner,
   collectionsController.delete);
 
-module.exports = router;
+export default router;

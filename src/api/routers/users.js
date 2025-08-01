@@ -4,14 +4,16 @@
 // URL préfixée par /users
 
 const router = require('express').Router();
-const {
-  usersController,
-  collectionsController,
-  artworksController,
-  commentsController,
-} = require('../controllers');
-const validationService = require('../services/validation');
-const securityService = require('../services/security.js');
+
+import {
+ usersController,
+ collectionsController,
+ artworksController,
+ commentsController,
+} from '../controllers';
+
+import validationService from '../services/validation';
+import securityService from '../services/security.js';
 
 /**
  * @swagger
@@ -344,7 +346,7 @@ router.delete('/:id/likes', validateNumericId,
   securityService.isUser,
   artworksController.deleteAppraise);
 
-module.exports = router;
+export default router;
 
 /**
  * Définit l'ordre de tri des catégories/tags

@@ -1,9 +1,10 @@
 // vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
-const dataMapper = require('../models/tags');
-const APIError = require('../services/APIError');
-const debug = require('debug')('controller');
+import dataMapper from '../models/tags';
+import APIError from '../services/APIError';
+import debugFactory from 'debug';
+const debug = debugFactory('controller');
 
 const tagsController = {
     read: async (req, res, next) => {
@@ -42,4 +43,4 @@ const tagsController = {
 
 };
 
-module.exports = tagsController;
+export default tagsController;

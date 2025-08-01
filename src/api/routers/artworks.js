@@ -1,8 +1,8 @@
 'use strict';
 
 const router = require('express').Router();
-const { artworksController } = require('../controllers');
-const securityService = require('../services/security.js');
+import { artworksController } from '../controllers';
+import securityService from '../services/security.js';
 
 /**
  * @swagger
@@ -98,4 +98,4 @@ router.get('/', artworksController.getAllArtworks);
  */
 router.get('/filter', artworksController.filter);
 
-module.exports = router;
+export default router;

@@ -1,11 +1,12 @@
 // vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
-const dataMapper = require('../models/users');
-const bcrypt = require('bcrypt');
-const securityService = require('../services/security');
-const APIError = require('../services/APIError');
-const debug = require('debug')('controller');
+import dataMapper from '../models/users';
+import bcrypt from 'bcrypt';
+import securityService from '../services/security';
+import APIError from '../services/APIError';
+import debugFactory from 'debug';
+const debug = debugFactory('controller');
 
 const usersController = {
     /**
@@ -203,4 +204,4 @@ const usersController = {
     },
 };
 
-module.exports = usersController;
+export default usersController;

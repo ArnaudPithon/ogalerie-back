@@ -1,10 +1,11 @@
 // vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
-const dataMapper = require('../models/collections');
-const securityService = require('../services/security');
-const APIError = require('../services/APIError');
-const debug = require('debug')('controller');
+import dataMapper from '../models/collections';
+import securityService from '../services/security';
+import APIError from '../services/APIError';
+import debugFactory from 'debug';
+const debug = debugFactory('controller');
 
 const collectionsController = {
     create: async (req, res, next) => {
@@ -91,4 +92,4 @@ const collectionsController = {
 
 };
 
-module.exports = collectionsController;
+export default collectionsController;

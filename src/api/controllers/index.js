@@ -1,12 +1,12 @@
 'use strict';
 
-const usersController = require('./users.js');
-const artworksController = require('./artworks.js');
-const collectionsController = require('./collections.js');
-const tagsController = require('./tags.js');
-const commentsController = require('./comments.js');
+import usersController from './users.js';
+import artworksController from './artworks.js';
+import collectionsController from './collections.js';
+import tagsController from './tags.js';
+import commentsController from './comments.js';
 
-module.exports = {
+export default {
     usersController,
     collectionsController,
     artworksController,

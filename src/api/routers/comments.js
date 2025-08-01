@@ -1,8 +1,8 @@
 'use strict';
 
 const router = require('express').Router();
-const { commentsController } = require('../controllers');
-const securityService = require('../services/security.js');
+import { commentsController } from '../controllers';
+import securityService from '../services/security.js';
 
 /**
  * @swagger
@@ -30,4 +30,4 @@ router.delete('/:id',
   securityService.isCommentOwner,
   commentsController.delete);
 
-module.exports = router;
+export default router;

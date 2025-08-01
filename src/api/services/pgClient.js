@@ -1,6 +1,6 @@
 'use strict';
 
-const { Client } = require('pg');
+import { Client } from 'pg';
 
 const { PGUSER, PGPASSWORD, PGHOST, PGDATABASE } = process.env;
 
@@ -10,4 +10,4 @@ const client = new Client(
 
 client.connect();
 
-module.exports = client;
+export default client;

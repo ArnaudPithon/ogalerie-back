@@ -1,12 +1,10 @@
 'use strict';
 
 const router = require('express').Router();
-const errorHandler = require('../services/errorHandler');
-
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-
-const routerAPI = require('./router.js');
+import errorHandler from '../services/errorHandler';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
+import routerAPI from './router.js';
 
 const swaggerDefinition = {
     openapi: '3.1.0',
@@ -52,4 +50,4 @@ router.use(errorHandler.notFound);
 // Gestion globale des erreurs
 router.use(errorHandler.manage);
 
-module.exports = router;
+export default router;

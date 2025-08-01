@@ -1,7 +1,8 @@
-const { appendFile } = require('node:fs/promises');
-const { join } = require('node:path');
-const APIError = require('./APIError');
-const debug = require('debug')('errorHandler');
+import { appendFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import APIError from './APIError';
+import debugFactory from 'debug';
+const debug = debugFactory('errorHandler');
 
 const errorHandler = {
     /**
@@ -56,4 +57,4 @@ const errorHandler = {
     },
 };
 
-module.exports = errorHandler;
+export default errorHandler;

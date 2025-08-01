@@ -1,8 +1,9 @@
 // vim:foldmethod=syntax:foldlevel=2:foldnestmax=2
 'use strict';
 
-const request = require('supertest');
-const debug = require('debug')('test');
+import request from 'supertest';
+import debugFactory from 'debug';
+const debug = debugFactory('test');
 
 
 require('dotenv').config();

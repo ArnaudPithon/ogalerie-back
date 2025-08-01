@@ -1,9 +1,10 @@
 // vim: foldmethod=syntax:foldlevel=1:foldnestmax=2
 'use strict';
 
-const dataMapper = require('../models/comments');
-const APIError = require('../services/APIError');
-const debug = require('debug')('controller');
+import dataMapper from '../models/comments';
+import APIError from '../services/APIError';
+import debugFactory from 'debug';
+const debug = debugFactory('controller');
 
 const commentsController = {
     create: async (req, res, next) => {
@@ -80,4 +81,4 @@ const commentsController = {
     },
 };
 
-module.exports = commentsController;
+export default commentsController;

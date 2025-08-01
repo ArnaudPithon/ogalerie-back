@@ -1,8 +1,8 @@
 'use strict';
 
 const router = require('express').Router();
-const swaggerJSDoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 const swaggerDefinition = {
     openapi: '3.1.0',
@@ -55,4 +55,4 @@ const swaggerSpec = swaggerJSDoc(options);
 
 router.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-module.exports = router;
+export default router;

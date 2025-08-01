@@ -5,18 +5,17 @@ require('dotenv').config();
 const PORT = process.env.PORT || 8080;
 const PORTS = process.env.PORTS || 8443;
 
-const fs = require('fs');
-const https = require('https');
-const express = require('express');
-const session = require('express-session');
-
-const cors = require('cors');
+import fs from 'fs';
+import https from 'https';
+import express from 'express';
+import session from 'express-session';
+import cors from 'cors';
 
 const app = express();
 
 app.use(cors());
 
-const routers = require('./api/routers');
+import routers from './api/routers';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

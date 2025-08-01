@@ -2,6 +2,7 @@
   "name": "O'Galerie - API",
   "version": "1.0.0",
   "description": "API du projet d'apothéose O'Galerie",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "test": "jest",
