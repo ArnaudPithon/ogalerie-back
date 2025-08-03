@@ -1,8 +1,11 @@
 'use strict';
 
-const router = require('express').Router();
-const { commentsController } = require('../controllers');
-const securityService = require('../services/security.js');
+import Router from 'express';
+
+const router = Router();
+
+import { commentsController } from '../controllers/index.js';
+import securityService from '../services/security.js';
 
 /**
  * @swagger
@@ -12,10 +15,12 @@ const securityService = require('../services/security.js');
  *      tags:
  *          - comments
  */
-router.patch('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isCommentOwner,
-    commentsController.update);
+router.patch(
+  '/:id',
+  securityService.isConnected,
+  securityService.isCommentOwner,
+  commentsController.update,
+);
 
 /**
  * @swagger
@@ -25,9 +30,11 @@ router.patch('/:id(\\d+)',
  *      tags:
  *          - comments
  */
-router.delete('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isCommentOwner,
-    commentsController.delete);
+router.delete(
+  '/:id',
+  securityService.isConnected,
+  securityService.isCommentOwner,
+  commentsController.delete,
+);
 
-module.exports = router;
+export default router;

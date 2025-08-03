@@ -10,11 +10,11 @@
 ## ven. 06 oct. 2023 09:54:27 CEST
 
 - routes nécessaires pour liker une œuvre
-    - `POST /users/:id/likes`
-    - `DELETE /users/:id/likes`
+  - `POST /users/:id/likes`
+  - `DELETE /users/:id/likes`
 - routes nécessaires pour mettre une œuvre en favoris
-    - `POST /users/:id/favorites`
-    - `DELETE /users/:id/favorites`
+  - `POST /users/:id/favorites`
+  - `DELETE /users/:id/favorites`
 - ajout de l'avatar dans les commentaires
 - amélioration de la création des tables _favorite_ et _appraise_
 - FIX: évite un crash dans le cas d'un token mal formé
@@ -35,6 +35,7 @@ l'utilisateur est connecté et un pour savoir si le
 profil/œuvre/… auquel il accède lui appartient.
 
 Les routes qui les utilisent actuellement :
+
 - `GET /users/:id` - profil public ou privé suivant le cas
 - `PATCH /users/:id` - autorisation de modification du profil
 - `DELETE /users/:id` - autorisation de suppression du profil
@@ -43,7 +44,7 @@ Les routes qui les utilisent actuellement :
 
 ### Ajout du champ biographie à la base de données et modification des requêtes liées
 
-### Ajout d'informations remontées à l'affichage d'un profil public et privé :
+### Ajout d'informations remontées à l'affichage d'un profil public et privé
 
 - nombre de like _donnés_ par l'utilisateur
 - nombre de like _reçus_ par les œuvres de l'utilisateur

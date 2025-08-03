@@ -1,50 +1,63 @@
 'use strict';
 
-require('dotenv').config();
+import 'dotenv/config';
+import fs from 'fs';
+import https from 'https';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+import express from 'express';
+import session from 'express-session';
+import cors from 'cors';
 
 const PORT = process.env.PORT || 8080;
 const PORTS = process.env.PORTS || 8443;
 
-const fs = require('fs');
-const https = require('https');
-const express = require('express');
-const session = require('express-session');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const cors = require('cors');
+const sslDir = path.resolve(__dirname, '../ssl');
+const keyPath = path.join(sslDir, 'privkey.pem');
+const certPath = path.join(sslDir, 'fullchain.pem');
 
 const app = express();
 
 app.use(cors());
 
-const routers = require('./api/routers');
+import routers from './api/routers/index.js';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
+app.use(
+  session({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
     cookie: {
-        // options pour le cookie
+      // options pour le cookie
     },
-}));
+  }),
+);
 
 app.use(routers);
 
 app.listen(PORT, () => {
-    console.log(`listening at http://localhost:${PORT} …`);
+  console.log(`listening at http://localhost:${PORT} …`);
 });
 
 try {
-    const server = https.createServer({
-        key: fs.readFileSync(`${__dirname}/../ssl/privkey.pem`),
-        cert: fs.readFileSync(`${__dirname}/../ssl/fullchain.pem`),
-    }, app);
+  const server = https.createServer(
+    {
+      key: fs.readFileSync(keyPath),
+      cert: fs.readFileSync(certPath),
+    },
+    app,
+  );
 
-    (async () => {
-        await server.listen(PORTS);
-    })();
+  (async () => {
+    server.listen(PORTS);
+  })();
 } catch (err) {
-    console.error(err);
+  console.error(err);
 }

@@ -1,7 +1,10 @@
 'use strict';
 
-const router = require('express').Router();
-const { tagsController } = require('../controllers');
+import Router from 'express';
+
+const router = Router();
+
+import { tagsController } from '../controllers/index.js';
 
 /**
  * @swagger
@@ -39,4 +42,4 @@ router.get('/:id', tagsController.read);
  */
 router.get('/', tagsController.getTags);
 
-module.exports = router;
+export default router;

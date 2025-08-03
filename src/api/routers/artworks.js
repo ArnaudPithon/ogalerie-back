@@ -1,8 +1,11 @@
 'use strict';
 
-const router = require('express').Router();
-const { artworksController } = require('../controllers');
-const securityService = require('../services/security.js');
+import Router from 'express';
+
+const router = Router();
+
+import { artworksController } from '../controllers/index.js';
+import securityService from '../services/security.js';
 
 /**
  * @swagger
@@ -14,10 +17,12 @@ const securityService = require('../services/security.js');
  *      responses:
  *          201:
  */
-router.get('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isArtworkOwner,
-    artworksController.getArtwork);
+router.get(
+  '/:id',
+  securityService.isConnected,
+  securityService.isArtworkOwner,
+  artworksController.getArtwork,
+);
 
 /**
  * @swagger
@@ -29,10 +34,12 @@ router.get('/:id(\\d+)',
  *      responses:
  *          200:
  */
-router.patch('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isArtworkOwner,
-    artworksController.update);
+router.patch(
+  '/:id',
+  securityService.isConnected,
+  securityService.isArtworkOwner,
+  artworksController.update,
+);
 
 /**
  * @swagger
@@ -44,10 +51,12 @@ router.patch('/:id(\\d+)',
  *      responses:
  *          200:
  */
-router.delete('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isArtworkOwner,
-    artworksController.delete);
+router.delete(
+  '/:id',
+  securityService.isConnected,
+  securityService.isArtworkOwner,
+  artworksController.delete,
+);
 
 /**
  * @swagger
@@ -98,4 +107,4 @@ router.get('/', artworksController.getAllArtworks);
  */
 router.get('/filter', artworksController.filter);
 
-module.exports = router;
+export default router;

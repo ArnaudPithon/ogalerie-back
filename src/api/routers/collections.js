@@ -1,8 +1,11 @@
 'use strict';
 
-const router = require('express').Router();
-const { collectionsController } = require('../controllers');
-const securityService = require('../services/security.js');
+import Router from 'express';
+
+const router = Router();
+
+import { collectionsController } from '../controllers/index.js';
+import securityService from '../services/security.js';
 
 /**
  * @swagger
@@ -14,10 +17,12 @@ const securityService = require('../services/security.js');
  *      responses:
  *          200:
  */
-router.get('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isCollectionOwner,
-    collectionsController.read);
+router.get(
+  '/:id',
+  securityService.isConnected,
+  securityService.isCollectionOwner,
+  collectionsController.read,
+);
 
 /**
  * @swagger
@@ -29,10 +34,12 @@ router.get('/:id(\\d+)',
  *      responses:
  *          200:
  */
-router.patch('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isCollectionOwner,
-    collectionsController.update);
+router.patch(
+  '/:id',
+  securityService.isConnected,
+  securityService.isCollectionOwner,
+  collectionsController.update,
+);
 
 /**
  * @swagger
@@ -45,9 +52,11 @@ router.patch('/:id(\\d+)',
  *          200:
  * @return string 200 - confirmation
  */
-router.delete('/:id(\\d+)',
-    securityService.isConnected,
-    securityService.isCollectionOwner,
-    collectionsController.delete);
+router.delete(
+  '/:id',
+  securityService.isConnected,
+  securityService.isCollectionOwner,
+  collectionsController.delete,
+);
 
-module.exports = router;
+export default router;
