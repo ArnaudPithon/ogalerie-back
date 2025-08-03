@@ -1,7 +1,10 @@
 'use strict';
 
-const router = require('express').Router();
-import { artworksController } from '../controllers';
+import Router from 'express';
+
+const router = Router();
+
+import { artworksController } from '../controllers/index.js';
 import securityService from '../services/security.js';
 
 /**
@@ -14,10 +17,12 @@ import securityService from '../services/security.js';
  *      responses:
  *          201:
  */
-router.get('/:id',
+router.get(
+  '/:id',
   securityService.isConnected,
   securityService.isArtworkOwner,
-  artworksController.getArtwork);
+  artworksController.getArtwork,
+);
 
 /**
  * @swagger
@@ -29,10 +34,12 @@ router.get('/:id',
  *      responses:
  *          200:
  */
-router.patch('/:id',
+router.patch(
+  '/:id',
   securityService.isConnected,
   securityService.isArtworkOwner,
-  artworksController.update);
+  artworksController.update,
+);
 
 /**
  * @swagger
@@ -44,10 +51,12 @@ router.patch('/:id',
  *      responses:
  *          200:
  */
-router.delete('/:id',
+router.delete(
+  '/:id',
   securityService.isConnected,
   securityService.isArtworkOwner,
-  artworksController.delete);
+  artworksController.delete,
+);
 
 /**
  * @swagger

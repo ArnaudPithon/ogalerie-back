@@ -1,7 +1,10 @@
 'use strict';
 
-const router = require('express').Router();
-import { collectionsController } from '../controllers';
+import Router from 'express';
+
+const router = Router();
+
+import { collectionsController } from '../controllers/index.js';
 import securityService from '../services/security.js';
 
 /**
@@ -14,10 +17,12 @@ import securityService from '../services/security.js';
  *      responses:
  *          200:
  */
-router.get('/:id',
+router.get(
+  '/:id',
   securityService.isConnected,
   securityService.isCollectionOwner,
-  collectionsController.read);
+  collectionsController.read,
+);
 
 /**
  * @swagger
@@ -29,10 +34,12 @@ router.get('/:id',
  *      responses:
  *          200:
  */
-router.patch('/:id',
+router.patch(
+  '/:id',
   securityService.isConnected,
   securityService.isCollectionOwner,
-  collectionsController.update);
+  collectionsController.update,
+);
 
 /**
  * @swagger
@@ -45,9 +52,11 @@ router.patch('/:id',
  *          200:
  * @return string 200 - confirmation
  */
-router.delete('/:id',
+router.delete(
+  '/:id',
   securityService.isConnected,
   securityService.isCollectionOwner,
-  collectionsController.delete);
+  collectionsController.delete,
+);
 
 export default router;

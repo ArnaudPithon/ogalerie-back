@@ -8,17 +8,17 @@
  * @property {object} infos - Additionnal informations
  */
 class APIError extends Error {
-    constructor (message, code, err) {
-        // Parent constructor
-        super(message);
+  constructor(message, code, err) {
+    // Parent constructor
+    super(message);
 
-        if (err) {
-            this.error = err;
-        }
-
-        this.code = code;
-        this.date = new Date();
+    if (err) {
+      this.error = err;
     }
+
+    this.code = code;
+    this.date = new Date();
+  }
 }
 
 export default APIError;

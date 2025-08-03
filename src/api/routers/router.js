@@ -1,13 +1,14 @@
 'use strict';
 
-const mainRouter = require('express').Router();
+import Router from 'express';
+const mainRouter = Router();
 
-import artworksRouter from './artworks';
-import collectionsRouter from './collections';
-import tagsRouter from './tags';
-import usersRouter from './users';
-import commentsRouter from './comments';
-import docsRouter from './documentation';
+import artworksRouter from './artworks.js';
+import collectionsRouter from './collections.js';
+import tagsRouter from './tags.js';
+import usersRouter from './users.js';
+import commentsRouter from './comments.js';
+import docsRouter from './documentation.js';
 
 mainRouter.use('/artworks', artworksRouter);
 mainRouter.use('/collections', collectionsRouter);

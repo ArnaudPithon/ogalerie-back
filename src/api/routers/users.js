@@ -3,16 +3,16 @@
 
 // URL préfixée par /users
 
-const router = require('express').Router();
+import Router from 'express';
+const router = Router();
 
 import {
- usersController,
- collectionsController,
- artworksController,
- commentsController,
-} from '../controllers';
-
-import validationService from '../services/validation';
+  usersController,
+  collectionsController,
+  artworksController,
+  commentsController,
+} from '../controllers/index.js';
+import validationService from '../services/validation.js';
 import securityService from '../services/security.js';
 
 /**
@@ -54,13 +54,12 @@ router.post('/login', validationService.checkLoginData, usersController.signIn);
  *                      schema:
  *                          $ref: '#/components/schemas/UserNew'
  */
-router.post('/',
-  validationService.checkSignUpData,
-  usersController.signUp);
+router.post('/', validationService.checkSignUpData, usersController.signUp);
 
 const validateRole = (req, res, next) => {
   const allowedRoles = ['creator', 'admin'];
   const { role } = req.params;
+
   if (role && !allowedRoles.includes(role)) {
     return res.status(400).json({ error: 'Role non valide' });
   }
@@ -133,10 +132,13 @@ router.get('/:role', validateRole, usersController.users);
  *                      schema:
  *                          $ref: '#/components/schemas/User'
  */
-router.get('/:id', validateNumericId,
+router.get(
+  '/:id',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  usersController.getUser);
+  usersController.getUser,
+);
 
 /**
  * @swagger
@@ -166,11 +168,14 @@ router.get('/:id', validateNumericId,
  *                      schema:
  *                          type: object
  */
-router.patch('/:id', validateNumericId,
+router.patch(
+  '/:id',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
   validationService.checkUpdateData,
-  usersController.update);
+  usersController.update,
+);
 
 /**
  * @swagger
@@ -183,10 +188,13 @@ router.patch('/:id', validateNumericId,
  *          200:
  *              description: Confirmation
  */
-router.delete('/:id', validateNumericId,
+router.delete(
+  '/:id',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  usersController.delete);
+  usersController.delete,
+);
 
 /**
  * @swagger
@@ -198,9 +206,13 @@ router.delete('/:id', validateNumericId,
  *          - collections
  *      responses:
  *          200:
- * @return [Collections] 200 - 
+ * @return [Collections] 200 -
  */
-router.get('/:id/collections', validateNumericId, usersController.getCollections);
+router.get(
+  '/:id/collections',
+  validateNumericId,
+  usersController.getCollections,
+);
 
 /**
  * @swagger
@@ -212,12 +224,15 @@ router.get('/:id/collections', validateNumericId, usersController.getCollections
  *          - collections
  *      responses:
  *          201:
- * @return {Collection} 201 - 
+ * @return {Collection} 201 -
  */
-router.post('/:id/collections', validateNumericId,
+router.post(
+  '/:id/collections',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  collectionsController.create);
+  collectionsController.create,
+);
 
 /**
  * @swagger
@@ -229,7 +244,7 @@ router.post('/:id/collections', validateNumericId,
  *          - artworks
  *      responses:
  *          200:
- * @return [Artworks] 200 - 
+ * @return [Artworks] 200 -
  */
 router.get('/:id/artworks', validateNumericId, usersController.getArtworks);
 
@@ -243,12 +258,15 @@ router.get('/:id/artworks', validateNumericId, usersController.getArtworks);
  *          - artworks
  *      responses:
  *          201:
- * @return {Artwork} 201 - 
+ * @return {Artwork} 201 -
  */
-router.post('/:id/artworks', validateNumericId,
+router.post(
+  '/:id/artworks',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  artworksController.create);
+  artworksController.create,
+);
 
 /**
  * @swagger
@@ -261,10 +279,13 @@ router.post('/:id/artworks', validateNumericId,
  *      responses:
  *          201:
  */
-router.post('/:id/comments', validateNumericId,
+router.post(
+  '/:id/comments',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  commentsController.create);
+  commentsController.create,
+);
 
 /**
  * @swagger
@@ -277,8 +298,7 @@ router.post('/:id/comments', validateNumericId,
  *      responses:
  *          200:
  */
-router.get('/:id/comments', validateNumericId,
-  commentsController.getAll);
+router.get('/:id/comments', validateNumericId, commentsController.getAll);
 
 router.get('/:id/favorites', validateNumericId, usersController.getFavorites);
 
@@ -293,10 +313,13 @@ router.get('/:id/favorites', validateNumericId, usersController.getFavorites);
  *      responses:
  *          201:
  */
-router.post('/:id/favorites', validateNumericId,
+router.post(
+  '/:id/favorites',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  artworksController.setFavorite);
+  artworksController.setFavorite,
+);
 
 /**
  * @swagger
@@ -309,10 +332,13 @@ router.post('/:id/favorites', validateNumericId,
  *      responses:
  *          200:
  */
-router.delete('/:id/favorites', validateNumericId,
+router.delete(
+  '/:id/favorites',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  artworksController.deleteFavorite);
+  artworksController.deleteFavorite,
+);
 
 /**
  * @swagger
@@ -325,10 +351,13 @@ router.delete('/:id/favorites', validateNumericId,
  *      responses:
  *          201:
  */
-router.post('/:id/likes', validateNumericId,
+router.post(
+  '/:id/likes',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  artworksController.setAppraise);
+  artworksController.setAppraise,
+);
 
 /**
  * @swagger
@@ -341,10 +370,13 @@ router.post('/:id/likes', validateNumericId,
  *      responses:
  *          200:
  */
-router.delete('/:id/likes', validateNumericId,
+router.delete(
+  '/:id/likes',
+  validateNumericId,
   securityService.isConnected,
   securityService.isUser,
-  artworksController.deleteAppraise);
+  artworksController.deleteAppraise,
+);
 
 export default router;
 
@@ -402,4 +434,3 @@ export default router;
  *                      description: The user lastname.
  *                      example: De Vinci
  */
-

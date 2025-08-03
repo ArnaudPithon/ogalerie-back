@@ -1,7 +1,10 @@
 'use strict';
 
-const router = require('express').Router();
-import { tagsController } from '../controllers';
+import Router from 'express';
+
+const router = Router();
+
+import { tagsController } from '../controllers/index.js';
 
 /**
  * @swagger

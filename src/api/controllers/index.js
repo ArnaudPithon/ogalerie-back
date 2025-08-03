@@ -6,10 +6,10 @@ import collectionsController from './collections.js';
 import tagsController from './tags.js';
 import commentsController from './comments.js';
 
-export default {
-    usersController,
-    collectionsController,
-    artworksController,
-    tagsController,
-    commentsController,
+export {
+  usersController,
+  collectionsController,
+  artworksController,
+  tagsController,
+  commentsController,
 };
