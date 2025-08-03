@@ -1,4 +1,4 @@
-import { commonRules } from './common-rules';
+import { commonRules } from './common-rules.js';
 
 export default {
   files: ['**/*.ts'],
