@@ -8,7 +8,7 @@ export default {
       ecmaVersion: 'latest',
       sourceType: 'module',
       tsconfigRootDir: process.cwd(),
-      project: './tsconfig.json',
+      project: './tsconfig.eslint.json',
     },
   },
   plugins: {
