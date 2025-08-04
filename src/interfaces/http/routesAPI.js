@@ -1,11 +1,11 @@
 import Router from 'express';
 const mainRouter = Router();
 
-import artworksRouter from '../../modules/artworks/router.js';
-import collectionsRouter from '../../modules/collections/router.js';
-import tagsRouter from '../../modules/tags/router.js';
-import usersRouter from '../../modules/users/router.js';
-import commentsRouter from '../../modules/comments/router.js';
+import artworksRouter from '../../modules/artworks/routes.js';
+import collectionsRouter from '../../modules/collections/routes.js';
+import tagsRouter from '../../modules/tags/routes.js';
+import usersRouter from '../../modules/users/routes.js';
+import commentsRouter from '../../modules/comments/routes.js';
 // import docsRouter from './documentation.js';
 
 mainRouter.use('/artworks', artworksRouter);

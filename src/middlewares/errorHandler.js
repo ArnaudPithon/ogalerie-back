@@ -5,7 +5,8 @@ import { fileURLToPath } from 'url';
 
 import debugFactory from 'debug';
 
-import APIError from '../shared/APIError.js';
+import APIError from '../infrastructure/shared/APIError.js';
+
 const debug = debugFactory('errorHandler');
 
 const __filename = fileURLToPath(import.meta.url);

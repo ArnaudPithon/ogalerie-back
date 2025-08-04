@@ -2,7 +2,7 @@
 import debugFactory from 'debug';
 
 import dataMapper from '../collections/model.js';
-import APIError from '../../shared/APIError.js';
+import APIError from '../../infrastructure/shared/APIError.js';
 const debug = debugFactory('controller');
 
 const collectionsController = {

@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import debugFactory from 'debug';
 
 import securityService from '../../middlewares/security.js';
-import APIError from '../../shared/APIError.js';
+import APIError from '../../infrastructure/shared/APIError.js';
 
 import dataMapper from './model.js';
 

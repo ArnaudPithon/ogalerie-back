@@ -2,7 +2,7 @@
 import debugFactory from 'debug';
 
 import client from '../../interfaces/db/pgClient.js';
-import APIError from '../../shared/APIError.js';
+import APIError from '../../infrastructure/shared/APIError.js';
 const debug = debugFactory('datamapper');
 
 const dataMapper = {

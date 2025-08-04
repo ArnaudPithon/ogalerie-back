@@ -1,7 +1,7 @@
 import Joi from 'joi';
 import debugFactory from 'debug';
 
-import APIError from '../../shared/APIError.js';
+import APIError from '../../infrastructure/shared/APIError.js';
 const debug = debugFactory('service:validation');
 
 // Schéma des données attendues au formulaire d'inscription
