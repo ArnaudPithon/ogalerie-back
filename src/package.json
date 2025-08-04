@@ -6,8 +6,8 @@
   "main": "server.js",
   "scripts": {
     "test": "vitest",
-    "start": "nodemon server.js",
-    "dev": "DEBUG=errorHandler,controller,datamapper,service* nodemon server.js",
+    "start": "nodemon app.js",
+    "dev": "DEBUG=errorHandler,controller,datamapper,service* nodemon app.js",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix"
   },

@@ -1,6 +1,4 @@
-// vim:foldmethod=syntax:foldlevel=2:foldnestmax=2
-'use strict';
-
+// vim:foldlevel=2:foldnestmax=2
 import request from 'supertest';
 import debugFactory from 'debug';
 import { describe, test, expect, beforeAll, afterAll } from 'vitest';

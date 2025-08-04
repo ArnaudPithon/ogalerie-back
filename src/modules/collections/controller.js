@@ -1,0 +1,87 @@
+// vim: foldlevel=1:foldnestmax=2
+import debugFactory from 'debug';
+
+import dataMapper from '../collections/model.js';
+import APIError from '../../shared/APIError.js';
+const debug = debugFactory('controller');
+
+const collectionsController = {
+  create: async (req, res, next) => {
+    const { id } = req.params;
+    const { title } = req.body;
+
+    if (!req.isUser) {
+      next(new APIError('Forbidden', 403));
+
+      return;
+    }
+    if (!title) {
+      next(new APIError('Collection need a title', 400));
+
+      return;
+    }
+
+    const newCollection = { title, ownerId: Number(id) };
+
+    debug(newCollection);
+    const { error, collection } = await dataMapper.create(newCollection);
+
+    if (error) {
+      next(error);
+    } else {
+      res.status(201).json(collection);
+    }
+  },
+
+  read: async (req, res, next) => {
+    const { id } = req.params;
+
+    const { error, collection } = await dataMapper.read(id);
+
+    if (error) {
+      next(error);
+    } else {
+      res.status(200).json(collection);
+    }
+  },
+
+  update: async (req, res, next) => {
+    const { id } = req.params;
+
+    if (!req.isOwner) {
+      next(new APIError('Forbidden', 403));
+
+      return;
+    }
+
+    const { error, collection } = await dataMapper.update({ id, ...req.body });
+
+    if (error) {
+      next(error);
+    } else {
+      res.json(collection);
+    }
+  },
+
+  delete: async (req, res, next) => {
+    const { id } = req.params;
+
+    if (!req.isOwner) {
+      next(new APIError('Forbidden', 403));
+
+      return;
+    }
+
+    const { error } = await dataMapper.delete({ id });
+
+    if (error) {
+      next(error);
+    } else {
+      res.json('Collection deleted');
+    }
+  },
+
+  getArtworks: async (req, res, next) => { },
+};
+
+export default collectionsController;
