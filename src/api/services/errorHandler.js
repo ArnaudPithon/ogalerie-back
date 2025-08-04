@@ -1,10 +1,15 @@
 import { appendFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import debugFactory from 'debug';
 
 import APIError from './APIError.js';
 const debug = debugFactory('errorHandler');
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const errorHandler = {
   /**
