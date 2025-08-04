@@ -3,9 +3,11 @@
 
 import request from 'supertest';
 import debugFactory from 'debug';
+import { describe, test, expect, beforeAll, afterAll } from 'vitest';
+
 const debug = debugFactory('test');
 
-require('dotenv').config();
+import 'dotenv/config';
 const PORT = process.env.PORT;
 const baseURL = `http://localhost:${PORT}`;
 
@@ -22,7 +24,7 @@ describe('Comments', () => {
     user.token = await response._body.token;
   });
 
-  afterAll(async () => {});
+  afterAll(async () => { });
 
   // Création d'un commentaire
   describe('POST /v1/users/:id/comments', () => {
