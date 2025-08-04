@@ -3,14 +3,13 @@ import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginNode from 'eslint-plugin-node';
 import eslintPluginPromise from 'eslint-plugin-promise';
 
-import { commonRules } from './common-rules.js';
+import { commonRules, languageOptions } from './_common.js';
 
 export default {
-  files: ['**/*.{js,mjs,cjs}'],
   languageOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    ...languageOptions,
   },
+  files: ['**/*.{js,mjs,cjs}'],
   plugins: {
     import: eslintPluginImport,
     node: eslintPluginNode,
