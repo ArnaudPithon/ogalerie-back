@@ -35,7 +35,7 @@ contenant ses éléments nécessaires au traitement métier.
 
 ### Exemple
 
-```
+```text
 modules/
 └── users/
 ├── controller.js # Gère les requêtes HTTP
