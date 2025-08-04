@@ -5,7 +5,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "test": "jest",
+    "test": "vitest",
     "start": "nodemon server.js",
     "dev": "DEBUG=errorHandler,controller,datamapper,service* nodemon server.js",
     "lint": "eslint . --ext .js,.ts",
@@ -23,14 +23,15 @@
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-vitest": "^0.5.4",
     "globals": "^16.3.0",
-    "jest": "^30.0.5",
     "nodemon": "^3.1.10",
     "npm-check-updates": "^18.0.2",
     "supertest": "^7.1.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
