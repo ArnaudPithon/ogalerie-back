@@ -1,4 +1,6 @@
-import { commonRules, languageOptions } from './_common.js';
+import eslintPluginImport from 'eslint-plugin-import';
+
+import { commonRules, languageOptions, settings } from './_common.js';
 
 export default {
   files: ['**/*.ts'],
@@ -12,6 +14,10 @@ export default {
   },
   plugins: {
     typescript: (await import('@typescript-eslint/eslint-plugin')).default,
+    import: eslintPluginImport,
+  },
+  settings: {
+    ...settings,
   },
   rules: {
     ...commonRules,

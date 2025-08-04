@@ -9,6 +9,17 @@ export const languageOptions = {
   },
 };
 
+export const settings = {
+  'import/resolver': {
+    node: {
+      extensions: ['.js', '.mjs', '.cjs', 'jsx', '.ts', '.tsx'],
+    },
+    typescript: {
+      project: './tsconfig.eslint.json',
+    },
+  },
+};
+
 export const commonRules = {
   camelcase: ['error'],
   indent: ['error', 2],
@@ -22,4 +33,5 @@ export const commonRules = {
   'dot-notation': ['error', { allowPattern: '^[a-z]+(_[a-z]+)+$' }],
   'no-undef': 'error',
   'import/no-unresolved': 'error',
+  'import/named': 'error',
 };

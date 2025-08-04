@@ -3,7 +3,7 @@ import eslintPluginImport from 'eslint-plugin-import';
 import eslintPluginNode from 'eslint-plugin-node';
 import eslintPluginPromise from 'eslint-plugin-promise';
 
-import { commonRules, languageOptions } from './_common.js';
+import { commonRules, languageOptions, settings } from './_common.js';
 
 export default {
   languageOptions: {
@@ -14,6 +14,9 @@ export default {
     import: eslintPluginImport,
     node: eslintPluginNode,
     promise: eslintPluginPromise,
+  },
+  settings: {
+    ...settings,
   },
   rules: {
     ...commonRules,
