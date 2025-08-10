@@ -3,7 +3,7 @@ import vitestPlugin from 'eslint-plugin-vitest';
 import jsConfig from './javascript.js';
 
 export default {
-  files: ['**/*.test.js', '**/__tests__/**/*.js'],
+  files: ['./src/**/*.test.js', './src/__tests__/**/*.js'],
   languageOptions: {
     ...jsConfig.languageOptions,
     globals: {

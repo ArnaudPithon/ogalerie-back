@@ -2,7 +2,7 @@ import Router from 'express';
 
 const router = Router();
 
-import securityService from '../../middlewares/security.js';
+import securityService from '../auth/security.js';
 
 import collectionsController from './controller.js';
 

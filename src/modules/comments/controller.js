@@ -3,6 +3,7 @@ import debugFactory from 'debug';
 
 import dataMapper from '../comments/model.js';
 import APIError from '../../infrastructure/shared/APIError.js';
+
 const debug = debugFactory('controller');
 
 const commentsController = {

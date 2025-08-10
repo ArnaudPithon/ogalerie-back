@@ -3,19 +3,20 @@
   "version": "1.0.0",
   "description": "API du projet d'apothéose O'Galerie",
   "type": "module",
-  "main": "server.js",
+  "main": "src/app.js",
   "scripts": {
     "test": "vitest",
-    "start": "nodemon app.js",
-    "dev": "DEBUG=errorHandler,controller,datamapper,service* nodemon app.js",
-    "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "eslint . --ext .js,.ts --fix"
+    "start": "nodemon ./src/app.js",
+    "dev": "DEBUG=errorHandler,controller,datamapper,service* nodemon ./src/app.js",
+    "lint": "eslint ./src --ext .js,.ts",
+    "lint:fix": "eslint ./src --ext .js,.ts --fix"
   },
   "keywords": [],
   "author": "Arnaud Pithon",
   "license": "MIT",
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.2.2",
+    "@types/node": "^24.2.1",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
     "debug": "^4.4.1",
@@ -32,6 +33,7 @@
     "supertest": "^7.1.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },

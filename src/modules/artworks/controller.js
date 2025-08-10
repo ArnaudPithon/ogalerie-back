@@ -3,8 +3,9 @@ import debugFactory from 'debug';
 
 import dataMapper from '../artworks/model.js';
 import userDataMapper from '../users/model.js';
-import securityService from '../../middlewares/security.js';
+import securityService from '../auth/security.js';
 import APIError from '../../infrastructure/shared/APIError.js';
+
 const debug = debugFactory('controller');
 
 const artworksController = {

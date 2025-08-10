@@ -2,8 +2,7 @@ import Router from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
-import errorHandler from '../../middlewares/errorHandler.js';
-
+import errorHandler from './middlewares/errorHandler.js';
 import routerAPI from './routesAPI.js';
 
 const router = Router();

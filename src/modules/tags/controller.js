@@ -2,6 +2,7 @@
 import debugFactory from 'debug';
 
 import dataMapper from './model.js';
+
 const debug = debugFactory('controller');
 
 const tagsController = {

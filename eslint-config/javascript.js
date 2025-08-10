@@ -9,7 +9,7 @@ export default {
   languageOptions: {
     ...languageOptions,
   },
-  files: ['**/*.{js,mjs,cjs}'],
+  files: ['./src/**/*.{js,mjs,cjs}'],
   plugins: {
     import: eslintPluginImport,
     node: eslintPluginNode,

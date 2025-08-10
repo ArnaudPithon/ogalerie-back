@@ -4,7 +4,7 @@ import Router from 'express';
 import collectionsController from '../collections/controller.js';
 import artworksController from '../artworks/controller.js';
 import commentsController from '../comments/controller.js';
-import securityService from '../../middlewares/security.js';
+import securityService from '../auth/security.js';
 
 import usersController from './controller.js';
 import {

@@ -3,7 +3,7 @@ import eslintPluginImport from 'eslint-plugin-import';
 import { commonRules, languageOptions, settings } from './_common.js';
 
 export default {
-  files: ['**/*.ts'],
+  files: ['./src/**/*.ts'],
   languageOptions: {
     ...languageOptions,
     parser: await import('@typescript-eslint/parser'),

@@ -2,7 +2,7 @@
 import bcrypt from 'bcrypt';
 import debugFactory from 'debug';
 
-import securityService from '../../middlewares/security.js';
+import securityService from '../auth/security.js';
 import APIError from '../../infrastructure/shared/APIError.js';
 
 import dataMapper from './model.js';
