@@ -1,4 +1,0 @@
-onlyBuiltDependencies:
-  - '@scarf/scarf'
-  - bcrypt
-  - unrs-resolver

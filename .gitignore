@@ -2,5 +2,6 @@
 .pgpass
 log/*.log
 tags
+!tags/
 */node_modules/
 ssl/*

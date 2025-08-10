@@ -1,0 +1,50 @@
+{
+  "name": "ogalerie-api",
+  "version": "1.0.0",
+  "description": "API du projet d'apothéose O'Galerie",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "vitest",
+    "start": "nodemon ./src/app.js",
+    "dev": "DEBUG=errorHandler,controller,datamapper,service* nodemon ./src/app.js",
+    "lint": "eslint ./src --ext .js,.ts",
+    "lint:fix": "eslint ./src --ext .js,.ts --fix"
+  },
+  "keywords": [],
+  "author": "Arnaud Pithon",
+  "license": "MIT",
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.2.2",
+    "@types/node": "^24.2.1",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "debug": "^4.4.1",
+    "eslint": "^9.32.0",
+    "eslint-import-resolver-node": "^0.3.9",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-vitest": "^0.5.4",
+    "globals": "^16.3.0",
+    "nodemon": "^3.1.10",
+    "npm-check-updates": "^18.0.2",
+    "supertest": "^7.1.4",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
+  }
+}

@@ -9,6 +9,20 @@ API du projet de fin de formation [O'Gallerie](https://github.com/O-clock-Yost/p
 - Postgres pour la base de données
 - Make et le shell pour l'automatisation
 
+## Architecture
+
+```text
+src/
+├── modules/         # logiques métier
+├── interfaces/      # points d'entrée (HTTP, DB)
+├── shared/          # outils réutilisables
+├── config/          # configuration app/db
+├── db/              # fichiers SQL
+└── app.js           # point d'entrée
+```
+
+Plus de détails sur l'architecture dans [[docs/wiki/Architecture.md]].
+
 ## Installation
 
 ### Dépendances
