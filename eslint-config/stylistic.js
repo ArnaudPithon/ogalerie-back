@@ -10,7 +10,7 @@ export default {
       'error',
       { blankLine: 'always', prev: '*', next: 'return' },
       { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
-      { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+      { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var']},
     ],
     '@stylistic/eol-last': ['error', 'always'],
     '@stylistic/no-multiple-empty-lines': ['error', { max: 1 }],
