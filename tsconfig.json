@@ -1,17 +1,20 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ES2022",
+    "moduleResolution": "nodeNext",
     "lib": [
       "ES2022"
     ],
+    "allowImportingTsExtensions": true,
     "noEmit": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "allowJs": true,
+    "checkJs": false,
     "isolatedModules": true,
     "types": [
       "node"
@@ -21,11 +24,11 @@
       "./node_modules/@types"
     ],
     "noFallthroughCasesInSwitch": true,
-    "outDir": "../dist",
-    "rootDir": "./src",
+    "outDir": "dist",
+    "rootDir": "src",
   },
   "include": [
-    "./src/**/*.ts"
+    "src"
   ],
   "exclude": [
     "node_modules",

@@ -18,6 +18,11 @@ export default {
   },
   settings: {
     ...settings,
+    'import/resolver': {
+      'typescript': {
+        'alwaysTryTypes': true,
+      }
+    }
   },
   rules: {
     ...commonRules,
@@ -46,5 +51,9 @@ export default {
     'typescript/await-thenable': 'warn',
     'typescript/consistent-type-imports': 'warn',
     'typescript/no-confusing-void-expression': ['warn', { ignoreArrowShorthand: true }],
+    'import/extensions': ['error', 'ignorePackages', {
+      'js': 'always',
+      'ts': 'never'
+    }]
   },
 };

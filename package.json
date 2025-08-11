@@ -8,7 +8,7 @@
     "test": "vitest",
     "build": "tsc",
     "start": "node ./dist/app.js",
-    "dev": "DEBUG=errorHandler,controller,datamapper,service* nodemon",
+    "dev": "DEBUG=errorHandler,controller,datamapper,service* tsx watch src/app.ts",
     "lint": "eslint ./src --ext .js,.ts",
     "lint:fix": "eslint ./src --ext .js,.ts --fix",
     "typecheck": "tsc --noEmit"
@@ -18,7 +18,9 @@
   "license": "MIT",
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.2.2",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/express-session": "^1.18.2",
     "@types/node": "^24.2.1",
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
@@ -31,12 +33,10 @@
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-vitest": "^0.5.4",
     "globals": "^16.3.0",
-    "nodemon": "^3.1.10",
-    "npm-check-updates": "^18.0.2",
     "supertest": "^7.1.4",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
