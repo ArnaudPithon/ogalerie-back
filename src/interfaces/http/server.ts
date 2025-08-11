@@ -7,7 +7,7 @@ import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 
-import credentials from '../../config/http.js';
+import credentials from '@/config/http.js';
 
 import router from './router.js';
 
