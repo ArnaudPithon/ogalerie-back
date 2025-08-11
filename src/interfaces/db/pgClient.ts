@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 
-import credentials from '../../config/db.js';
+import credentials from '@/config/db.js';
 
 const { PGUSER, PGPASSWORD, PGHOST, PGDATABASE } = credentials;
 
