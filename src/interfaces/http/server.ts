@@ -54,10 +54,9 @@ export const startServer = () => {
       app,
     );
 
-    (async () => {
-      server.listen(PORT_HTTPS);
-      console.log(`listening at https://localhost:${PORT_HTTPS} …`);
-    })();
+    server.listen(PORT_HTTPS);
+    console.log(`listening at https://localhost:${PORT_HTTPS} …`);
+
   } catch (err) {
     console.error(err);
   }
