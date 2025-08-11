@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import type { Response, NextFunction } from 'express';
+import type { RequestHandler, ErrorRequestHandler } from 'express';
+
 import debugFactory from 'debug';
 
 import APIError from '@/infrastructure/shared/APIError.js';
@@ -14,15 +15,15 @@ const debug = debugFactory('errorHandler');
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const errorHandler = {
-  /**
-   * Méthode de gestion d'erreur
-   * @param {*} err
-   * @param {*} res
-   */
-  async manage(err: apiError, res: Response) {
+interface errorHandlerInterface {
+  manage: ErrorRequestHandler;
+  log: ErrorRequestHandler;
+  notFound: RequestHandler;
+}
+const errorHandler: errorHandlerInterface = {
+  async manage(err, _req, res, next) {
     // j'écris dans le fichier de logs
-    await errorHandler.log(err);
+    await errorHandler.log(err, _req, res, next);
 
     debug(err.error);
 
@@ -56,8 +57,8 @@ const errorHandler = {
 
     await appendFile(path, text);
   },
-  notFound({ url }: { url: string }, next: NextFunction) {
-    const message = `Url ${url} not found !`;
+  notFound(req, _res, next) {
+    const message = `Url ${req.url} not found !`;
     const err = new APIError(message, 404);
 
     next(err);
