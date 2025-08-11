@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ES2022",
+    "module": "NodeNext",
     "moduleResolution": "nodeNext",
     "lib": [
       "ES2022"
@@ -23,6 +23,12 @@
       "./src/types",
       "./node_modules/@types"
     ],
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": [
+        "*"
+      ]
+    },
     "noFallthroughCasesInSwitch": true,
     "outDir": "dist",
     "rootDir": "src",
