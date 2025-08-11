@@ -8,7 +8,7 @@ import type { RequestHandler, ErrorRequestHandler } from 'express';
 import debugFactory from 'debug';
 
 import APIError from '@/infrastructure/shared/APIError.js';
-import type { apiError } from '@/types/APIError.js';
+import type { ApiError } from '@/types/APIError.js';
 
 const debug = debugFactory('errorHandler');
 
@@ -33,7 +33,7 @@ const errorHandler: errorHandlerInterface = {
    * Méthode pour enregistrer les fichiers de logs
    * @param {*} err
    */
-  async log(err: apiError) {
+  async log(err: ApiError) {
     debug(err);
 
     const fileName = `${err.date.toISOString().slice(0, 10)}.log`;
