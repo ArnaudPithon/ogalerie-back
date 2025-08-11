@@ -3,9 +3,11 @@ import { join } from 'node:path';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+import type { Response, NextFunction } from 'express';
 import debugFactory from 'debug';
 
-import APIError from '../../../infrastructure/shared/APIError.js';
+import APIError from '@/infrastructure/shared/APIError.js';
+import type { apiError } from '@/types/APIError.js';
 
 const debug = debugFactory('errorHandler');
 
@@ -16,13 +18,11 @@ const errorHandler = {
   /**
    * Méthode de gestion d'erreur
    * @param {*} err
-   * @param {*} req
    * @param {*} res
-   * @param {*} next
    */
-  async manage(err, req, res, next) {
+  async manage(err: apiError, res: Response) {
     // j'écris dans le fichier de logs
-    errorHandler.log(err);
+    await errorHandler.log(err);
 
     debug(err.error);
 
@@ -32,7 +32,7 @@ const errorHandler = {
    * Méthode pour enregistrer les fichiers de logs
    * @param {*} err
    */
-  async log(err) {
+  async log(err: apiError) {
     debug(err);
 
     const fileName = `${err.date.toISOString().slice(0, 10)}.log`;
@@ -56,8 +56,8 @@ const errorHandler = {
 
     await appendFile(path, text);
   },
-  notFound(req, res, next) {
-    const message = `Url ${req.url} not found !`;
+  notFound({ url }: { url: string }, next: NextFunction) {
+    const message = `Url ${url} not found !`;
     const err = new APIError(message, 404);
 
     next(err);

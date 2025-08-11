@@ -3,7 +3,7 @@ class APIError extends Error {
   code: number;
   date: Date;
 
-  constructor(message: string, code: number, err: Error) {
+  constructor(message: string, code: number, err?: Error) {
     // Parent constructor
     super(message);
 
