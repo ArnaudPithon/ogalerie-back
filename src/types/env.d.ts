@@ -1,4 +1,4 @@
-import type { CipherKey } from 'crypto';
+import type { CipherKey, JsonWebKeyInput } from 'crypto';
 
 /*
  * ProcessEnv existe dans l'espace de nom de NodeJS
@@ -9,5 +9,6 @@ declare namespace NodeJS {
     PORT_HTTP?: string;
     PORT_HTTPS?: string;
     SESSION_SECRET?: CipherKey;
+    JWT_SECRET?: JsonWebKeyInput;
   }
 }
