@@ -1,25 +1,16 @@
 import fs from 'fs';
 import https from 'https';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
 
-import credentials from '@/config/http.js';
+import { credentials, sslPath } from '@/config/http.js';
 
 import router from './router.js';
 
 export const startServer = () => {
   const { PORT_HTTP, PORT_HTTPS, SESSION_SECRET } = credentials;
-
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-
-  const sslDir = path.resolve(__dirname, '../../../ssl');
-  const keyPath = path.join(sslDir, 'privkey.pem');
-  const certPath = path.join(sslDir, 'fullchain.pem');
 
   const app = express();
 
@@ -46,6 +37,7 @@ export const startServer = () => {
   });
 
   try {
+    const { keyPath, certPath } = sslPath;
     const server = https.createServer(
       {
         key: fs.readFileSync(keyPath),
