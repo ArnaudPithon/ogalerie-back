@@ -8,7 +8,7 @@ declare namespace NodeJS {
   interface ProcessEnv {
     PORT_HTTP?: string;
     PORT_HTTPS?: string;
-    SESSION_SECRET?: CipherKey;
-    JWT_SECRET?: JsonWebKeyInput;
+    SESSION_SECRET: CipherKey;
+    JWT_SECRET: JsonWebKeyInput;
   }
 }
