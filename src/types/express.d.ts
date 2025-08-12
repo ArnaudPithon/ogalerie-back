@@ -5,9 +5,9 @@ export { };
 declare global {
   namespace Express {
     export interface Request {
-      isOwner?: boolean;
-      isConnected?: boolean;
-      isUser?: boolean;
+      isOwner: boolean;
+      isConnected: boolean;
+      isUser: boolean;
     }
   }
 }
