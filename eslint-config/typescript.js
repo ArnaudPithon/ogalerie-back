@@ -27,7 +27,7 @@ export default {
   },
   rules: {
     ...commonRules,
-    'typescript/no-unused-vars': ['warn'],
+    'typescript/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     'typescript/explicit-function-return-type': 'off',
     'typescript/no-explicit-any': 'warn',
     'typescript/ban-ts-comment': 'warn',
