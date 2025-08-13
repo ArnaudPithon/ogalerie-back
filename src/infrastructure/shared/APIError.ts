@@ -1,19 +1,17 @@
-class APIError extends Error {
-  error?: Error;
-  code: number;
-  date: Date;
+/**
+ * @summary classe d'erreur pour l'API
+ */
+export default class APIError extends Error {
+  code: number;            // HTTP status ou code interne
+  cause?: Error;           // l'erreur originale si besoin
+  expose: boolean;         // montrer le message au client ?
 
-  constructor(message: string, code: number, err?: Error) {
-    // Parent constructor
+  constructor(message: string, code: number, cause?: Error, expose = false) {
     super(message);
-
-    if (err) {
-      this.error = err;
-    }
-
     this.code = code;
-    this.date = new Date();
+    this.cause = cause;
+    this.expose = expose;
+
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
-
-export default APIError;

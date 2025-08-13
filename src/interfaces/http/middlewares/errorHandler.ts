@@ -1,68 +1,28 @@
-import { appendFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-import type { RequestHandler, ErrorRequestHandler } from 'express';
-
-import debugFactory from 'debug';
+import type { Request, Response, NextFunction } from 'express';
 
 import APIError from '@/infrastructure/shared/APIError.js';
-import type { ApiError } from '@/types/APIError.js';
 
-const debug = debugFactory('errorHandler');
+/**
+ * @description Middleware pour gérer les erreurs dans l'API.
+  */
+export function errorHandler(err: APIError, req: Request, res: Response, _next: NextFunction) {
+  if (err instanceof APIError) {
+    // Si l'erreur n'est pas dans la plage des 500, on attribue 500 par
+    // défaut
+    const status = err.code >= 100 && err.code < 600 ? err.code : 500;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-interface errorHandlerInterface {
-  manage: ErrorRequestHandler;
-  log: ErrorRequestHandler;
-  notFound: RequestHandler;
-}
-const errorHandler: errorHandlerInterface = {
-  async manage(err, _req, res, next) {
-    // j'écris dans le fichier de logs
-    await errorHandler.log(err, _req, res, next);
-
-    debug(err.error);
-
-    res.status(err.code).json({ error: err.message });
-  },
-  /**
-   * Méthode pour enregistrer les fichiers de logs
-   * @param {*} err
-   */
-  async log(err: ApiError) {
-    debug(err);
-
-    const fileName = `${err.date.toISOString().slice(0, 10)}.log`;
-    const path = join(__dirname, `../../log/${fileName}`);
-
-    /*
-     * Nous allons logguer le moment où est
-     * survenue l'erreur, le message de celle-ci, la
-     * stacktrace ainsi que le contexte (par exemple le
-     * endpoint de notre API qui a conduit à l'erreur)
-     */
-    const time = err.date.toISOString().slice(11, -1);
-    let errorMessage;
-
-    if (err.error) {
-      errorMessage = err.error.message;
+    if (status >= 500) {
+      req.log.error({ err, cause: err.cause }, 'Erreur serveur connue');
     } else {
-      errorMessage = err.message;
+      req.log.warn({ err, cause: err.cause }, 'Erreur métier');
     }
-    const text = `${time};${errorMessage};${err.stack}\r\n`;
 
-    await appendFile(path, text);
-  },
-  notFound(req, _res, next) {
-    const message = `Url ${req.url} not found !`;
-    const err = new APIError(message, 404);
+    return res.status(status).json({
+      error: err.expose ? err.message : 'Erreur interne du serveur',
+    });
+  }
 
-    next(err);
-  },
-};
-
-export default errorHandler;
+  // Erreur inconnue → crash possible
+  req.log.error({ err }, 'Erreur non gérée');
+  res.status(500).json({ error: 'Erreur interne du serveur' });
+}
