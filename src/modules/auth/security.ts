@@ -1,218 +1,88 @@
 // vim: foldlevel=1:foldnestmax=2
-import type { JwtPayload } from 'jsonwebtoken';
+//import debugFactory from 'debug';
 import jwt from 'jsonwebtoken';
-import debugFactory from 'debug';
 
 import type { RequestHandler } from 'express';
 
-import APIError from '../../infrastructure/shared/APIError.js';
+import APIError from '@/infrastructure/shared/APIError.js';
 
-const debug = debugFactory('service:security');
+import type { Entity, User } from '@/types/auth.d.js';
 
-type UserJwtPayload = JwtPayload & { id: number };
+import { findOwner, getJwtSecret, checkSignedIn, getUserId } from './helpers.js';
+
+// const debug = debugFactory('service:security');
 
 interface securityServiceInterface {
-  isBearerToken: (authHeader: unknown) => authHeader is string,
-  isConnected: RequestHandler,
-  getToken: (user: string) => string | void,
-  checkToken: (token: string) => UserJwtPayload,
-  isUser: RequestHandler,
-  isArtworkOwner: RequestHandler,
-  isCollectionOwner: RequestHandler,
-  isCommentOwner: RequestHandler,
+  connectionRequired: (required?: boolean) => RequestHandler,
+  getToken: (user: User) => string,
+  checkIdentity: RequestHandler,
+  checkOwner: (entity: Entity) => RequestHandler,
 }
-const securityService: securityServiceInterface = {
-  isBearerToken(authHeader): authHeader is string {
-    return typeof authHeader === 'string' && authHeader.startsWith('Bearer ');
-  },
+export const securityService: securityServiceInterface = {
   /**
-   * @summary Vérification d'une session active
-   * @returns boolean
-   */
-  isConnected(req, _res, next) {
-    const authHeader = req.headers.authorization;
-
-    if (!securityService.isBearerToken(authHeader)) {
-      next(new APIError('Authorization header is missing or invalid', 401));
-
-      return;
-    }
-    const token = authHeader.split(' ')[1];
-
-    if (securityService.checkToken(token)) {
-      req.isConnected = true;
-    } else {
-      req.isConnected = false;
-    }
-    debug(`token valide : ${req.isConnected.toString()}`);
-    next();
-  },
-
-  /**
-   * Token generation
+   * @summary Génération d'un token JWT
    */
   getToken(user) {
-    const jwtSecret = process.env.JWT_SECRET;
-
-    if (!jwtSecret) {
-      throw new APIError('No JWT secret defined', 500);
-    }
+    const jwtSecret = getJwtSecret();
 
     return jwt.sign(user, jwtSecret, {
       expiresIn: '12h',
     });
-
   },
 
   /**
-   * Token validation
+   * @summary Middleware to check if the user is connected
    */
-  checkToken(token) {
+  connectionRequired(required = true) {
+    return (req, _res, next) => {
+      req.isConnected = false;
+      try {
+        req.isConnected = checkSignedIn(req.headers.authorization);
+      } catch { }
+
+      if (required && !req.isConnected) {
+        next(new APIError('You must be connected to access this resource', 401));
+
+        return;
+      }
+      next();
+    };
+  },
+
+  /**
+   * @summary Vérification de l'identité d'un utilisateur
+   */
+  checkIdentity(req, _res, next) {
+    req.isUser = false;
+
     try {
-      const jwtSecret = process.env.JWT_SECRET;
+      const pretendId = Number(req.params.id);
 
-      if (!jwtSecret) {
-        throw new APIError('No JWT secret defined', 401);
-      }
+      const realId = getUserId(req.headers.authorization);
 
-      const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+      req.isUser = pretendId === realId;
+    } catch { }
 
-      if (typeof decoded !== 'object' || decoded === null || typeof decoded.id !== 'number') {
-        throw new APIError('Invalid token payload', 401);
-      }
-
-      return decoded as UserJwtPayload;
-    } catch (err) {
-      if (err instanceof jwt.JsonWebTokenError) {
-        const message = err.message ?? 'Token invalide';
-
-        throw new APIError(message, 401, err);
-      } else {
-        throw new APIError('Invalid or expired token', 401);
-      }
-    }
-  },
-
-  /**
-   * @summary Vérification de l'identité
-   * @returns boolean
-   */
-  isUser(req, _res, next) {
-    const { id } = req.params;
-    const authHeader = req.headers.authorization;
-
-    if (!securityService.isBearerToken(authHeader)) {
-      next(new APIError('Authorization header is missing or invalid', 401));
-
-      return;
-    }
-    const token = authHeader.split(' ')[1];
-    const decoded = securityService.checkToken(token);
-
-    if (Number(id) === decoded.id) {
-      req.isUser = true;
-    } else {
-      req.isUser = false;
-    }
-    debug(`isUser : ${req.isUser.toString()}`);
     next();
   },
 
   /**
-   * @summary Vérification de la propriété d'un artwork
-   * @returns boolean
-   */
-  async isArtworkOwner(req, _res, next) {
-    const { id } = req.params;
-    const authHeader = req.headers.authorization;
-
-    if (!securityService.isBearerToken(authHeader)) {
-      next(new APIError('Authorization header is missing or invalid', 401));
-
-      return;
-    }
-    const token = authHeader.split(' ')[1];
-    const decoded = securityService.checkToken(token);
-
-    const dataMapper = require('@/models/artworks.js');
-    const { ownerId } = await dataMapper.getOwner(id);
-
-    if (!ownerId) {
-      next(new APIError('Artwork not found', 404));
-
-      return;
-    } else if (ownerId === decoded.id) {
-      req.isOwner = true;
-    } else {
+  * @summary Middleware to check if the user is the owner of an entity
+  */
+  checkOwner(entity) {
+    return async (req, _res, next) => {
       req.isOwner = false;
-    }
-    debug(`isOwner : ${req.isOwner.toString()}`);
-    next();
-  },
 
-  /**
-   * @summary Vérification de la propriété d'une collection
-   * @returns boolean
-   */
-  async isCollectionOwner(req, _res, next) {
-    const { id } = req.params;
-    const authHeader = req.headers.authorization;
+      try {
+        const entityId = req.params.id;
 
-    if (!securityService.isBearerToken(authHeader)) {
-      next(new APIError('Authorization header is missing or invalid', 401));
+        const identity = getUserId(req.headers.authorization);
 
-      return;
-    }
-    const token = authHeader.split(' ')[1];
-    const decoded = securityService.checkToken(token);
+        const owner = await findOwner(entity, entityId);
 
-    const dataMapper = require('@/models/collections.js');
-    const { ownerId } = await dataMapper.getOwner(id);
-
-    if (!ownerId) {
-      next(new APIError('Collection not found', 404));
-
-      return;
-    } else if (ownerId === decoded.id) {
-      req.isOwner = true;
-    } else {
-      req.isOwner = false;
-    }
-    debug(`isOwner : ${req.isOwner.toString()}`);
-    next();
-  },
-
-  /**
-   * @summary Vérification de la propriété d'un commentaire
-   * @returns boolean
-   */
-  async isCommentOwner(req, _res, next) {
-    const { id } = req.params;
-    const authHeader = req.headers.authorization;
-
-    if (!securityService.isBearerToken(authHeader)) {
-      next(new APIError('Authorization header is missing or invalid', 401));
-
-      return;
-    }
-    const token = authHeader.split(' ')[1];
-    const decoded = securityService.checkToken(token);
-
-    const dataMapper = require('@/models/comments.js');
-    const { ownerId } = await dataMapper.getOwner(id);
-
-    if (!ownerId) {
-      next(new APIError('Comment not found', 404));
-
-      return;
-    } else if (ownerId === decoded.id) {
-      req.isOwner = true;
-    } else {
-      req.isOwner = false;
-    }
-    debug(`isOwner : ${req.isOwner.toString()}`);
-    next();
+        req.isOwner = identity === owner;
+      } catch { }
+      next();
+    };
   },
 };
-
-export default securityService;
