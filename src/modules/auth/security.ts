@@ -1,5 +1,4 @@
 // vim: foldlevel=1:foldnestmax=2
-//import debugFactory from 'debug';
 import jwt from 'jsonwebtoken';
 
 import type { RequestHandler } from 'express';
@@ -9,8 +8,6 @@ import APIError from '@/infrastructure/shared/APIError.js';
 import type { Entity, User } from '@/types/auth.d.js';
 
 import { findOwner, getJwtSecret, checkSignedIn, getUserId } from './helpers.js';
-
-// const debug = debugFactory('service:security');
 
 interface securityServiceInterface {
   connectionRequired: (required?: boolean) => RequestHandler,
@@ -50,7 +47,7 @@ export const securityService: securityServiceInterface = {
   },
 
   /**
-   * @summary Vérification de l'identité d'un utilisateur
+   * @summary Middleware to confirm user identity
    */
   checkIdentity(req, _res, next) {
     req.isUser = false;

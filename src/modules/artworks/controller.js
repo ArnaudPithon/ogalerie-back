@@ -1,10 +1,10 @@
 // vim: foldlevel=1:foldnestmax=2
 import debugFactory from 'debug';
 
-import dataMapper from '../artworks/model.js';
-import userDataMapper from '../users/model.js';
-import securityService from '../auth/security.js';
-import APIError from '../../infrastructure/shared/APIError.js';
+import APIError from '@/infrastructure/shared/APIError.js';
+import dataMapper from '@/modules/artworks/model.js';
+import userDataMapper from '@/modules/users/model.js';
+import { getUserId } from '@/modules/auth/helpers.ts';
 
 const debug = debugFactory('controller');
 
@@ -55,10 +55,7 @@ const artworksController = {
     let viewverId = 0;
 
     if (req.isConnected) {
-      const token = req.headers?.authorization.split(' ')[1];
-      const decoded = securityService.checkToken(token);
-
-      viewverId = decoded.id;
+      viewverId = getUserId(req.headers.authorization);
     }
 
     const { error, artwork } = await dataMapper.getArtwork(id, viewverId);

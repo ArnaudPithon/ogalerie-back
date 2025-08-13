@@ -2,10 +2,10 @@
 import bcrypt from 'bcrypt';
 import debugFactory from 'debug';
 
-import securityService from '../auth/security.js';
-import APIError from '../../infrastructure/shared/APIError.js';
-
 import dataMapper from './model.js';
+
+import APIError from '@/infrastructure/shared/APIError.js';
+import { securityService } from '@/modules/auth/security.js';
 
 const debug = debugFactory('controller');
 

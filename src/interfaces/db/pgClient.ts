@@ -1,5 +1,7 @@
 import { Client } from 'pg';
 
+import { logEvent, logger } from '@/interfaces/logger/logger.js';
+
 import credentials from '@/config/db.js';
 
 const { PGUSER, PGPASSWORD, PGHOST, PGDATABASE } = credentials;
@@ -10,10 +12,10 @@ const client = new Client(
 
 await client.connect()
   .then(() => {
-    console.log('Connected to PostgreSQL database');
+    logEvent('Connected to PostgreSQL database', { host: PGHOST, db: PGDATABASE });
   })
   .catch(err => {
-    console.error('Database connection failed', err);
+    logger.error('Database connection failed', err);
   });
 
 export default client;

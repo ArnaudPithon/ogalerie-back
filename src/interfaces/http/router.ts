@@ -1,17 +1,24 @@
 import Router from 'express';
 
-import errorHandler from './middlewares/errorHandler.js';
-import routerAPI from './routesAPI.js';
+import artworksRouter from '../../modules/artworks/routes.js';
+import collectionsRouter from '../../modules/collections/routes.js';
+import tagsRouter from '../../modules/tags/routes.js';
+import usersRouter from '../../modules/users/routes.js';
+import commentsRouter from '../../modules/comments/routes.js';
 
 const router = Router();
 
-// Les urls préfixées par /v1 rentrent dans routerAPI
+const routerAPI = Router();
+
+routerAPI.use('/artworks', artworksRouter);
+routerAPI.use('/collections', collectionsRouter);
+routerAPI.use('/tags', tagsRouter);
+routerAPI.use('/users', usersRouter);
+routerAPI.use('/comments', commentsRouter);
+
+/**
+  * @desciption Les urls préfixées par /v1 rentrent dans routerAPI
+  */
 router.use('/v1', routerAPI);
-
-// Levée d'une erreur 404
-router.use(errorHandler.notFound);
-
-// Gestion globale des erreurs
-router.use(errorHandler.manage);
 
 export default router;
