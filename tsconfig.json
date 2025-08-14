@@ -16,6 +16,7 @@
     "allowJs": true,
     "checkJs": false,
     "isolatedModules": true,
+    "noUncheckedIndexedAccess": true,
     "types": [
       "node"
     ],
