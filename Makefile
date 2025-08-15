@@ -15,6 +15,9 @@ start:
 dev:
 	make -C src dev
 
+dev-watch:
+	make -C src dev-watch
+
 test:
 	make -C src test
 

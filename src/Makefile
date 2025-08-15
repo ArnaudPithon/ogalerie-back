@@ -8,6 +8,9 @@ start:
 dev:
 	$(NPM) run dev
 
+dev-watch:
+	$(NPM) run dev:watch
+
 test:
 	$(NPM) run test
 
