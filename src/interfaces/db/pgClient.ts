@@ -18,4 +18,11 @@ await client.connect()
     logger.error('Database connection failed', err);
   });
 
+export async function dbDisconnect() {
+  await client.end()
+    .then(() => {
+      logEvent('Disconnected from PostgreSQL database', { host: PGHOST, db: PGDATABASE });
+    });
+};
+
 export default client;
