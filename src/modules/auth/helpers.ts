@@ -16,7 +16,9 @@ export function getJwtSecret() {
 }
 
 function isBearerToken(authHeader: unknown): authHeader is `Bearer ${string}` {
-  return typeof authHeader === 'string' && authHeader.startsWith('Bearer ');
+  return typeof authHeader === 'string'
+    && authHeader.startsWith('Bearer ')
+    && authHeader.length > 7;
 }
 
 function collectToken(authHeader: unknown): string {
@@ -24,7 +26,7 @@ function collectToken(authHeader: unknown): string {
     throw new APIError('Authorization header is missing or invalid', 401);
   }
 
-  return authHeader.split(' ')[1];
+  return authHeader.split(' ')[1] as string;
 }
 
 function isUserJwtPayload(payload: unknown): payload is UserJwtPayload {
