@@ -73,6 +73,10 @@ export const securityService: securityServiceInterface = {
       try {
         const entityId = req.params.id;
 
+        if (typeof entityId === 'undefined') {
+          return new APIError('Entity ID is required', 400);
+        }
+
         const identity = getUserId(req.headers.authorization);
 
         const owner = await findOwner(entity, entityId);
