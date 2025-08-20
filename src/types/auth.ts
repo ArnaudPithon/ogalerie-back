@@ -1,6 +1,6 @@
 import type { JwtPayload } from 'jsonwebtoken';
 
-type Situation =
+export type Situation =
   | 'user'
   | 'admin'
   | 'creator';
