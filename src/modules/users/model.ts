@@ -106,10 +106,18 @@ const dataMapper = {
     let error;
     let users;
 
+    type User = {
+      id: number,
+      firstname: string,
+      lastname: string,
+      nickname: string,
+      avatar: string,
+    };
+
     try {
       const response = await client.query(sqlQuery, values);
 
-      users = response.rows.map((e) => {
+      users = response.rows.map((e: { get_users: User }) => {
         return e.get_users;
       });
 
@@ -230,7 +238,17 @@ const dataMapper = {
     try {
       const response = await client.query(queryCollections, values);
 
-      collections = response.rows.map((e) => e.get_user_collections);
+      type Collection = {
+        id: number,
+        title: string,
+        created_at: Date,
+        updated_at: Date,
+        artworks?: Array<{}>,
+      };
+
+      collections = response.rows
+        .map((e: { get_user_collections: Collection }) => e.get_user_collections);
+
       if (!collections) {
         error = new APIError('informations erronnées', 403);
       }
@@ -282,9 +300,20 @@ const dataMapper = {
     try {
       const response = await client.query(sqlQuery, values);
 
-      favorites = response.rows.map((e) => {
-        return e.get_user_favorites;
-      });
+      type Favorite = {
+        id: number,
+        title: string,
+        mature: boolean,
+        collection_id: number,
+        date: Date,
+        uri: string,
+        created_at: Date,
+        updated_at: Date,
+      };
+
+      favorites = response.rows
+        .map((e: { get_user_favorites: Favorite }) => e.get_user_favorites);
+
       if (!favorites) {
         error = new APIError('informations erronnées', 403);
       }
@@ -297,7 +326,9 @@ const dataMapper = {
     return { error, favorites };
   },
 
+  // FIXME: Presque sûr que cette fonction est pétée
   async deleteFavorites(id: number) {
+    // FIXME: Comment ça favorites au plurier ?
     const sqlQuery = `
         select * from delete_user_favorites($1)
         ;`;
@@ -307,7 +338,9 @@ const dataMapper = {
     try {
       const response = await client.query(sqlQuery, values);
 
+      // TODO: Typer le paramètre
       result = response.rows.map((e) => {
+        // FIXME: get_user_result ?
         return e.get_user_result;
       });
       if (!result) {
