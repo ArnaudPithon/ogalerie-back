@@ -7,7 +7,7 @@ import APIError from '../../infrastructure/shared/APIError.js';
 const debug = debugFactory('datamapper');
 
 const dataMapper = {
-  async create({ title, ownerId }) {
+  async create({ title, ownerId }: { title: string, ownerId: number }) {
     const newCollection = { title, ownerId };
     const sqlQuery = `
         select * from create_collection($1)
@@ -25,13 +25,13 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, collection };
   },
 
-  async read(id) {
+  async read(id: number) {
     const queryCollection = 'select * from get_collection($1);';
     const queryArtworks = 'select * from get_collection_artwork($1);';
     const values = [id];
@@ -49,14 +49,14 @@ const dataMapper = {
 
       collection.artworks = artworks.rows;
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
     debug(collection);
 
     return { error, collection };
   },
 
-  async getOwner(id) {
+  async getOwner(id: number) {
     const sqlQuery = `
         select * from get_collection_owner($1)
         ;`;
@@ -72,13 +72,13 @@ const dataMapper = {
         error = new APIError("Can't define owner", 400);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, ownerId };
   },
 
-  async update(newInfos) {
+  async update(newInfos: string) {
     const sqlQuery = `
         select * from update_collection($1)
         ;`;
@@ -94,13 +94,13 @@ const dataMapper = {
         error = new APIError('Bad Request', 400);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, collection };
   },
 
-  async delete(id) {
+  async delete(id: number) {
     const sqlQuery = `
         select * from delete_collection($1)
         ;`;
@@ -117,7 +117,7 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, result };
