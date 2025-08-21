@@ -226,7 +226,7 @@ const dataMapper = {
       result = response.rows[0].delete_appraise;
 
       debug(response.rows[0]);
-      if (!result && result != 0) {
+      if (!result && result !== 0) {
         error = new APIError("Can't delete appraise", 400);
       }
     } catch (err) {
