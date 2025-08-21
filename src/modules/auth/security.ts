@@ -5,7 +5,7 @@ import type { RequestHandler } from 'express';
 
 import APIError from '@/infrastructure/shared/APIError.js';
 
-import type { Entity, User } from '@/types/auth.d.js';
+import type { Entity, User } from '@/types/auth.js';
 
 import { findOwner, getJwtSecret, checkSignedIn, getUserId } from './helpers.js';
 
@@ -42,6 +42,7 @@ export const securityService: securityServiceInterface = {
 
         return;
       }
+
       next();
     };
   },
@@ -74,7 +75,7 @@ export const securityService: securityServiceInterface = {
         const entityId = req.params.id;
 
         if (typeof entityId === 'undefined') {
-          return new APIError('Entity ID is required', 400);
+          throw new APIError('Entity ID is required', 400);
         }
 
         const identity = getUserId(req.headers.authorization);
@@ -83,6 +84,7 @@ export const securityService: securityServiceInterface = {
 
         req.isOwner = identity === owner;
       } catch { }
+
       next();
     };
   },
