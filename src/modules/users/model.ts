@@ -42,7 +42,7 @@ const dataMapper = {
    * @param {object} loginInformations
    * @returns
    */
-  async signIn(loginInformations: { email: string; password: string }) {
+  async signIn(loginInformations: { email: string }) {
     const sqlQuery = `
         select * from sign_in($1)
         ;`;
