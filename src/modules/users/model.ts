@@ -205,7 +205,7 @@ const dataMapper = {
     return { error, user };
   },
 
-  async delete(id: number) {
+  async delete({ id }: { id: number }) {
     const sqlQuery = `
         select * from delete_person($1)
         ;`;

@@ -143,8 +143,7 @@ const usersController = {
 
       return;
     }
-
-    const { error } = await dataMapper.delete(Number(id));
+    const { error } = await dataMapper.delete({ id: Number(id) });
 
     if (error) {
       next(error);
