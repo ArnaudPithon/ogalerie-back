@@ -144,7 +144,7 @@ const dataMapper = {
     return { error, ownerId };
   },
 
-  async setFavorite(infos: { personId: number, artworkId: number }) {
+  async setFavorite(infos: { userId: number, artworkId: number }) {
     const sqlQuery = `
         select * from set_user_favorite($1)
         ;`;
@@ -167,7 +167,7 @@ const dataMapper = {
     return { error, result };
   },
 
-  async deleteFavorite(infos: { personId: number, artworkId: number }) {
+  async deleteFavorite(infos: { userId: number, artworkId: number }) {
     const sqlQuery = `
         select * from delete_user_favorite($1)
         ;`;
@@ -190,7 +190,7 @@ const dataMapper = {
     return { error, result };
   },
 
-  async setAppraise(infos: { personId: number, artworkId: number }) {
+  async setAppraise(infos: { userId: number, artworkId: number }) {
     const sqlQuery = `
         select * from set_appraise($1)
         ;`;
@@ -213,7 +213,7 @@ const dataMapper = {
     return { error, result };
   },
 
-  async deleteAppraise(infos: { personId: number, artworkId: number }) {
+  async deleteAppraise(infos: { userId: number, artworkId: number }) {
     const sqlQuery = `
         select * from delete_appraise($1)
         ;`;
