@@ -19,7 +19,7 @@ const router = Router();
 router.get(
   '/:id',
   securityService.connectionRequired,
-  securityService.checkOwner('artwork'),
+  securityService.checkOwner('artworks'),
   artworksController.getArtwork,
 );
 
@@ -36,7 +36,7 @@ router.get(
 router.patch(
   '/:id',
   securityService.connectionRequired,
-  securityService.checkOwner('artwork'),
+  securityService.checkOwner('artworks'),
   artworksController.update,
 );
 
@@ -53,7 +53,7 @@ router.patch(
 router.delete(
   '/:id',
   securityService.connectionRequired,
-  securityService.checkOwner('artwork'),
+  securityService.checkOwner('artworks'),
   artworksController.delete,
 );
 

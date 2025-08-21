@@ -19,7 +19,7 @@ import { securityService } from '@/modules/auth/security.js';
 router.get(
   '/:id',
   securityService.connectionRequired,
-  securityService.checkOwner('collection'),
+  securityService.checkOwner('collections'),
   collectionsController.read,
 );
 
@@ -36,7 +36,7 @@ router.get(
 router.patch(
   '/:id',
   securityService.connectionRequired,
-  securityService.checkOwner('collection'),
+  securityService.checkOwner('collections'),
   collectionsController.update,
 );
 
@@ -54,7 +54,7 @@ router.patch(
 router.delete(
   '/:id',
   securityService.connectionRequired,
-  securityService.checkOwner('collection'),
+  securityService.checkOwner('collections'),
   collectionsController.delete,
 );
 
