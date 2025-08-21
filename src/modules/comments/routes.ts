@@ -2,7 +2,7 @@ import Router from 'express';
 
 const router = Router();
 
-import securityService from '../auth/security.js';
+import { securityService } from '../auth/security.js';
 
 import commentsController from './controller.js';
 
@@ -16,8 +16,8 @@ import commentsController from './controller.js';
  */
 router.patch(
   '/:id',
-  securityService.isConnected,
-  securityService.isCommentOwner,
+  securityService.connectionRequired,
+  securityService.checkOwner('comments'),
   commentsController.update,
 );
 
@@ -31,8 +31,8 @@ router.patch(
  */
 router.delete(
   '/:id',
-  securityService.isConnected,
-  securityService.isCommentOwner,
+  securityService.connectionRequired,
+  securityService.checkOwner('comments'),
   commentsController.delete,
 );
 

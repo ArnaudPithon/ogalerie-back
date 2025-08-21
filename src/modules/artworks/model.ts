@@ -1,13 +1,14 @@
 // vim: foldlevel=1:foldnestmax=2
 import debugFactory from 'debug';
 
-import client from '../../interfaces/db/pgClient.js';
-import APIError from '../../infrastructure/shared/APIError.js';
+import client from '@/interfaces/db/pgClient.js';
+import APIError from '@/infrastructure/shared/APIError.js';
+import type { Artwork } from './types.js';
 
 const debug = debugFactory('datamapper');
 
 const dataMapper = {
-  async create(newArtwork) {
+  async create(newArtwork: Artwork) {
     const sqlQuery = `
         select * from create_artwork($1)
         ;`;
@@ -26,13 +27,13 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, artwork };
   },
 
-  async getArtwork(artworkId, viewverId) {
+  async getArtwork(artworkId: number, viewverId: number) {
     // Connaitre le spectateur permet de déterminer s'il a déjà liké l'œuvre
     // ou mise dans ses favoris.
     const queryArtwork = 'select * from get_artwork($1, $2);';
@@ -69,14 +70,14 @@ const dataMapper = {
         }
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
     debug(artwork);
 
     return { error, artwork };
   },
 
-  async update(newInfos) {
+  async update(newInfos: Artwork) {
     const sqlQuery = `
         select * from update_artwork($1)
         ;`;
@@ -92,13 +93,13 @@ const dataMapper = {
         error = new APIError('Bad Request', 400);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, artwork };
   },
 
-  async delete(id) {
+  async delete(id: number) {
     const sqlQuery = `
         select * from delete_artwork($1)
         ;`;
@@ -115,13 +116,13 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, result };
   },
 
-  async getOwner(id) {
+  async getOwner(id: number) {
     const sqlQuery = `
         select * from get_artwork_owner($1)
         ;`;
@@ -137,13 +138,13 @@ const dataMapper = {
         error = new APIError("Can't define owner", 400);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, ownerId };
   },
 
-  async setFavorite(infos) {
+  async setFavorite(infos: { userId: number, artworkId: number }) {
     const sqlQuery = `
         select * from set_user_favorite($1)
         ;`;
@@ -160,13 +161,13 @@ const dataMapper = {
         error = new APIError("Can't set as favorite", 400);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, result };
   },
 
-  async deleteFavorite(infos) {
+  async deleteFavorite(infos: { userId: number, artworkId: number }) {
     const sqlQuery = `
         select * from delete_user_favorite($1)
         ;`;
@@ -183,13 +184,13 @@ const dataMapper = {
         error = new APIError("Can't delete favorite", 400);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, result };
   },
 
-  async setAppraise(infos) {
+  async setAppraise(infos: { userId: number, artworkId: number }) {
     const sqlQuery = `
         select * from set_appraise($1)
         ;`;
@@ -206,13 +207,13 @@ const dataMapper = {
         error = new APIError("Can't add a appraise", 400);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, result };
   },
 
-  async deleteAppraise(infos) {
+  async deleteAppraise(infos: { userId: number, artworkId: number }) {
     const sqlQuery = `
         select * from delete_appraise($1)
         ;`;
@@ -225,11 +226,11 @@ const dataMapper = {
       result = response.rows[0].delete_appraise;
 
       debug(response.rows[0]);
-      if (!result && result != 0) {
+      if (!result && result !== 0) {
         error = new APIError("Can't delete appraise", 400);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, result };
@@ -247,7 +248,7 @@ const dataMapper = {
 
       result = response.rows.map((e) => e.random_artworks);
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, result };
@@ -267,7 +268,7 @@ const dataMapper = {
         error = new APIError('informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     debug(artworks);
@@ -275,9 +276,9 @@ const dataMapper = {
     return { error, artworks };
   },
 
-  async filter(query) {
+  async filter(query: { type?: string, support?: string, style?: string }) {
     let sqlQuery = 'select * from get_artworks() as a';
-    const filters = {
+    const filters: Record<number, string> = {
       1: " where (a->>'id')::int in (select * from filter_tag($1))",
       2: " and (a->>'id')::int in (select * from filter_tag($2))",
       3: " and (a->>'id')::int in (select * from filter_tag($3))",
@@ -314,7 +315,7 @@ const dataMapper = {
         error = new APIError('informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
     debug(artworks);
 

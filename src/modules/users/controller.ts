@@ -1,22 +1,21 @@
 // vim: foldlevel=1:foldnestmax=2
 import bcrypt from 'bcrypt';
+import type { Request, Response, NextFunction } from 'express';
 import debugFactory from 'debug';
 
-import securityService from '../auth/security.js';
-import APIError from '../../infrastructure/shared/APIError.js';
-
 import dataMapper from './model.js';
+import type { Situation } from '@/types/auth.js';
+
+import APIError from '@/infrastructure/shared/APIError.js';
+import { securityService } from '@/modules/auth/security.js';
 
 const debug = debugFactory('controller');
 
 const usersController = {
   /**
    * Add a user in DB
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
    */
-  signUp: async (req, res, next) => {
+  signUp: async (req: Request, res: Response, next: NextFunction) => {
     const newUser = req.body;
 
     debug('body', req.body);
@@ -39,16 +38,13 @@ const usersController = {
       const token = securityService.getToken(user);
       const response = { ...user, token, logged: true };
 
-      res.status(201).json(response);
+      return res.status(201).json(response);
     }
   },
   /**
    * Authenticating a user
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
    */
-  signIn: async (req, res, next) => {
+  signIn: async (req: Request, res: Response, next: NextFunction) => {
     const { password, email } = req.body;
     const { error, user } = await dataMapper.signIn({ email });
 
@@ -70,7 +66,7 @@ const usersController = {
 
         const response = { ...user, token, logged: true };
 
-        res.json(response);
+        return res.json(response);
       } else {
         // Mot de passe incorrect
         const error = new APIError('Incorrect password', 403);
@@ -79,19 +75,19 @@ const usersController = {
       }
     }
   },
-  users: async (req, res, next) => {
-    const role = req.params.role ? req.params.role : 'user';
+  users: async (req: Request, res: Response, next: NextFunction) => {
+    const role = <Situation>req.params.role ?? 'user';
 
     const { error, users } = await dataMapper.getUsers(role);
 
     if (error) {
       next(error);
     } else {
-      res.json(users);
+      return res.json(users);
     }
   },
 
-  getUser: async (req, res, next) => {
+  getUser: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     let request;
 
@@ -101,7 +97,7 @@ const usersController = {
       request = dataMapper.getProfilPublic;
     }
 
-    const { error, user } = await request(id);
+    const { error, user } = await request(Number(id));
 
     if (error) {
       next(error);
@@ -113,11 +109,12 @@ const usersController = {
       } else {
         response = { ...user, logged: false };
       }
-      res.json(response);
+
+      return res.json(response);
     }
   },
 
-  update: async (req, res, next) => {
+  update: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     if (!req.isUser) {
@@ -131,18 +128,14 @@ const usersController = {
     if (error) {
       next(error);
     } else {
-      res.json(user);
+      return res.json(user);
     }
   },
 
   /**
    * Remove a user from DB
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
-   * @return string
    */
-  delete: async (req, res, next) => {
+  delete: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     if (!req.isUser) {
@@ -150,48 +143,49 @@ const usersController = {
 
       return;
     }
-
-    const { error } = await dataMapper.delete({ id });
-
-    if (error) {
-      next(error);
-    } else {
-      res.json('User deleted');
-    }
-  },
-
-  getCollections: async (req, res, next) => {
-    const { id } = req.params;
-    const { error, collections } = await dataMapper.getCollections(id);
+    const { error } = await dataMapper.delete({ id: Number(id) });
 
     if (error) {
       next(error);
     } else {
-      res.json(collections);
+      return res.json('User deleted');
     }
   },
 
-  getArtworks: async (req, res, next) => {
+  getCollections: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const { error, artworks } = await dataMapper.getArtworks(id);
+    const { error, collections } = await dataMapper.getCollections(Number(id));
+
+    if (error) {
+      next(error);
+    } else {
+      return res.json(collections);
+    }
+  },
+
+  getArtworks: async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const { error, artworks } = await dataMapper.getArtworks(Number(id));
 
     if (error) {
       next(error);
     } else {
       debug(artworks);
-      res.json(artworks);
+
+      return res.json(artworks);
     }
   },
 
-  getFavorites: async (req, res, next) => {
+  getFavorites: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const { error, favorites } = await dataMapper.getFavorites(id);
+    const { error, favorites } = await dataMapper.getFavorites(Number(id));
 
     if (error) {
       next(error);
     } else {
       debug(favorites);
-      res.json(favorites);
+
+      return res.json(favorites);
     }
   },
 };

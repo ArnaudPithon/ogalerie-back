@@ -1,13 +1,14 @@
 // vim: foldlevel=1:foldnestmax=2
 import debugFactory from 'debug';
 
-import client from '../../interfaces/db/pgClient.js';
-import APIError from '../../infrastructure/shared/APIError.js';
+import client from '@/interfaces/db/pgClient.js';
+import APIError from '@/infrastructure/shared/APIError.js';
+import type { Tag } from './types.js';
 
 const debug = debugFactory('datamapper');
 
 const dataMapper = {
-  async read(id) {
+  async read(id: number) {
     const sqlQuery = 'select * from get_tag($1)';
     const values = [id];
     let tag, error;
@@ -15,13 +16,13 @@ const dataMapper = {
     try {
       const response = await client.query(sqlQuery, values);
 
-      tag = response.rows.map((e) => e.get_tag);
+      tag = response.rows.map((e: { get_tag: Tag }) => e.get_tag);
 
       if (!tag) {
         error = new APIError('error', 404);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, tag };
@@ -40,7 +41,7 @@ const dataMapper = {
         error = new APIError('error', 404);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
     debug(tags);
 
@@ -60,13 +61,13 @@ const dataMapper = {
         error = new APIError('error', 404);
       }
 
-      const typeTags = result.filter((t) => t.category === 'type');
-      const supportTags = result.filter((t) => t.category === 'support');
-      const styleTags = result.filter((t) => t.category === 'style');
+      const typeTags = result.filter((t: { category: string }) => t.category === 'type');
+      const supportTags = result.filter((t: { category: string }) => t.category === 'support');
+      const styleTags = result.filter((t: { category: string }) => t.category === 'style');
 
       tags = { style: styleTags, support: supportTags, type: typeTags };
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
     debug(tags);
 

@@ -4,7 +4,7 @@ import Router from 'express';
 import collectionsController from '../collections/controller.js';
 import artworksController from '../artworks/controller.js';
 import commentsController from '../comments/controller.js';
-import securityService from '../auth/security.js';
+import { securityService } from '../auth/security.js';
 
 import usersController from './controller.js';
 import {
@@ -120,8 +120,8 @@ router.get('/:role', validateRole, usersController.users);
 router.get(
   '/:id',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   usersController.getUser,
 );
 
@@ -156,8 +156,8 @@ router.get(
 router.patch(
   '/:id',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   checkUpdateData,
   usersController.update,
 );
@@ -176,8 +176,8 @@ router.patch(
 router.delete(
   '/:id',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   usersController.delete,
 );
 
@@ -214,8 +214,8 @@ router.get(
 router.post(
   '/:id/collections',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   collectionsController.create,
 );
 
@@ -248,8 +248,8 @@ router.get('/:id/artworks', validateNumericId, usersController.getArtworks);
 router.post(
   '/:id/artworks',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   artworksController.create,
 );
 
@@ -267,8 +267,8 @@ router.post(
 router.post(
   '/:id/comments',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   commentsController.create,
 );
 
@@ -301,8 +301,8 @@ router.get('/:id/favorites', validateNumericId, usersController.getFavorites);
 router.post(
   '/:id/favorites',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   artworksController.setFavorite,
 );
 
@@ -320,8 +320,8 @@ router.post(
 router.delete(
   '/:id/favorites',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   artworksController.deleteFavorite,
 );
 
@@ -339,8 +339,8 @@ router.delete(
 router.post(
   '/:id/likes',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   artworksController.setAppraise,
 );
 
@@ -358,8 +358,8 @@ router.post(
 router.delete(
   '/:id/likes',
   validateNumericId,
-  securityService.isConnected,
-  securityService.isUser,
+  securityService.connectionRequired,
+  securityService.checkIdentity,
   artworksController.deleteAppraise,
 );
 

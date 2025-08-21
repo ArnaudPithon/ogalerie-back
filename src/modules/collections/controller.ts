@@ -1,13 +1,14 @@
 // vim: foldlevel=1:foldnestmax=2
 import debugFactory from 'debug';
+import type { Request, Response, NextFunction } from 'express';
 
-import dataMapper from '../collections/model.js';
-import APIError from '../../infrastructure/shared/APIError.js';
+import dataMapper from './model.js';
+import APIError from '@/infrastructure/shared/APIError.js';
 
 const debug = debugFactory('controller');
 
 const collectionsController = {
-  create: async (req, res, next) => {
+  create: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { title } = req.body;
 
@@ -30,23 +31,23 @@ const collectionsController = {
     if (error) {
       next(error);
     } else {
-      res.status(201).json(collection);
+      return res.status(201).json(collection);
     }
   },
 
-  read: async (req, res, next) => {
+  read: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
-    const { error, collection } = await dataMapper.read(id);
+    const { error, collection } = await dataMapper.read(Number(id));
 
     if (error) {
       next(error);
     } else {
-      res.status(200).json(collection);
+      return res.status(200).json(collection);
     }
   },
 
-  update: async (req, res, next) => {
+  update: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     if (!req.isOwner) {
@@ -60,11 +61,11 @@ const collectionsController = {
     if (error) {
       next(error);
     } else {
-      res.json(collection);
+      return res.json(collection);
     }
   },
 
-  delete: async (req, res, next) => {
+  delete: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     if (!req.isOwner) {
@@ -73,16 +74,16 @@ const collectionsController = {
       return;
     }
 
-    const { error } = await dataMapper.delete({ id });
+    const { error } = await dataMapper.delete(Number(id));
 
     if (error) {
       next(error);
     } else {
-      res.json('Collection deleted');
+      return res.json('Collection deleted');
     }
   },
 
-  getArtworks: async (req, res, next) => { },
+  getArtworks: async (_req: Request, _res: Response, _next: NextFunction) => { },
 };
 
 export default collectionsController;

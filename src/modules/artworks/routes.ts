@@ -1,10 +1,10 @@
 import Router from 'express';
 
-const router = Router();
-
-import securityService from '../auth/security.js';
-
 import artworksController from './controller.js';
+
+import { securityService } from '@/modules/auth/security.js';
+
+const router = Router();
 
 /**
  * @swagger
@@ -18,8 +18,8 @@ import artworksController from './controller.js';
  */
 router.get(
   '/:id',
-  securityService.isConnected,
-  securityService.isArtworkOwner,
+  securityService.connectionRequired,
+  securityService.checkOwner('artworks'),
   artworksController.getArtwork,
 );
 
@@ -35,8 +35,8 @@ router.get(
  */
 router.patch(
   '/:id',
-  securityService.isConnected,
-  securityService.isArtworkOwner,
+  securityService.connectionRequired,
+  securityService.checkOwner('artworks'),
   artworksController.update,
 );
 
@@ -52,8 +52,8 @@ router.patch(
  */
 router.delete(
   '/:id',
-  securityService.isConnected,
-  securityService.isArtworkOwner,
+  securityService.connectionRequired,
+  securityService.checkOwner('artworks'),
   artworksController.delete,
 );
 

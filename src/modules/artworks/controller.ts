@@ -1,28 +1,31 @@
 // vim: foldlevel=1:foldnestmax=2
 import debugFactory from 'debug';
+import type { Request, Response, NextFunction } from 'express';
 
-import dataMapper from '../artworks/model.js';
-import userDataMapper from '../users/model.js';
-import securityService from '../auth/security.js';
-import APIError from '../../infrastructure/shared/APIError.js';
+import APIError from '@/infrastructure/shared/APIError.js';
+import dataMapper from '@/modules/artworks/model.js';
+import userDataMapper from '@/modules/users/model.js';
+import { getUserId } from '@/modules/auth/helpers.js';
 
 const debug = debugFactory('controller');
 
 const artworksController = {
-  create: async (req, res, next) => {
+  create: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const newArtwork = req.body;
 
     if (!req.isUser) {
-      return next(new APIError('Forbidden', 403));
+      next(new APIError('Forbidden', 403));
+
+      return;
     }
 
-    const response = await userDataMapper.getCollections(id);
+    const response = await userDataMapper.getCollections(Number(id));
     const userCollections = response.collections;
 
     // Confirme que l'artwork appartient bien à une collection de l'utilisateur
     if (
-      !userCollections.filter((c) => c.id === Number(newArtwork.collection_id))
+      !userCollections?.filter((c) => c.id === Number(newArtwork.collection_id))
         .length
     ) {
       next(
@@ -44,33 +47,31 @@ const artworksController = {
       next(error);
     } else {
       debug(artwork);
-      res.status(201).json(artwork);
+
+      return res.status(201).json(artwork);
     }
   },
 
-  getArtwork: async (req, res, next) => {
+  getArtwork: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     // On affecte par défaut une id qui ne peut exister en BDD pour un utilisateur
     // qui n'est pas connecté.
     let viewverId = 0;
 
     if (req.isConnected) {
-      const token = req.headers?.authorization.split(' ')[1];
-      const decoded = securityService.checkToken(token);
-
-      viewverId = decoded.id;
+      viewverId = getUserId(req.headers.authorization);
     }
 
-    const { error, artwork } = await dataMapper.getArtwork(id, viewverId);
+    const { error, artwork } = await dataMapper.getArtwork(Number(id), viewverId);
 
     if (error) {
       next(error);
     } else {
-      res.json(artwork);
+      return res.json(artwork);
     }
   },
 
-  update: async (req, res, next) => {
+  update: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     if (!req.isOwner) {
@@ -84,11 +85,11 @@ const artworksController = {
     if (error) {
       next(error);
     } else {
-      res.json(artwork);
+      return res.json(artwork);
     }
   },
 
-  delete: async (req, res, next) => {
+  delete: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
 
     if (!req.isOwner) {
@@ -97,16 +98,16 @@ const artworksController = {
       return;
     }
 
-    const { error } = await dataMapper.delete({ id });
+    const { error } = await dataMapper.delete(Number(id));
 
     if (error) {
       next(error);
     } else {
-      res.json('Artwork deleted');
+      return res.json('Artwork deleted');
     }
   },
 
-  setFavorite: async (req, res, next) => {
+  setFavorite: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { artworkId } = req.body;
 
@@ -117,17 +118,17 @@ const artworksController = {
     }
     const { error, result } = await dataMapper.setFavorite({
       artworkId,
-      userId: id,
+      userId: Number(id),
     });
 
     if (error) {
       next(error);
     } else {
-      res.status(201).json(result);
+      return res.status(201).json(result);
     }
   },
 
-  deleteFavorite: async (req, res, next) => {
+  deleteFavorite: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { artworkId } = req.body;
 
@@ -138,17 +139,17 @@ const artworksController = {
     }
     const { error, result } = await dataMapper.deleteFavorite({
       artworkId,
-      userId: id,
+      userId: Number(id),
     });
 
     if (error) {
       next(error);
     } else {
-      res.json(result);
+      return res.json(result);
     }
   },
 
-  setAppraise: async (req, res, next) => {
+  setAppraise: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { artworkId } = req.body;
 
@@ -159,17 +160,17 @@ const artworksController = {
     }
     const { error, result } = await dataMapper.setAppraise({
       artworkId,
-      userId: id,
+      userId: Number(id),
     });
 
     if (error) {
       next(error);
     } else {
-      res.status(201).json(result);
+      return res.status(201).json(result);
     }
   },
 
-  deleteAppraise: async (req, res, next) => {
+  deleteAppraise: async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const { artworkId } = req.body;
 
@@ -180,44 +181,45 @@ const artworksController = {
     }
     const { error, result } = await dataMapper.deleteAppraise({
       artworkId,
-      userId: id,
+      userId: Number(id),
     });
 
     if (error) {
       next(error);
     } else {
-      res.json(result);
+      return res.json(result);
     }
   },
 
-  random: async (req, res, next) => {
+  random: async (_req: Request, res: Response, next: NextFunction) => {
     const { error, result } = await dataMapper.random();
 
     if (error) {
       next(error);
     } else {
-      res.json(result);
+      return res.json(result);
     }
   },
 
-  getAllArtworks: async (req, res, next) => {
+  getAllArtworks: async (_req: Request, res: Response, next: NextFunction) => {
     const { error, artworks } = await dataMapper.getAllArtworks();
 
     if (error) {
       next(error);
     } else {
       debug(artworks);
-      res.json(artworks);
+
+      return res.json(artworks);
     }
   },
 
-  filter: async (req, res, next) => {
+  filter: async (req: Request, res: Response, next: NextFunction) => {
     const { error, artworks } = await dataMapper.filter(req.query);
 
     if (error) {
       next(error);
     } else {
-      res.status(200).json(artworks);
+      return res.status(200).json(artworks);
     }
   },
 };

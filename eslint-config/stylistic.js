@@ -21,8 +21,8 @@ export default {
       catch: 'always',
     }],
     '@stylistic/object-curly-spacing': ['error', 'always', {
-      arraysInObjects: false,
-      objectsInObjects: false,
+      arraysInObjects: true,
+      objectsInObjects: true,
     }],
     '@stylistic/array-bracket-spacing': ['error', 'never'],
   },

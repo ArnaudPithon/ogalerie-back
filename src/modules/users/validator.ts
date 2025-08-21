@@ -1,8 +1,7 @@
 import Joi from 'joi';
-import debugFactory from 'debug';
+import type { Request, Response, NextFunction } from 'express';
 
-import APIError from '../../infrastructure/shared/APIError.js';
-const debug = debugFactory('service:validation');
+import APIError from '@/infrastructure/shared/APIError.js';
 
 // Schéma des données attendues au formulaire d'inscription
 const schemaUserInput = Joi.object({
@@ -21,8 +20,8 @@ const schemaUserInput = Joi.object({
     .required(),
   firstname: Joi.string().pattern(/^[\d\p{L}\p{M} -]{3,32}$/mu),
   lastname: Joi.string().pattern(/^[\d\p{L}\p{M} -]{3,32}$/mu),
-  town: Joi.string().pattern(/[a-zA-Z-]{2,24}$/),
-  country: Joi.string().pattern(/[a-zA-Z-]{2,32}$/),
+  town: Joi.string().pattern(/^[a-zA-Z-]{2,24}$/),
+  country: Joi.string().pattern(/^[a-zA-Z-]{2,32}$/),
   avatar: Joi.string(),
   biography: Joi.string().pattern(/^.{0,140}$/),
 }).required();
@@ -33,8 +32,8 @@ const schemaUserPatch = Joi.object({
   lastname: Joi.string().pattern(/^[\d\p{L}\p{M} -]{3,32}$/mu),
   nickname: Joi.string().pattern(/^[\d\p{L}\p{M}_-]{3,24}$/mu),
   birthday: Joi.string().pattern(/^\d{4}(?:-\d{2}){2}$/),
-  town: Joi.string().pattern(/[a-zA-Z-]{2,24}$/),
-  country: Joi.string().pattern(/[a-zA-Z-]{2,32}$/),
+  town: Joi.string().pattern(/^[a-zA-Z-]{2,24}$/),
+  country: Joi.string().pattern(/^[a-zA-Z-]{2,32}$/),
   avatar: Joi.string(),
   biography: Joi.string().pattern(/^.{0,140}$/),
   situation: Joi.string().pattern(/^(?:user|creator|admin)?$/),
@@ -54,7 +53,7 @@ const schemaUserLogin = Joi.object({
  * @param {*} _res
  * @param {*} next
  */
-export function checkSignUpData(req, _res, next) {
+export function checkSignUpData(req: Request, _res: Response, next: NextFunction) {
   const { error } = schemaUserInput.validate(req.body);
 
   if (!error) {
@@ -76,7 +75,7 @@ export function checkSignUpData(req, _res, next) {
  * @param {*} _res
  * @param {*} next
  */
-export function checkLoginData(req, _res, next) {
+export function checkLoginData(req: Request, _res: Response, next: NextFunction) {
   const { error } = schemaUserLogin.validate(req.body);
 
   if (!error) {
@@ -92,7 +91,7 @@ export function checkLoginData(req, _res, next) {
   }
 }
 
-export function checkUpdateData(req, _res, next) {
+export function checkUpdateData(req: Request, _res: Response, next: NextFunction) {
   const { error } = schemaUserPatch.validate(req.body);
 
   if (!error) {
@@ -108,7 +107,7 @@ export function checkUpdateData(req, _res, next) {
   }
 }
 
-export function validateRole(req, res, next) {
+export function validateRole(req: Request, res: Response, next: NextFunction) {
   const allowedRoles = ['creator', 'admin'];
   const { role } = req.params;
 
@@ -118,8 +117,10 @@ export function validateRole(req, res, next) {
   next();
 };
 
-export function validateNumericId(req, res, next) {
-  if (!/^\d+$/.test(req.params.id)) {
+export function validateNumericId(req: Request, res: Response, next: NextFunction) {
+  const { id } = req.params;
+
+  if (!id || !/^\d+$/.test(id)) {
     return res.status(400).json({ error: 'ID must be a number' });
   }
   next();

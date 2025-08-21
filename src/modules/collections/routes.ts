@@ -2,9 +2,9 @@ import Router from 'express';
 
 const router = Router();
 
-import securityService from '../auth/security.js';
-
 import collectionsController from './controller.js';
+
+import { securityService } from '@/modules/auth/security.js';
 
 /**
  * @swagger
@@ -18,8 +18,8 @@ import collectionsController from './controller.js';
  */
 router.get(
   '/:id',
-  securityService.isConnected,
-  securityService.isCollectionOwner,
+  securityService.connectionRequired,
+  securityService.checkOwner('collections'),
   collectionsController.read,
 );
 
@@ -35,8 +35,8 @@ router.get(
  */
 router.patch(
   '/:id',
-  securityService.isConnected,
-  securityService.isCollectionOwner,
+  securityService.connectionRequired,
+  securityService.checkOwner('collections'),
   collectionsController.update,
 );
 
@@ -53,8 +53,8 @@ router.patch(
  */
 router.delete(
   '/:id',
-  securityService.isConnected,
-  securityService.isCollectionOwner,
+  securityService.connectionRequired,
+  securityService.checkOwner('collections'),
   collectionsController.delete,
 );
 

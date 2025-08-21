@@ -18,10 +18,16 @@ export default {
   },
   settings: {
     ...settings,
+    'import/resolver': {
+      'typescript': {
+        'alwaysTryTypes': true,
+        project: './tsconfig.json',
+      },
+    }
   },
   rules: {
     ...commonRules,
-    'typescript/no-unused-vars': ['warn'],
+    'typescript/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     'typescript/explicit-function-return-type': 'off',
     'typescript/no-explicit-any': 'warn',
     'typescript/ban-ts-comment': 'warn',
@@ -46,5 +52,9 @@ export default {
     'typescript/await-thenable': 'warn',
     'typescript/consistent-type-imports': 'warn',
     'typescript/no-confusing-void-expression': ['warn', { ignoreArrowShorthand: true }],
+    'import/extensions': ['error', 'ignorePackages', {
+      'js': 'always',
+      'ts': 'never'
+    }]
   },
 };

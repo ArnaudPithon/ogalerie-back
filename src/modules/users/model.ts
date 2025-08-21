@@ -1,18 +1,18 @@
 // vim: foldlevel=1:foldnestmax=2
 import debugFactory from 'debug';
 
-import client from '../../interfaces/db/pgClient.js';
-import APIError from '../../infrastructure/shared/APIError.js';
+import client from '@/interfaces/db/pgClient.js';
+import APIError from '@/infrastructure/shared/APIError.js';
+import type { Situation } from '@/types/auth.js';
+import type { Person } from './types.js';
 
 const debug = debugFactory('datamapper');
 
 const dataMapper = {
   /**
    * Récupération d'un utilisateur via son email
-   * @param {object} loginInformations
-   * @returns
    */
-  async getUserByEmail(loginInformations) {
+  async getUserByEmail(loginInformations: { email: string }) {
     const sqlQuery = `
         select * from get_user_by_email($1)
         ;`;
@@ -31,7 +31,7 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, user };
@@ -42,7 +42,7 @@ const dataMapper = {
    * @param {object} loginInformations
    * @returns
    */
-  async signIn(loginInformations) {
+  async signIn(loginInformations: { email: string }) {
     const sqlQuery = `
         select * from sign_in($1)
         ;`;
@@ -60,7 +60,7 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, user };
@@ -68,10 +68,10 @@ const dataMapper = {
 
   /**
    * Ajout d'un utilisateur à la base de données
-   * @param {object} user
+   * @param {object} signInformations
    * @returns
    */
-  async signUp(signInformations) {
+  async signUp(signInformations: Person) {
     const sqlQuery = `
         select * from insert_user($1)
         ;`;
@@ -89,7 +89,7 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, user };
@@ -98,7 +98,7 @@ const dataMapper = {
   /**
    * Récupère la liste des utilisateurs en fonction de leur rôle
    */
-  async getUsers(role) {
+  async getUsers(role: Situation) {
     const sqlQuery = `
         select * from get_users($1)
         ;`;
@@ -106,22 +106,30 @@ const dataMapper = {
     let error;
     let users;
 
+    type User = {
+      id: number,
+      firstname: string,
+      lastname: string,
+      nickname: string,
+      avatar: string,
+    };
+
     try {
       const response = await client.query(sqlQuery, values);
 
-      users = response.rows.map((e) => {
+      users = response.rows.map((e: { get_users: User }) => {
         return e.get_users;
       });
 
       debug(users);
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, users };
   },
 
-  async getUser(id) {
+  async getUser(id: number) {
     const sqlQuery = `
         select * from get_user_by_id($1)
         ;`;
@@ -139,13 +147,13 @@ const dataMapper = {
         error = new APIError('User not found', 404);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, user };
   },
 
-  async getProfilPublic(id) {
+  async getProfilPublic(id: number) {
     const sqlQuery = `
         select * from get_user_profil($1)
         ;`;
@@ -163,13 +171,13 @@ const dataMapper = {
         error = new APIError('User not found', 404);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, user };
   },
 
-  async update(newInfos) {
+  async update(newInfos: Person) {
     const sqlQuery = `
         select * from update_person($1)
         ;`;
@@ -191,13 +199,13 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, user };
   },
 
-  async delete(id) {
+  async delete({ id }: { id: number }) {
     const sqlQuery = `
         select * from delete_person($1)
         ;`;
@@ -215,13 +223,13 @@ const dataMapper = {
         error = new APIError('Informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, result };
   },
 
-  async getCollections(id) {
+  async getCollections(id: number) {
     const queryCollections = 'select * from get_user_collections($1);';
     const queryArtworks = 'select * from get_collection_artwork($1);';
     const values = [id];
@@ -230,7 +238,17 @@ const dataMapper = {
     try {
       const response = await client.query(queryCollections, values);
 
-      collections = response.rows.map((e) => e.get_user_collections);
+      type Collection = {
+        id: number,
+        title: string,
+        created_at: Date,
+        updated_at: Date,
+        artworks?: Array<{}>,
+      };
+
+      collections = response.rows
+        .map((e: { get_user_collections: Collection }) => e.get_user_collections);
+
       if (!collections) {
         error = new APIError('informations erronnées', 403);
       }
@@ -243,13 +261,13 @@ const dataMapper = {
       }
       debug(collections);
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     return { error, collections };
   },
 
-  async getArtworks(id) {
+  async getArtworks(id: number) {
     const sqlQuery = `
         select * from get_user_artworks($1)
         ;`;
@@ -264,7 +282,7 @@ const dataMapper = {
         error = new APIError('informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     debug(artworks);
@@ -272,7 +290,7 @@ const dataMapper = {
     return { error, artworks };
   },
 
-  async getFavorites(id) {
+  async getFavorites(id: number) {
     const sqlQuery = `
         select * from get_user_favorites($1)
         ;`;
@@ -282,14 +300,25 @@ const dataMapper = {
     try {
       const response = await client.query(sqlQuery, values);
 
-      favorites = response.rows.map((e) => {
-        return e.get_user_favorites;
-      });
+      type Favorite = {
+        id: number,
+        title: string,
+        mature: boolean,
+        collection_id: number,
+        date: Date,
+        uri: string,
+        created_at: Date,
+        updated_at: Date,
+      };
+
+      favorites = response.rows
+        .map((e: { get_user_favorites: Favorite }) => e.get_user_favorites);
+
       if (!favorites) {
         error = new APIError('informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     debug(favorites);
@@ -297,7 +326,9 @@ const dataMapper = {
     return { error, favorites };
   },
 
-  async deleteFavorites(id) {
+  // FIXME: Presque sûr que cette fonction est incorrecte
+  async deleteFavorites(id: number) {
+    // FIXME: Comment ça favorites au pluriel ?
     const sqlQuery = `
         select * from delete_user_favorites($1)
         ;`;
@@ -307,14 +338,16 @@ const dataMapper = {
     try {
       const response = await client.query(sqlQuery, values);
 
+      // TODO: Typer le paramètre
       result = response.rows.map((e) => {
+        // FIXME: get_user_result ?
         return e.get_user_result;
       });
       if (!result) {
         error = new APIError('informations erronnées', 403);
       }
     } catch (err) {
-      error = new APIError(err.message, 500, err);
+      error = new APIError('Error server', 500, err as Error);
     }
 
     debug(result);
