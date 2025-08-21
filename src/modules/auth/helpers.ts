@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import APIError from '@/infrastructure/shared/APIError.js';
 import { toBool } from '@/infrastructure/shared/utils.js';
 
-import type { Entity, UserJwtPayload } from '@/types/auth.d.js';
+import type { Entity, UserJwtPayload } from '@/types/auth.js';
 
 export function getJwtSecret() {
   const jwtSecret = process.env.JWT_SECRET;
@@ -62,7 +62,7 @@ function isUserConnected(token: string): boolean {
 
 export async function findOwner(entity: Entity, entityId: string): Promise<number> {
   const dataMapper = await import(`@/modules/${entity}/model.js`);
-  const { ownerId } = await dataMapper.getOwner(entityId);
+  const { ownerId } = await dataMapper.default.getOwner(entityId);
 
   if (!ownerId) {
     throw new APIError('Entity not found', 404);
