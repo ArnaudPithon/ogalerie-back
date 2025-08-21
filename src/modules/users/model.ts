@@ -326,9 +326,9 @@ const dataMapper = {
     return { error, favorites };
   },
 
-  // FIXME: Presque sûr que cette fonction est pétée
+  // FIXME: Presque sûr que cette fonction est incorrecte
   async deleteFavorites(id: number) {
-    // FIXME: Comment ça favorites au plurier ?
+    // FIXME: Comment ça favorites au pluriel ?
     const sqlQuery = `
         select * from delete_user_favorites($1)
         ;`;
