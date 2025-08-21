@@ -20,7 +20,7 @@ const commentsController = {
       return;
     }
 
-    const { error, comment } = await dataMapper.create({ id, ...newComment });
+    const { error, comment } = await dataMapper.create({ ownerId: Number(id), ...newComment });
 
     if (error) {
       next(error);
