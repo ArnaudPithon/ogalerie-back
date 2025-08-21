@@ -10,7 +10,7 @@ const tagsController = {
     if (error) {
       next(error);
     } else {
-      return res.status(201).json(tag);
+      return res.status(200).json(tag);
     }
   },
 
@@ -20,7 +20,7 @@ const tagsController = {
     if (error) {
       next(error);
     } else {
-      return res.status(201).json(tags);
+      return res.status(200).json(tags);
     }
   },
 
@@ -30,7 +30,7 @@ const tagsController = {
     if (error) {
       next(error);
     } else {
-      return res.status(201).json(tags);
+      return res.status(200).json(tags);
     }
   },
 };
