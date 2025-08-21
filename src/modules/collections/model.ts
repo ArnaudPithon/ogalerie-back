@@ -78,7 +78,7 @@ const dataMapper = {
     return { error, ownerId };
   },
 
-  async update(newInfos: string) {
+  async update(newInfos: { id: number, title: string }) {
     const sqlQuery = `
         select * from update_collection($1)
         ;`;
