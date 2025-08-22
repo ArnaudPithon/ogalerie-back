@@ -108,7 +108,7 @@ export function checkUpdateData(req: Request, _res: Response, next: NextFunction
 }
 
 export function validateRole(req: Request, res: Response, next: NextFunction) {
-  const allowedRoles = ['creator', 'admin'];
+  const allowedRoles = ['user', 'creator', 'admin'];
   const { role } = req.params;
 
   if (role && !allowedRoles.includes(role)) {
