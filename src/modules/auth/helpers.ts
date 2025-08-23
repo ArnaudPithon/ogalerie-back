@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 
+import { assert } from 'infrastructure/shared/utils.js';
 import APIError from '@/infrastructure/shared/APIError.js';
+import { logEvent } from '@/interfaces/logger/logger.js';
 
 import type { Entity, UserJwtPayload } from '@/types/auth.js';
 
@@ -62,14 +64,23 @@ function isUserConnected(token: string): boolean {
 }
 
 export async function findOwner(entity: Entity, entityId: string): Promise<number> {
-  const dataMapper = await import(`@/modules/${entity}/model.js`);
-  const { ownerId } = await dataMapper.default.getOwner(entityId);
+  let dataMapper: Record<'default', Record<'getOwner', Function>>;
 
-  if (!ownerId) {
-    throw new APIError('Entity not found', 404);
+  try {
+    dataMapper = await import(`@/modules/${entity}/model.js`);
+  } catch {
+    throw new APIError(`Module ${entity} not found`, 404);
   }
 
-  return ownerId;
+  try {
+    const { ownerId } = await dataMapper.default.getOwner(entityId);
+
+    assert(ownerId);
+
+    return ownerId;
+  } catch {
+    throw new APIError('Entity not found', 404);
+  }
 }
 
 /**
@@ -85,7 +96,13 @@ export function getUserId(authHeader: unknown): number {
  * @summary Vérification si l'utilisateur est connecté
  */
 export function checkSignedIn(authHeader: unknown): boolean {
-  const token = collectToken(authHeader);
+  try {
+    const token = collectToken(authHeader);
 
-  return isUserConnected(token);
+    return isUserConnected(token);
+  } catch (err) {
+    logEvent('User not connected', { err });
+
+    return false;
+  }
 }
