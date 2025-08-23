@@ -9,7 +9,11 @@ export function errorHandler(err: APIError, req: Request, res: Response, _next: 
   if (err instanceof APIError) {
     // Si l'erreur n'est pas dans la plage des 500, on attribue 500 par
     // défaut
-    const status = err.code >= 100 && err.code < 600 ? err.code : 500;
+    const status = Number.isInteger(err.code)
+      && err.code >= 100
+      && err.code < 600
+      ? err.code
+      : 500;
 
     if (status >= 500) {
       req.log.error({ err, cause: err.cause }, 'Erreur serveur connue');
