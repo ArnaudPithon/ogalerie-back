@@ -43,17 +43,19 @@ function isUserJwtPayload(payload: unknown): payload is UserJwtPayload {
  * @summary Vérification d'un token JWT
  */
 function verifyToken(token: string): UserJwtPayload {
+  let decoded: string | jwt.JwtPayload;
+
   try {
-    const decoded = jwt.verify(token, getJwtSecret());
-
-    if (!isUserJwtPayload(decoded)) {
-      throw new APIError('Invalid token payload', 401);
-    }
-
-    return decoded;
+    decoded = jwt.verify(token, getJwtSecret());
   } catch {
     throw new APIError('Invalid or expired token', 401);
   }
+
+  if (!isUserJwtPayload(decoded)) {
+    throw new APIError('Invalid token payload', 401);
+  }
+
+  return decoded;
 }
 
 function isUserConnected(token: string): boolean {
