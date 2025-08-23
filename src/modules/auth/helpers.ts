@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 
 import APIError from '@/infrastructure/shared/APIError.js';
-import { toBool } from '@/infrastructure/shared/utils.js';
 
 import type { Entity, UserJwtPayload } from '@/types/auth.js';
 
@@ -59,7 +58,7 @@ function verifyToken(token: string): UserJwtPayload {
 }
 
 function isUserConnected(token: string): boolean {
-  return toBool(verifyToken(token));
+  return Boolean(verifyToken(token));
 }
 
 export async function findOwner(entity: Entity, entityId: string): Promise<number> {
