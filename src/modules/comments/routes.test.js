@@ -6,8 +6,11 @@ import { describe, test, expect, beforeAll, afterAll } from 'vitest';
 const debug = debugFactory('test');
 
 import 'dotenv/config';
-const PORT = process.env.PORT;
-const baseURL = `http://localhost:${PORT}`;
+const PORT_HTTP = process.env.PORT;
+const TEST_EMAIL = process.env.TEST_EMAIL;
+const TEST_PASSWORD = process.env.TEST_PASSWORD;
+
+const baseURL = `http://localhost:${PORT_HTTP}`;
 
 describe('Comments', () => {
   const user = { id: 4 };
@@ -17,7 +20,7 @@ describe('Comments', () => {
   beforeAll(async () => {
     const response = await request(baseURL)
       .post('/v1/users/login')
-      .send({ email: 'pro.test@icarios.net', password: 'password' });
+      .send({ email: TEST_EMAIL, password: TEST_PASSWORD });
 
     user.token = await response._body.token;
   });
