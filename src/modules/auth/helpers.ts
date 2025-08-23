@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import { assert } from 'infrastructure/shared/utils.js';
 import APIError from '@/infrastructure/shared/APIError.js';
-import { logEvent } from '@/interfaces/logger/logger.js';
+import { logger } from '@/interfaces/logger/logger.js';
 
 import type { Entity, UserJwtPayload } from '@/types/auth.js';
 
@@ -101,7 +101,7 @@ export function checkSignedIn(authHeader: unknown): boolean {
 
     return isUserConnected(token);
   } catch (err) {
-    logEvent('User not connected', { err });
+    logger.debug({ err }, 'User not connected');
 
     return false;
   }
