@@ -32,15 +32,10 @@ export const securityService: securityServiceInterface = {
    */
   connectionRequired(required = true) {
     return (req, _res, next) => {
-      req.isConnected = false;
-      try {
-        req.isConnected = checkSignedIn(req.headers.authorization);
-      } catch { }
+      req.isConnected = checkSignedIn(req.headers.authorization);
 
       if (required && !req.isConnected) {
-        next(new APIError('You must be connected to access this resource', 401));
-
-        return;
+        throw new APIError('You must be connected to access this resource', 401);
       }
 
       next();
