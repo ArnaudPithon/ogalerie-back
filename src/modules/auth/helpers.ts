@@ -63,7 +63,7 @@ function isUserConnected(token: string): boolean {
   return Boolean(verifyToken(token));
 }
 
-export async function findOwner(entity: Entity, entityId: string): Promise<number> {
+export async function findOwner(entity: Entity, entityId: number): Promise<number> {
   let dataMapper: Record<'default', Record<'getOwner', Function>>;
 
   try {

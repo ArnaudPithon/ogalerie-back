@@ -99,13 +99,13 @@ describe('getUserId', () => {
   */
 describe('findOwner', () => {
   it('return owner ID if entity exists', async () => {
-    await expect(findOwner('artworks', '1'))
+    await expect(findOwner('artworks', 1))
       .resolves.toBe(2); // Assuming artwork with ID 1 is owned by user ID 2
   });
   it("throws if entity can't be found", async () => {
-    await expect(findOwner('invalid' as unknown as 'artworks', '1'))
+    await expect(findOwner('invalid' as unknown as 'artworks', 1))
       .rejects.toThrow('Module invalid not found');
-    await expect(findOwner('artworks', '99999'))
+    await expect(findOwner('artworks', 99999))
       .rejects.toThrow('Entity not found');
   });
 });
