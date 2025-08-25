@@ -1,9 +1,9 @@
-// vim: foldlevel=1:foldnestmax=2
 import jwt from 'jsonwebtoken';
 
 import type { RequestHandler } from 'express';
 
 import APIError from '@/infrastructure/shared/APIError.js';
+import { assert } from 'infrastructure/shared/utils.js';
 
 import type { Entity, User } from '@/types/auth.js';
 
@@ -47,15 +47,18 @@ export const securityService: securityServiceInterface = {
    */
   checkIdentity(req, _res, next) {
     req.isUser = false;
+    let pretendId: number;
 
     try {
-      const pretendId = Number(req.params.id);
+      pretendId = Number(req.params.id);
+      assert(pretendId);
+    } catch {
+      throw new APIError('Cannot confirm identity', 400);
+    }
 
-      const realId = getUserId(req.headers.authorization);
+    const realId = getUserId(req.headers.authorization);
 
-      req.isUser = pretendId === realId;
-    } catch { }
-
+    req.isUser = pretendId === realId;
     next();
   },
 
@@ -65,21 +68,19 @@ export const securityService: securityServiceInterface = {
   checkOwner(entity) {
     return async (req, _res, next) => {
       req.isOwner = false;
+      let entityId: number;
 
       try {
-        const entityId = req.params.id;
+        entityId = Number(req.params.id);
+        assert(entityId);
+      } catch {
+        throw new APIError('Cannot identify the entity', 400);
+      }
 
-        if (typeof entityId === 'undefined') {
-          throw new APIError('Entity ID is required', 400);
-        }
+      const identity = getUserId(req.headers.authorization);
+      const owner = await findOwner(entity, entityId);
 
-        const identity = getUserId(req.headers.authorization);
-
-        const owner = await findOwner(entity, entityId);
-
-        req.isOwner = identity === owner;
-      } catch { }
-
+      req.isOwner = identity === owner;
       next();
     };
   },
