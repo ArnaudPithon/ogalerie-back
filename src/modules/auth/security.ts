@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import type { RequestHandler } from 'express';
 
 import APIError from '@/infrastructure/shared/APIError.js';
-import { assert } from 'infrastructure/shared/utils.js';
+import { assert } from '@/infrastructure/shared/utils.js';
 
 import type { Entity, User } from '@/types/auth.js';
 
