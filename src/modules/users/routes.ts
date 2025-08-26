@@ -60,7 +60,7 @@ router.post('/', checkSignUpData, usersController.signUp);
 
 /**
  * @swagger
- * /v1/users/{role}:
+ * /v1/users/role/{role}:
  *   get:
  *      summary: Respond with a list of users
  *      tags:
@@ -93,7 +93,7 @@ router.post('/', checkSignUpData, usersController.signUp);
  *                                      description: The user nickname
  *                                      example: tux
  */
-router.get('/:role', validateRole, usersController.users);
+router.get('/role/:role', validateRole, usersController.users);
 
 /**
  * @swagger
