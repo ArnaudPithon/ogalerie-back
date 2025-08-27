@@ -2,8 +2,6 @@ import 'dotenv/config';
 import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
-import swaggerUi from 'swagger-ui-express';
-import { RegisterRoutes } from './routes/routes.ts';
 
 import { httpLogger, logger } from '@/interfaces/logger/logger.js';
 import { errorHandler } from '@/interfaces/http/middlewares/errorHandler.js';
@@ -51,15 +49,6 @@ app.use(
   * @description Routeur principal de l'application
   */
 app.use(router);
-
-// routes auto-générées par tsoa
-RegisterRoutes(app);
-
-/**
-  * @description Route pour la documentation Swagger
-  */
-import swaggerDoc from '../build/swagger.json' with { type: 'json' };
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 /**
   * @description Middleware global de gestion d'erreur
