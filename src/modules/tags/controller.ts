@@ -1,38 +1,48 @@
-// vim: foldlevel=1:foldnestmax=2
-import type { Request, Response, NextFunction } from 'express';
-import dataMapper from './model.js';
+import { Controller, Get, Route, Path, Response, Tags } from 'tsoa';
 
-const tagsController = {
-  read: async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.params;
-    const { error, tag } = await dataMapper.read(Number(id));
+import { assert } from '@/infrastructure/shared/utils.js';
+import dataMapper from './model.js';
+import type { TTags } from './types.js';
+import type { Artwork } from '../../types/artwork.js';
+
+@Route('v2/tags')
+@Tags('Tags')
+export class TagsController extends Controller {
+
+  /**
+  * @summary Get artworks by tag ID
+  * @param {number} id - The ID of the tag
+  * @returns {Promise<Artwork[]>} - A promise that resolves to an array of artworks associated with the tag
+  * @throws {Error} - Throws an error if the tag is not found or if there is a server error
+  */
+  @Get('{id}')
+  @Response<Error>(404, 'Tag not found')
+  public async read(@Path() id: number): Promise<Artwork[]> {
+    const { error, artworks } = await dataMapper.read(Number(id));
 
     if (error) {
-      next(error);
-    } else {
-      return res.status(200).json(tag);
+      throw error;
     }
-  },
+    assert(artworks, `Tag with ID ${id} not found`);
 
-  getTags: async (_req: Request, res: Response, next: NextFunction) => {
+    return artworks;
+  }
+
+  /**
+  * @summary Get all tags
+  * @returns {Promise<TTags>} - A promise that resolves to an object containing arrays of tags categorized by style, support, and type
+  * @throws {Error} - Throws an error if no tags are found or if there is a server error
+  */
+  @Get()
+  public async getTags(): Promise<TTags> {
     const { error, tags } = await dataMapper.getTags();
 
     if (error) {
-      next(error);
-    } else {
-      return res.status(200).json(tags);
+      throw error;
     }
-  },
+    assert(tags, 'No tags found');
 
-  getTags2: async (_req: Request, res: Response, next: NextFunction) => {
-    const { error, tags } = await dataMapper.getTags2();
+    return tags;
+  }
+}
 
-    if (error) {
-      next(error);
-    } else {
-      return res.status(200).json(tags);
-    }
-  },
-};
-
-export default tagsController;

@@ -1,56 +1,32 @@
-// vim: foldlevel=1:foldnestmax=2
-import debugFactory from 'debug';
-
 import client from '@/interfaces/db/pgClient.js';
 import APIError from '@/infrastructure/shared/APIError.js';
-import type { Tag } from './types.js';
-
-const debug = debugFactory('datamapper');
+import type { TTags } from './types.js';
+import type { Artwork } from '@/types/artwork.js';
 
 const dataMapper = {
   async read(id: number) {
     const sqlQuery = 'select * from get_tag($1)';
     const values = [id];
-    let tag, error;
+    let artworks, error;
 
     try {
       const response = await client.query(sqlQuery, values);
 
-      tag = response.rows.map((e: { get_tag: Tag }) => e.get_tag);
+      artworks = response.rows.map((e: { get_tag: Artwork }) => e.get_tag);
 
-      if (!tag) {
+      if (!artworks) {
         error = new APIError('error', 404);
       }
     } catch (err) {
       error = new APIError('Error server', 500, err as Error);
     }
 
-    return { error, tag };
+    return { error, artworks };
   },
 
   async getTags() {
     const sqlQuery = 'select * from get_tags()';
-    let tags, error;
-
-    try {
-      const response = await client.query(sqlQuery);
-
-      tags = response.rows;
-
-      if (!tags) {
-        error = new APIError('error', 404);
-      }
-    } catch (err) {
-      error = new APIError('Error server', 500, err as Error);
-    }
-    debug(tags);
-
-    return { error, tags };
-  },
-
-  async getTags2() {
-    const sqlQuery = 'select * from get_tags()';
-    let tags, error;
+    let tags: TTags | undefined, error: Error | undefined;
 
     try {
       const response = await client.query(sqlQuery);
@@ -69,7 +45,6 @@ const dataMapper = {
     } catch (err) {
       error = new APIError('Error server', 500, err as Error);
     }
-    debug(tags);
 
     return { error, tags };
   },
