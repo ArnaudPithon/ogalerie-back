@@ -1,4 +1,4 @@
-// vim:foldlevel=2:foldnestmax=2
+// vim:ft=javascript
 import request from 'supertest';
 import debugFactory from 'debug';
 import { describe, test, expect, beforeAll, afterAll } from 'vitest';

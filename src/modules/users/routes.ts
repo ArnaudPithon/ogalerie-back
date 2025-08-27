@@ -3,7 +3,7 @@ import Router from 'express';
 
 import collectionsController from '../collections/controller.js';
 import artworksController from '../artworks/controller.js';
-import commentsController from '../comments/controller.js';
+// import commentsController from '../comments/controller.js';
 import { securityService } from '../auth/security.js';
 
 import usersController from './controller.js';
@@ -252,38 +252,6 @@ router.post(
   securityService.checkIdentity,
   artworksController.create,
 );
-
-/**
- * @swagger
- * /v1/users/{id}/comments:
- *   post:
- *      summary: Add an comment
- *      tags:
- *          - users
- *          - comments
- *      responses:
- *          201:
- */
-router.post(
-  '/:id/comments',
-  validateNumericId,
-  securityService.connectionRequired,
-  securityService.checkIdentity,
-  commentsController.create,
-);
-
-/**
- * @swagger
- * /v1/users/{id}/comments:
- *   get:
- *      summary: Return all user comments
- *      tags:
- *          - users
- *          - comments
- *      responses:
- *          200:
- */
-router.get('/:id/comments', validateNumericId, commentsController.getAll);
 
 router.get('/:id/favorites', validateNumericId, usersController.getFavorites);
 
