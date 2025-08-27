@@ -11,5 +11,8 @@
   "noImplicitAdditionalProperties": "throw-on-extras",
   "routes": {
     "routesDir": "src/routes"
-  }
+  },
+  "modelPathGlobs": [
+    "src/types/**/*.ts"
+  ]
 }
