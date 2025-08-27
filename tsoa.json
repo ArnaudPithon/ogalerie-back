@@ -1,7 +1,8 @@
 {
   "entryFile": "src/app.ts",
   "controllerPathGlobs": [
-    "src/modules/**/controller.ts"
+    "src/modules/**/controller.ts",
+    "src/modules/**/controllers/*.ts"
   ],
   "spec": {
     "outputDirectory": "build",
