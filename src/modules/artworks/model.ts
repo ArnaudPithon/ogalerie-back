@@ -1,9 +1,8 @@
-// vim: foldlevel=1:foldnestmax=2
 import debugFactory from 'debug';
 
 import client from '@/interfaces/db/pgClient.js';
 import APIError from '@/infrastructure/shared/APIError.js';
-import type { Artwork } from './types.js';
+import type { Artwork } from '@/types/artwork.js';
 
 const debug = debugFactory('datamapper');
 
