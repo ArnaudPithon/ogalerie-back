@@ -1,4 +1,4 @@
-export type TTags = {
+export type TagsCollection = {
   style: string[];
   support: string[];
   type: string[];

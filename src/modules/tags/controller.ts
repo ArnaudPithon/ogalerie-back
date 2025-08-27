@@ -2,7 +2,7 @@ import { Controller, Get, Route, Path, Response, Tags } from 'tsoa';
 
 import { assert } from '@/infrastructure/shared/utils.js';
 import dataMapper from './model.js';
-import type { TTags } from './types.js';
+import type { TagsCollection } from './types.js';
 import type { Artwork } from '../../types/artwork.js';
 
 @Route('v2/tags')
@@ -30,11 +30,11 @@ export class TagsController extends Controller {
 
   /**
   * @summary Get all tags
-  * @returns {Promise<TTags>} - A promise that resolves to an object containing arrays of tags categorized by style, support, and type
+  * @returns {Promise<Tags>} - A promise that resolves to an object containing arrays of tags categorized by style, support, and type
   * @throws {Error} - Throws an error if no tags are found or if there is a server error
   */
   @Get()
-  public async getTags(): Promise<TTags> {
+  public async getTags(): Promise<TagsCollection> {
     const { error, tags } = await dataMapper.getTags();
 
     if (error) {
