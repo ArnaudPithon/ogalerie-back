@@ -10,6 +10,7 @@ import type { Artwork } from '../../types/artwork.js';
 export class TagsController extends Controller {
 
   /**
+  * Get artworks associated with a specific tag ID
   * @summary Get artworks by tag ID
   * @param {number} id - The ID of the tag
   * @returns {Promise<Artwork[]>} - A promise that resolves to an array of artworks associated with the tag
@@ -29,6 +30,7 @@ export class TagsController extends Controller {
   }
 
   /**
+   * Get all tags
   * @summary Get all tags
   * @returns {Promise<Tags>} - A promise that resolves to an object containing arrays of tags categorized by style, support, and type
   * @throws {Error} - Throws an error if no tags are found or if there is a server error

@@ -12,6 +12,7 @@ import { validateNumericId } from '@/modules/users/validator.js';
 export class UserCommentsController extends Controller {
   /**
    * Create a new comment for a specific owner
+   * @summary Create a new comment
    * @param {number} id - The ID of the owner
    * @param {NewComment} newComment - The comment data to be created
    * @returns {Promise<Comment>} - A promise that resolves to the created comment
@@ -35,6 +36,7 @@ export class UserCommentsController extends Controller {
 
   /**
    * Get all comments for a specific owner
+   * @summary Get all comments of an user
    * @param {number} id - The ID of the owner
    * @returns {Promise<Comment[]>} - A promise that resolves to an array of comments
    */

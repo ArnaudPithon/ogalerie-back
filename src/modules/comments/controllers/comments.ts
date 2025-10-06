@@ -11,6 +11,7 @@ import { securityService } from '@/modules/auth/security.js';
 export class CommentsController extends Controller {
   /**
    * Update a specific comment
+   * @summary Update a comment
    * @param {number} id - The ID of the comment to be updated
    * @param {string} content - The updated comment data
    * @returns {Promise<Comment>} - A promise that resolves to the updated comment
@@ -31,6 +32,7 @@ export class CommentsController extends Controller {
 
   /**
    * Delete a specific comment
+   * @summary Delete a comment
    * @param {number} id - The ID of the comment to be deleted
    */
   @Delete('{id}')
