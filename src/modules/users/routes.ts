@@ -1,9 +1,6 @@
-// vim: foldlevel=0:foldnestmax=2
 import Router from 'express';
 
-import collectionsController from '../collections/controller.js';
 import artworksController from '../artworks/controller.js';
-// import commentsController from '../comments/controller.js';
 import { securityService } from '../auth/security.js';
 
 import usersController from './controller.js';
@@ -197,26 +194,6 @@ router.get(
   '/:id/collections',
   validateNumericId,
   usersController.getCollections,
-);
-
-/**
- * @swagger
- * /v1/users/{id}/collections:
- *   post:
- *      summary: Create a collection
- *      tags:
- *          - users
- *          - collections
- *      responses:
- *          201:
- * @return {Collection} 201 -
- */
-router.post(
-  '/:id/collections',
-  validateNumericId,
-  securityService.connectionRequired,
-  securityService.checkIdentity,
-  collectionsController.create,
 );
 
 /**

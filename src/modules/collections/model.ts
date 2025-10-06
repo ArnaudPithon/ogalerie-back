@@ -38,20 +38,22 @@ const dataMapper = {
     let collection, error;
 
     try {
+      // get collection infos
       const response = await client.query(queryCollection, values);
 
       collection = response.rows[0].get_collection;
 
       if (!collection) {
-        error = new APIError('Informations erronnées', 403);
+        error = new APIError('Collection not found', 404);
       }
+
+      // get artworks in the collection
       const artworks = await client.query(queryArtworks, values);
 
       collection.artworks = artworks.rows;
     } catch (err) {
       error = new APIError('Error server', 500, err as Error);
     }
-    debug(collection);
 
     return { error, collection };
   },

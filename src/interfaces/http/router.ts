@@ -1,7 +1,6 @@
 import Router from 'express';
 
 import artworksRouter from '@/modules/artworks/routes.js';
-import collectionsRouter from '@/modules/collections/routes.js';
 import usersRouter from '@/modules/users/routes.js';
 
 const router = Router();
@@ -10,7 +9,6 @@ const router = Router();
 const routerAPI = Router();
 
 routerAPI.use('/artworks', artworksRouter);
-routerAPI.use('/collections', collectionsRouter);
 routerAPI.use('/users', usersRouter);
 
 // Les urls préfixées par /v1 rentrent dans routerAPI
